@@ -3,13 +3,18 @@ A single page application utilizing the google maps API (and others) to showcase
 
 ## Requirements
 
-### Libraries and Frameworks
+### Libraries, Frameworks and API's
 #### Must use the following:
 1. [Knockout.js](http://knockoutjs.com/)
 
 #### Also using:
 1. [jQuery.js](https://jquery.com/)
-2. [slideout](https://github.com/Mango/slideout)
+2. [slideout.js](https://github.com/Mango/slideout)
+
+#### API's
+1. GoogleMaps API
+2. [Foursquare API](https://developer.foursquare.com/start)
+
 
 ### Must do's
 1. Track click events on list items using Knockout.js
