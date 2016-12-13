@@ -7,22 +7,94 @@ Start Date: Dec. 13, 2016 -->
 <head>
   <meta charset="utf-8">
   <title>My Neighborhood</title>
+  <!-- From Slideout.js documentation -->
+  <meta http-equiv="cleartype" content="on">
+  <meta name="MobileOptimized" content="320">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <!-- This meta is used to make the site compatible with mobile devices -->
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
   <!-- Load the page styles. -->
   <link href="./styles/css/style.css" rel="stylesheet">
+  <!-- Slideout style -->
+  <style media="screen">
+
+  .slideout-menu {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 256px;
+    min-height: 100vh;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    z-index: 0;
+    display: none;
+  }
+
+  .slideout-menu-left {
+    left: 0;
+  }
+
+  .slideout-menu-right {
+    right: 0;
+  }
+
+  .slideout-panel {
+    position: relative;
+    z-index: 1;
+    will-change: transform;
+    background-color: #FFF; /* A background-color is required */
+    min-height: 100vh;
+  }
+
+  .slideout-open,
+  .slideout-open body,
+  .slideout-open .slideout-panel {
+    overflow: hidden;
+  }
+
+  .slideout-open .slideout-menu {
+    display: block;
+  }
+  </style>
 </head>
 <body>
-
+  <nav>
+    <header id="menu">
+      <h2>Menu</h2>
+    </header>
+  </nav>
+  <main id="panel">
+    <header>
+      <button class="toggle-button">☰</button>
+      <h2>Map</h2>
+    </header>
+  </main>
 
 
   <!-- GoogleMaps  -->
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1Vs3ktrsweXIEICK-axcOk_Smy7-plgU&libraries=drawing,geometry,places&v=3&callback=initMap">
+  <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1Vs3ktrsweXIEICK-axcOk_Smy7-plgU&libraries=drawing,geometry,places&v=3&callback=initMap">
+  </script> -->
+  <!-- Slideout.js for off canvas menu -->
+  <script src="js/lib/slideout-1.0.1/dist/slideout.js"></script>
+  <script type="text/javascript">
+  var slideout = new Slideout({
+    'panel': document.getElementById('panel'),
+    'menu': document.getElementById('menu'),
+    'padding': 256,
+    'tolerance': 70
+  });
+  // Toggle button
+  document.querySelector('.toggle-button').addEventListener('click',function(){
+    slideout.toggle();
+  });
   </script>
-
-  <script src="./js/lib/knockout-3.4.1.js"></script>
-  <script type="text/javascript" src="./js/lib/jquery.min.js"></script>
-  <script src="./js/app.js"></script>
+  <!-- knockout-3 for data responsiveness -->
+  <!-- <script src="./js/lib/knockout-3.4.1.js"></script> -->
+  <!-- jQuery for DOM manipulation and AJAX -->
+  <!-- <script type="text/javascript" src="./js/lib/jquery.min.js"></script> -->
+  <!-- Application code base -->
+  <!-- <script src="./js/app.js"></script> -->
 
 </body>
 </html>
