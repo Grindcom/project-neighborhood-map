@@ -5,10 +5,10 @@ A single page application utilizing the google maps API (and others) to showcase
 
 ### Libraries and Frameworks
 #### Must use the following:
-1. Knockout.js
+1. [Knockout.js](http://knockoutjs.com/)
 
 #### Also using:
-1. jQuery.js
+1. [jQuery.js](https://jquery.com/)
 
 ### Must do's
 1. Track click events on list items using Knockout.js
