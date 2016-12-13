@@ -9,6 +9,7 @@ A single page application utilizing the google maps API (and others) to showcase
 
 #### Also using:
 1. [jQuery.js](https://jquery.com/)
+2. [slideout](https://github.com/Mango/slideout)
 
 ### Must do's
 1. Track click events on list items using Knockout.js
