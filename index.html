@@ -17,56 +17,18 @@ Start Date: Dec. 13, 2016 -->
   <!-- Load the page styles. -->
   <link href="./styles/css/style.css" rel="stylesheet">
   <!-- Slideout style -->
-  <style media="screen">
-
-  .slideout-menu {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    width: 256px;
-    min-height: 100vh;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
-    z-index: 0;
-    display: none;
-  }
-
-  .slideout-menu-left {
-    left: 0;
-  }
-
-  .slideout-menu-right {
-    right: 0;
-  }
-
-  .slideout-panel {
-    position: relative;
-    z-index: 1;
-    will-change: transform;
-    background-color: #FFF; /* A background-color is required */
-    min-height: 100vh;
-  }
-
-  .slideout-open,
-  .slideout-open body,
-  .slideout-open .slideout-panel {
-    overflow: hidden;
-  }
-
-  .slideout-open .slideout-menu {
-    display: block;
-  }
-  </style>
+  <link rel="stylesheet" href="./styles/css/slideout.css">
 </head>
 <body>
   <nav>
     <header id="menu">
-      <h2>Menu</h2>
+      <h2>Neighborhood Locations</h2>
     </header>
   </nav>
   <main id="panel">
     <header>
       <button class="toggle-button">☰</button>
+      <!-- TODO: Make this title in-line with hamburger button -->
       <h2>Map</h2>
     </header>
   </main>
