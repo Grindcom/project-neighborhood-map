@@ -25,22 +25,49 @@ Start Date: Dec. 13, 2016 -->
       <h2>Neighborhood Locations</h2>
     </header>
   </nav>
+
   <main id="panel">
+
     <header>
       <button class="toggle-button">☰</button>
       <!-- TODO: Make this title in-line with hamburger button -->
       <h2>Map</h2>
+          <div id="map">Hello</div>
     </header>
     <section>
-      <figure id="map">
 
-      </figure>
     </section>
     <!-- TODO: Place acknowlegment for referenced libraries etc. here -->
     <footer></footer>
   </main>
 
+  <script>
+  var map;
+  function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: -34.397, lng: 150.644},
+      zoom: 8
+    });
+  }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1Vs3ktrsweXIEICK-axcOk_Smy7-plgU&callback=initMap"
+async defer></script>
+  <!-- <script type="text/javascript">
+  var map;
+  function initMap(){
+    console.log("Init Map");
+    //  The first parameter is the element on the page to place the map,
+    map = new google.maps.Map(document.getElementById('map'),{
+      // Lat long literal, location on earth,  [lat: 52.133243, lng: -122.149504], []
+      center: {lat: 40.7413549, lng: -73.998024439999996},
+      // Zoom can go up to 21.
+      zoom: 13
+    });
+    //
+    //ViewModel().initMap(map);
+  }
 
+  </script> -->
   <!-- GoogleMaps  -->
   <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1Vs3ktrsweXIEICK-axcOk_Smy7-plgU&libraries=drawing,geometry,places&v=3&callback=initMap">
   </script> -->
