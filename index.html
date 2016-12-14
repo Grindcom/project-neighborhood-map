@@ -15,17 +15,32 @@ Start Date: Dec. 13, 2016 -->
   <!-- This meta is used to make the site compatible with mobile devices -->
   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
   <!-- Load the page styles. -->
-  <link href="./styles/css/style.css" rel="stylesheet">
 
-  <!-- </style> -->
+  <!-- Bootstrap -->
+  <!-- <link href="./styles/css/bootstrap.min.css" rel="stylesheet" media="screen"> -->
   <!-- Slideout style -->
   <link rel="stylesheet" href="./styles/css/slideout.css">
+  <!-- Neighborhood map Styles -->
+  <link href="./styles/css/style.css" rel="stylesheet">
+
 </head>
 <body>
+  <div class="container" id="main">
+    <nav class="options-box" id="menu">
+      <hr>
+      <h2>Neighborhood Locations</h2>
+      <hr>
+    </nav>
+    <div id="panel">
+      <header>
+        <button class="toggle-button">☰</button>
+        <h2>Panel</h2>
+      </header>
 
-  <div id="map">Hello</div>
+      <div id="map"></div>
+    </div>
 
-
+  </div>
 
   <script type="text/javascript">
   var map;
@@ -66,12 +81,14 @@ Start Date: Dec. 13, 2016 -->
     slideout.toggle();
   });
   </script>
-<!-- knockout-3 for data responsiveness -->
-<!-- <script src="./js/lib/knockout-3.4.1.js"></script> -->
-<!-- jQuery for DOM manipulation and AJAX -->
-<!-- <script type="text/javascript" src="./js/lib/jquery.min.js"></script> -->
-<!-- Application code base -->
-<!-- <script src="./js/app.js"></script> -->
+  <!-- knockout-3 for data responsiveness -->
+  <script src="./js/lib/knockout-3.4.1.js"></script>
+  <!-- jQuery for DOM manipulation and AJAX -->
+  <script type="text/javascript" src="./js/lib/jquery.min.js"></script>
+  <!-- Bootstrap -->
+  <script src="./js/lib/bootstrap.min.js"></script>
+  <!-- Application code base -->
+  <!-- <script src="./js/app.js"></script> -->
 
 </body>
 </html>
