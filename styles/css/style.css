@@ -3,7 +3,17 @@ Main CSS Style sheet
 Author: Greg Ford, B.Sc.
 Start Date: Dec. 13, 2016*/
 
+
+html,body {
+  font-family: Arial, sans-serif;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 body{
   width: 100%;
+  height: 100%;
+}
+#map {
   height: 100%;
 }
