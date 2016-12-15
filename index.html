@@ -31,6 +31,13 @@ Start Date: Dec. 13, 2016 -->
       <hr>
       <h2>Neighborhood Locations</h2>
       <hr>
+      <div id="locations" class="location-list">
+        <ul data-bind="foreach: locationList">
+          <li data-bind="text: name">
+            
+          </li>
+        </ul>
+      </div>
     </nav>
     <div id="panel" class="">
       <header class="panel-header">
@@ -46,19 +53,21 @@ Start Date: Dec. 13, 2016 -->
   <script type="text/javascript">
   var map;
   function initMap(){
+    // lat/long literal for a map and map marker.
+    var williams_lake = {lat: 52.1417, lng: -122.1417};
     // Constructor that creates a new map - only center and zoom are required
     //  The first parameter is the element on the page to place the map,
     map = new google.maps.Map(document.getElementById('map'),{
-      // Lat long literal, location on earth,  [lat: 52.133243, lng: -122.149504], []
-      center: {lat: 52.1417, lng: -122.1417},
+      // Set initial location to Williams Lake
+      center: williams_lake,
       // Zoom can go up to 21.
       zoom: 13
     });
     // Set up the lat/long literal for a map marker.
-    var tribeca = {lat: 40.7413549, lng: -73.998024439999996};
+    var williams_lake = {lat: 52.1417, lng: -122.1417};
     // Set the marker with the position and the map object created above.
     var marker = new google.maps.Marker({
-      position: tribeca,
+      position: williams_lake,
       map: map,
       title: 'First Marker!!!'
     });
@@ -91,7 +100,7 @@ Start Date: Dec. 13, 2016 -->
   <!-- Bootstrap -->
   <script src="./js/lib/bootstrap.min.js"></script>
   <!-- Application code base -->
-  <!-- <script src="./js/app.js"></script> -->
+  <script src="./js/app.js"></script>
 
 </body>
 </html>
