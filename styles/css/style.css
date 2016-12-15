@@ -1,96 +1,43 @@
 /*Neighborhood Map project
-  Main CSS Style sheet
-  Author: Greg Ford, B.Sc.
-  Start Date: Dec. 13, 2016*/
+Main CSS Style sheet
+Author: Greg Ford, B.Sc.
+Start Date: Dec. 13, 2016*/
 
-  /*Add for resoponsive design*/
-  *{
-    /*default box sizing*/
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -ms-box-sizing: border-box;
-    box-sizing: border-box;
-    max-width: 900px;
-  }
-
-  html,body {
-    font-family: Arial, sans-serif;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
-  .container{
-    height: 100%;
-    position: relative;
-  }
-  #map {
-    bottom:0px;
-    border-radius: 24px;
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    right: 0px;
-    z-index: 0;
-
-  }
-  /*Make sure toggle-button is always on top*/
-  .toggle-button{
-    position: absolute;
-    z-index: 50;
-    top: 0;
-  }
-  #panel{
-    border: 5px;
-    margin-left: 18px;
-  }
-  .options-box{
-    background: #FFD04C;
-    border-radius: 24px;
-    position: absolute;
-    z-index: 10;
-    box-shadow: 1px 1px 25px #070B57;
-    height: 100%;
-    width: 30%;
-    padding: 5px;
-    text-align: left;
-  }
-  /*Must have pano for street View to work*/
-  #pano {
-    width: 200px;
-    height: 200px;
-  }
-  #toggle-drawing, #show-listing,
-  #hide-listing, #zoom-to-area-button,
-  #search-within-time-button{
-    margin: 4px;
-    padding: 2px;
-  }
-  #zoom-to-area-text{
-    width: 75%;
-  }
-  #zoom-to-area-button{
-    width: 20%;
-    float: center;
-  }
-
+/*Add for resoponsive design*/
+*{
+  /*default box sizing*/
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  /*max-width: 900px;*/
 }
-<<<<<<< HEAD
-body{
-=======
+
+html,body {
+  font-family: Arial, sans-serif;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
 .container{
+  max-width: 1600px;
   height: 100%;
   position: relative;
+  margin: 0;
+  /*left: 0;
+  right: 0:*/
 }
 #map {
   bottom:0px;
   border-radius: 24px;
   height: 100%;
->>>>>>> show-map
   width: 100%;
+  margin: 0;
+  padding: 0;
   position: absolute;
   right: 0px;
   z-index: 0;
-
 }
 /*Make sure toggle-button is always on top*/
 .toggle-button{
@@ -99,8 +46,12 @@ body{
   top: 0;
 }
 #panel{
-  border: 5px;
-  margin-left: 18px;
+
+  /*border: 5px;*/
+  margin-left: 25px;
+  /*width: 100%;*/
+  /*left: 0;
+  right: 0;*/
 }
 .options-box{
   background: #FFD04C;
@@ -131,6 +82,23 @@ body{
   width: 20%;
   float: center;
 }
-#map {
-  height: 100%;
+/* TODO: This is a temporary fix, need toggle button to move when slideout toggles */
+.toggle-button{
+  margin-left: 150px;
+
+}
+/*The following was found here: http://stackoverflow.com/questions/22996429/override-bootstrap-container-width*/
+@media(min-width: 768px){
+  .container{
+    /*override*/
+    max-width: 100%;
+    width: auto;
+  }
+}
+@media(min-width: 992px){
+  .container{
+    /*override*/
+    max-width: 100%;
+    width: auto;
+  }
 }
