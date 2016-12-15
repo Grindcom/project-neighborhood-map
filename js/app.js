@@ -73,13 +73,16 @@ var CoolSpot = function(data){
 
 //*******************
 var ViewModel = function(){
-  var map;
-  console.log("ViewModel");
+  // Use for clarity when necessary
   var self = this;
+  // Google Map object
+  var map;
   // Provide global access to this as an object literal
   view_model = this;
-  //
+  // ***************************
+  // List of favorites locations
   this.locationList = ko.observableArray([]);
+  // Load the favorites with static data
   favSpots.forEach(function(location){
     console.log("  favSpots");
     self.locationList.push(new CoolSpot(location));
@@ -101,6 +104,7 @@ var ViewModel = function(){
     slideout.toggle();
   };
   //************************
+  // GOOGLE MAP STUFF
   // Initialize google map
   this.initMap = function(map){
     console.log(" Map: "+map);
@@ -120,9 +124,11 @@ var ViewModel = function(){
     var marker = new google.maps.Marker({
       position: williams_lake,
       map: map,
-      title: 'First Marker!!!'
+      title: 'Center of Williams Lake'
     });
   };
+
+  // *************************************
 }
 
 ko.applyBindings(new ViewModel());
