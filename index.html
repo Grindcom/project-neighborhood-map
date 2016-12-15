@@ -34,7 +34,7 @@ Start Date: Dec. 13, 2016 -->
       <div id="locations" class="location-list">
         <ul data-bind="foreach: locationList">
           <li data-bind="text: name">
-            
+
           </li>
         </ul>
       </div>
@@ -50,32 +50,9 @@ Start Date: Dec. 13, 2016 -->
 
   </div>
 
-  <script type="text/javascript">
-  var map;
-  function initMap(){
-    // lat/long literal for a map and map marker.
-    var williams_lake = {lat: 52.1417, lng: -122.1417};
-    // Constructor that creates a new map - only center and zoom are required
-    //  The first parameter is the element on the page to place the map,
-    map = new google.maps.Map(document.getElementById('map'),{
-      // Set initial location to Williams Lake
-      center: williams_lake,
-      // Zoom can go up to 21.
-      zoom: 13
-    });
-    // Set up the lat/long literal for a map marker.
-    var williams_lake = {lat: 52.1417, lng: -122.1417};
-    // Set the marker with the position and the map object created above.
-    var marker = new google.maps.Marker({
-      position: williams_lake,
-      map: map,
-      title: 'First Marker!!!'
-    });
-  }
 
-  </script>
   <!-- GoogleMaps  -->
-  <script type="text/javascript" async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1Vs3ktrsweXIEICK-axcOk_Smy7-plgU&v=3&callback=initMap">
+  <script type="text/javascript" async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1Vs3ktrsweXIEICK-axcOk_Smy7-plgU&v=3&callback=view_model.initMap">
   </script>
   <!-- Slideout.js for off canvas menu -->
   <script src="js/lib/slideout-1.0.1/dist/slideout.js"></script>

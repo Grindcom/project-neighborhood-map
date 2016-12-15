@@ -3,6 +3,11 @@
 // Author: Greg Ford, B.Sc.
 // Start Date: Dec. 13, 2016
 
+//
+// GLOBALS
+//
+var view_model;
+var map;
 // ******************
 // Favorite locations
 var favSpots = [{
@@ -47,6 +52,7 @@ var favSpots = [{
   imgAttribution: ''
 }]
 //*******************
+//
 var CoolSpot = function(data){
   console.log("    CoolSpot");
   //
@@ -63,13 +69,15 @@ var CoolSpot = function(data){
   this.imgAttribution = ko.observable(data.imgAttribution);
   //
   this.reviews = ko.observableArray(data.reviews);
-  // TODO: Add computed observables; get more information about this spot. 
+  // TODO: Add computed observables; get more information about this spot.
 }
 
 //*******************
 var ViewModel = function(){
   console.log("ViewModel");
   var self = this;
+  // Provide global access to this as an object literal
+  view_model = this;
   //
   this.locationList = ko.observableArray([]);
   favSpots.forEach(function(location){
@@ -78,9 +86,29 @@ var ViewModel = function(){
   });
   // Set the Current cool spot
   this.currentSpot = ko.observable(this.locationList()[0]);
-  //
+  // Set up slideout menu
+
+  // Initialize google map
   this.initMap = function(map){
     console.log(" Map: "+map);
+    // lat/long literal for a map and map marker.
+    var williams_lake = {lat: 52.1417, lng: -122.1417};
+    // Constructor that creates a new map - only center and zoom are required
+    //  The first parameter is the element on the page to place the map,
+    map = new google.maps.Map(document.getElementById('map'),{
+      // Set initial location to Williams Lake
+      center: williams_lake,
+      // Zoom can go up to 21.
+      zoom: 13
+    });
+    // Set up the lat/long literal for a map marker.
+    var williams_lake = {lat: 52.1417, lng: -122.1417};
+    // Set the marker with the position and the map object created above.
+    var marker = new google.maps.Marker({
+      position: williams_lake,
+      map: map,
+      title: 'First Marker!!!'
+    });
   };
 }
 
