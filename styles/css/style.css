@@ -3,15 +3,81 @@ Main CSS Style sheet
 Author: Greg Ford, B.Sc.
 Start Date: Dec. 13, 2016*/
 
+<<<<<<< HEAD
+=======
+/*Add for resoponsive design*/
+*{
+  /*default box sizing*/
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  max-width: 900px;
+}
+
+>>>>>>> show-map
 html,body {
   font-family: Arial, sans-serif;
   height: 100%;
   margin: 0;
   padding: 0;
 }
+<<<<<<< HEAD
 body{
-  width: 100%;
+=======
+.container{
   height: 100%;
+  position: relative;
+}
+#map {
+  bottom:0px;
+  border-radius: 24px;
+  height: 100%;
+>>>>>>> show-map
+  width: 100%;
+  position: absolute;
+  right: 0px;
+  z-index: 0;
+
+}
+/*Make sure toggle-button is always on top*/
+.toggle-button{
+  position: absolute;
+  z-index: 50;
+  top: 0;
+}
+#panel{
+  border: 5px;
+  margin-left: 18px;
+}
+.options-box{
+  background: #FFD04C;
+  border-radius: 24px;
+  position: absolute;
+  z-index: 10;
+  box-shadow: 1px 1px 25px #070B57;
+  height: 100%;
+  width: 30%;
+  padding: 5px;
+  text-align: left;
+}
+/*Must have pano for street View to work*/
+#pano {
+  width: 200px;
+  height: 200px;
+}
+#toggle-drawing, #show-listing,
+#hide-listing, #zoom-to-area-button,
+#search-within-time-button{
+  margin: 4px;
+  padding: 2px;
+}
+#zoom-to-area-text{
+  width: 75%;
+}
+#zoom-to-area-button{
+  width: 20%;
+  float: center;
 }
 #map {
   height: 100%;
