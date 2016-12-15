@@ -86,8 +86,21 @@ var ViewModel = function(){
   });
   // Set the Current cool spot
   this.currentSpot = ko.observable(this.locationList()[0]);
+  // *********************
   // Set up slideout menu
-
+  var slideout = new Slideout({
+    'panel': document.getElementById('panel'),
+    'menu': document.getElementById('menu'),
+    'padding': 10,
+    'tolerance': 70,
+    'duration': 350,
+    'easing':'ease-out(.32,2,.55,.27)'
+  });
+  // Toggle button
+  this.menuToggle = function(){
+    slideout.toggle();
+  };
+  //************************
   // Initialize google map
   this.initMap = function(map){
     console.log(" Map: "+map);
