@@ -7,7 +7,6 @@
 // GLOBALS
 //
 var view_model;
-var map;
 // ******************
 // Favorite locations
 var favSpots = [{
@@ -74,6 +73,7 @@ var CoolSpot = function(data){
 
 //*******************
 var ViewModel = function(){
+  var map;
   console.log("ViewModel");
   var self = this;
   // Provide global access to this as an object literal
