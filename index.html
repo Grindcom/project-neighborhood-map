@@ -26,16 +26,16 @@ Start Date: Dec. 13, 2016 -->
 </head>
 <body>
   <div class="container" id="main">
+
     <nav class="options-box" id="menu">
       <hr>
       <h2>Neighborhood Locations</h2>
       <hr>
     </nav>
-    <div id="panel" class="container slideout-panel">
+    <div id="panel" class="">
       <header class="panel-header">
         <!-- TODO: Place button on right(?) -->
-        <button class="toggle-button">☰</button>
-        <h2>Panel</h2>
+        <button class="toggle-button">☰ Menu</button>
       </header>
 
       <div id="map"></div>
@@ -74,8 +74,10 @@ Start Date: Dec. 13, 2016 -->
   var slideout = new Slideout({
     'panel': document.getElementById('panel'),
     'menu': document.getElementById('menu'),
-    'padding': 256,
-    'tolerance': 70
+    'padding': 10,
+    'tolerance': 70,
+    'duration': 350,
+    'easing':'ease-out(.32,2,.55,.27)'
   });
   // Toggle button
   document.querySelector('.toggle-button').addEventListener('click',function(){

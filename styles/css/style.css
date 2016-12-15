@@ -20,10 +20,14 @@ html,body {
   margin: 0;
   padding: 0;
 }
+header{
+  position: absolute;
+  z-index: 100;
+}
 .container{
   max-width: 1600px;
   height: 100%;
-  position: relative;
+  /*position: absolute;*/
   margin: 0;
   /*left: 0;
   right: 0:*/
@@ -41,14 +45,14 @@ html,body {
 }
 /*Make sure toggle-button is always on top*/
 .toggle-button{
-  position: absolute;
   z-index: 50;
   top: 0;
 }
 #panel{
-
+  position: relative;
+  z-index: 0;
   /*border: 5px;*/
-  margin-left: 25px;
+  /*margin-left: 25px;*/
   /*width: 100%;*/
   /*left: 0;
   right: 0;*/
@@ -62,6 +66,7 @@ html,body {
   height: 100%;
   width: 30%;
   padding: 5px;
+  margin-top: 30px;
   text-align: left;
 }
 /*Must have pano for street View to work*/
@@ -84,15 +89,15 @@ html,body {
 }
 /* TODO: This is a temporary fix, need toggle button to move when slideout toggles */
 .toggle-button{
-  margin-left: 150px;
-
+  margin-left: 2px;
+  border-radius: 24px;
 }
 /*The following was found here: http://stackoverflow.com/questions/22996429/override-bootstrap-container-width*/
 @media(min-width: 768px){
   .container{
     /*override*/
-    max-width: 100%;
-    width: auto;
+    /*max-width: 100%;
+    width: auto;*/
   }
 }
 @media(min-width: 992px){
@@ -100,5 +105,9 @@ html,body {
     /*override*/
     max-width: 100%;
     width: auto;
+  }
+  .slideout-panel,
+  .slideout-panel-left{
+    /*transform: translate(350px);*/
   }
 }
