@@ -8,6 +8,71 @@
 //
 var view_model;
 // ******************
+// Map Styles
+// Create styles to use on the map
+//  Find Option list here: https://developers.google.com/maps/documentation/javascript/style-reference
+var mapStyles = [
+  {
+    featureType: 'water',
+    stylers: [
+      // {color: '#474CB2'}
+    ]
+  },{
+    featureType: 'administrative',
+    elementType: 'labels.text.stroke',
+    stylers: [
+      // {color: '#141A8E'},
+      {weight: 2}
+    ]
+  },{
+    featureType: 'administrative',
+    elementType: 'labels.text.fill',
+    stylers: [
+      // {color: '#CD7200'}
+    ]
+  },{
+    featureType: 'road.highway',
+    elementType: 'geometry.stroke',
+    stylers: [
+      // {color: '#7D4600'},
+      {lightness: -40}
+    ]
+  },{
+    featureType: 'road.highway',
+    elementType: 'geometry.fill',
+    stylers: [
+      // {color: '#FFD04C'},
+      {lightness: -40}
+    ]
+  },{
+    featureType: 'transit.station',
+    stylers: [
+      {weight: 9},
+      {hue: '#262CAD'}
+    ]
+  },{
+    featureType: 'transit.station',
+    elementType: 'labels.icon',
+    stylers: [
+      {visibility: 'on'}
+    ]
+  },{
+    featureType: 'landscape.man_made',
+    elementType: 'geometry.fill',
+    stylers:[
+      // {color: '#FFD04C'},
+      {lightness: 20}
+    ]
+  },{
+    featureType: 'landscape.natural',
+    elementType: 'geometry.fill',
+    stylers:[
+      // {color: '#7D4600'},
+      // {lightness: -40}
+    ]
+  }
+]
+// ******************
 // Favorite locations
 var favSpots = [{
   name: 'Oliver Street Bar and Grill',
@@ -53,7 +118,6 @@ var favSpots = [{
 //*******************
 //
 var CoolSpot = function(data){
-  console.log("    CoolSpot");
   //
   this.name = ko.observable(data.name);
   //
@@ -82,9 +146,8 @@ var ViewModel = function(){
   // ***************************
   // List of favorites locations
   this.locationList = ko.observableArray([]);
-  // Load the favorites with static data
+  // Load the favorite location list with static data
   favSpots.forEach(function(location){
-    console.log("  favSpots");
     self.locationList.push(new CoolSpot(location));
   });
   // Set the Current cool spot
@@ -107,16 +170,19 @@ var ViewModel = function(){
   // GOOGLE MAP STUFF
   // Initialize google map
   this.initMap = function(map){
-    console.log(" Map: "+map);
     // lat/long literal for a map and map marker.
     var williams_lake = {lat: 52.1417, lng: -122.1417};
+
+
     // Constructor that creates a new map - only center and zoom are required
     //  The first parameter is the element on the page to place the map,
     map = new google.maps.Map(document.getElementById('map'),{
       // Set initial location to Williams Lake
       center: williams_lake,
       // Zoom can go up to 21.
-      zoom: 13
+      zoom: 13,
+      // Set the styles property to use the above array
+      styles: mapStyles
     });
     // Set up the lat/long literal for a map marker.
     var williams_lake = {lat: 52.1417, lng: -122.1417};
