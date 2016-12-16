@@ -145,13 +145,13 @@ var ViewModel = function(){
   view_model = this;
   // ***************************
   // List of favorites locations
-  this.locationList = ko.observableArray([]);
+  this.spotList = ko.observableArray([]);
   // Load the favorite location list with static data
   favSpots.forEach(function(location){
-    self.locationList.push(new CoolSpot(location));
+    self.spotList.push(new CoolSpot(location));
   });
   // Set the Current cool spot
-  this.currentSpot = ko.observable(this.locationList()[0]);
+  this.currentSpot = ko.observable(this.spotList()[0]);
   // *********************
   // Set up slideout menu
   var slideout = new Slideout({
@@ -172,8 +172,6 @@ var ViewModel = function(){
   this.initMap = function(map){
     // lat/long literal for a map and map marker.
     var williams_lake = {lat: 52.1417, lng: -122.1417};
-
-
     // Constructor that creates a new map - only center and zoom are required
     //  The first parameter is the element on the page to place the map,
     map = new google.maps.Map(document.getElementById('map'),{
