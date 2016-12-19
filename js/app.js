@@ -311,7 +311,7 @@ var ViewModel = function(){
       // Initialize a geocoder
       var geocoder = new google.maps.Geocoder();
       // Get the address to zoom to
-      // TODO: Replace this with a knockout-3 data-bind(ing)
+      // TODO: Replace this with a knockout JS data-bind(ing)
       var address = document.getElementById('zoom-to-area-text').value;
       // Make sure the address isn't blank
       if(address == ''){
@@ -344,7 +344,7 @@ var ViewModel = function(){
       // Initialize the distance matrix
       var distanceMatrixService = new google.maps.DistanceMatrixService;
       // Get the address entered by user
-      // TODO: Change to knockout-3 data-bind(ing)
+      // TODO: Change to knockout JS data-bind(ing)
       var address = document.getElementById('search-within-time-text').value;
       // Check to make sure the address isn't blank
       if(address == ''){
@@ -365,7 +365,7 @@ var ViewModel = function(){
           });
           // address given by user is now the destination
           var destination = address;
-          // TODO: Change to knockout-3 data-bind(ing)
+          // TODO: Change to knockout JS data-bind(ing)
           var mode = document.getElementById('mode').value;
           //
           // Call the google distance matrix service;
@@ -391,7 +391,82 @@ var ViewModel = function(){
   };
   //****************************
   // TODO: Display markers within time/distance
+  //  This is a refactored version of the course example.
+  this.displayMarkersWithinTime = function(response){
+      var origins = response.originAddresses;
+      var destivations = response.destinationAddress;
+      // TODO: Change to knockout JS data-bind(ing)
+      var maxDuration = document.getElementById('max-duration').value;
+      //
+      var atLeastOne = false;
+      var i = 0;
+      // Go through each response address and compare the time it
+      //  takes
+      response.rows.forEach(function(results){
+          results.elements.forEach(function(result){
 
+              // The distance .value is returned in feet - set by the UnitSystem parameter - but the .text is in miles.
+              //  if you want to change the logic to show markers in a distance, you need the value for distance; 'result.distance.value' only need text here tho.
+              var distanceText = null;
+              // Make sure the result has a distance
+              if(result.distance){
+                  distanceText = result.distance.text;
+              }else {
+                  // If not, Skip the rest, there is no valid result
+                  return;
+              }
+              // Duration value is given in seconds, convert to minutes.
+              var duration = result.duration.value/60;
+              // Also need the duration text
+              var durationText = result.duration.text;
+              if(duration <= maxDuration){
+                  //
+                  // set the marker for this result.
+                  // indavidual marker, to be used later in this function as well.
+                  // TODO: This will require extra thought
+                  var marker = null;
+                  if(i < markers.length){
+                      marker = markers[i];
+                      marker.setMap(map);
+                  }
+                  //
+                  // Obviously at least one marker is within range
+                  atLeastOne = true;
+                  // Create a mini infowindow to open immediately and
+                  //  contain the distance and duration
+                  // TODO: Change to knockoutjs data-bind(ing)
+                  var infowindow = new google.maps.InfoWindow({
+                      content: durationText + ' away, about ' + distanceText +
+                      '<div><button type=\"button\" id=\"display-directions\" onClick='+
+                      '\"displayDirections(&quot;'+ origins[i] +'&quot;);\">View Route</button></div>'
+                  });
+
+                  // Assign this local infowindow to the marker so the marker will be re-shown on the larger infowindow
+                  //  if the view changes.
+                  //  The reason to use markers[] instead of marker is because marker is local and markers[] is the actual global value.
+                  if(marker){
+                    // TODO: Requires extra thought
+                      markers[i].infowindow = infowindow;
+                      // event listener for infowindow click, to close this local infowindow.
+                      google.maps.event.addListener(marker, 'click', function(){
+                          marker.infowindow.close();
+                      });
+
+                  }
+                  // Show the marker
+                  infowindow.open(map_global, marker);
+              }
+              // increment i for marker selection
+              i = i + 1;
+          });
+
+      });
+      //
+      if(!atLeastOne){
+          window.alert('Sorry, nothing found within your selected time window.')
+      }
+
+  };
   //*****************************
   // TODO: Search by nearby places
 
