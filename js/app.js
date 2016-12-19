@@ -210,7 +210,7 @@ var ViewModel = function(){
     // createMarker("Test","12 Oliver Street, Williams Lake, BC");
     //***
     // Add Drawing manager for polygon shapes
-    drawingManager(new google.maps.drawing.DrawingManager({
+    self.drawingManager(new google.maps.drawing.DrawingManager({
       drawingMode: google.maps.drawing.OverlayType.POLYGON,
       drawingControl: true,
       drawingControlOptions: {
@@ -225,7 +225,7 @@ var ViewModel = function(){
     //  that checks for the captured polygon
     //  Once there is a polygon this function will call for a search within
     //  the polygon area and eliminate any markers that are not in that area.
-    drawingManager().addListener('overlaycomplete', function(event){
+    self.drawingManager().addListener('overlaycomplete', function(event){
       console.log("Drawing Manager listener");
       //Check for an existing polygon
       if(self.polygon()){
