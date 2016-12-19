@@ -303,7 +303,55 @@ var ViewModel = function(){
 
   //******************************
   // TODO: populateInfoWindow
-
+  // This function will populate the infowindow when the marker is clicked.
+  //  We'll only allow one infowindow at a time.  When clicked it will be
+  //  populated with the related information
+  this.populateInfoWindow = function(marker, infowindow){
+      // Make sure the infowindow is not already opened on this marker
+      if(infowindow.marker != marker){
+          infowindow.marker = marker;
+          // Add the marker title to an element in the infowindow
+          infowindow.setContent('<div>'+ marker.title +'</div>');
+          // Open the content on the map
+          infowindow.open(map_global, marker);
+          // Clear the marker property if the infowindow is closed.
+          infowindow.addListener('closeclick',function(){
+              infowindow.setMarker(null);
+          });
+          // Set up street view stuff
+          var streetViewService = new google.maps.StreetViewService();
+          var radius = 50;// 50 meters
+          //
+          function getStreetView(data, status){
+              if(status == google.maps.StreetViewStatus.OK){
+                  var nearStreetViewLocation = data.location.latLng;
+                  // Get the direction to face in order to see the fron of the building
+                  var heading = google.maps.geometry.spherical.computeHeading(
+                      nearStreetViewLocation, marker.position
+                  );
+                  // Create a div for the street view image
+                  infowindow.setContent('<div>'+marker.title+'</div><div id="pano"></div>');
+                  var panoramaOptions = {
+                      position: nearStreetViewLocation,
+                      pov: {
+                          heading: heading,
+                          pitch: 30// looking up or down at building
+                      }
+                  };
+                  var panorama = new google.maps.StreetViewPanorama(
+                      document.getElementById('pano'), panoramaOptions
+                  );
+              } else {
+                  infowindow.setContent('<div>'+ marker.title +'</div>' + '<div>No Street View Found</div>');
+              }
+          }
+          // Use the streetview service to get the closest streetview image
+          //  within 50 meters of the markers position
+          streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+          // Open the infowindow on the correct marker.
+          infowindow.open(map_global, marker);
+      }
+  };
   //*******************************
   // TODO: Make Marker Icon (possible a helper function)
   // This function will make a custom marker, Using the supplied color as
