@@ -130,6 +130,8 @@ var CoolSpot = function(data){
   //
   this.geoLocation = ko.observable(data.geoLocation);
   //
+  this.markerColor = ko.observable('070B57');
+  //
   this.imgSrc = ko.observable(data.imgSrc);
   //
   this.imgAttribution = ko.observable(data.imgAttribution);
@@ -137,64 +139,8 @@ var CoolSpot = function(data){
   this.reviews = ko.observableArray(data.reviews);
   // TODO: Add computed observables; get more information about this spot, map marker, etc.
   // Map marker for this object
-  this.marker = ko.computed(function(){
-    console.log("Marker, computed");
-    return null;
-  });
+  this.marker = ko.observable(null);
 }
-// Create a google maps marker for the address parameter
-var createMarker = function(title, address){
-    console.log("Create Marker for "+title+" @ "+address);
-  // Get the location literal from a geocoder
-  var markPoint = getGeocode(address);
-  console.log("Create Marker: Mark Point - "+markPoint);
-  // Make a new marker
-  var marker = new google.maps.Marker({
-    position: markPoint,// Location of marker on map
-    title: title,// What will show when the marker is hovered over
-    icon: makeMarkerIcon('070B57'),
-    animation: google.maps.Animation.DROP, // Shake the marker as it appears
-  });
-  console.log("  createMarker: "+marker);
-  return marker;
-}
-// Get the geo coded lat and long from an address
-var getGeocode = function(address){
-  console.log("  Get Geocode for "+address);
-  var self = this;
-  var mapPoint = null;
-  // Initialize a geocoder
-  var geocoder = new google.maps.Geocoder();
-  // Make sure the address isn't blank
-  if(address == ''){
-    window.alert('Address: '+address+', is not valid.');
-  }else {
-      console.log("----getGeocode Address "+address);
-    // Geocode the address/area entered; want the center.
-    geocoder.geocode(
-      { address: address }// keep within city
-      , function(results, status){
-
-        // Center the map on location if an address or area is found
-        console.log("   Map "+map_global);
-        console.log("  Status: "+status);
-        console.log("   Partial Match: " +results[0].partial_match);
-        if(status == google.maps.GeocoderStatus.OK){
-          map_global.setCenter(results[0].geometry.location);
-          map_global.setZoom(18);
-          self.mapPoint = results[0].geometry.location;
-          console.log("   Map Point: " + self.mapPoint);
-          // return self.mapPoint;
-          //
-          testProof();
-        }else {
-          window.alert('Could not find that location - try entering a more specific place');
-        }
-      }
-    );
-  }
-}
-
 //*******************
 var ViewModel = function(){
   // Use for clarity when necessary
@@ -255,30 +201,80 @@ var ViewModel = function(){
     });
     // set up markers for the cool spots
     self.spotList().forEach(function(spot){
-      console.log("Spot List, Address: "+spot.address());
+      // console.log("Spot List, Address: "+spot.address());
       // createMarker(spot.name(),spot.address());
-      testSpot(spot);
+      buildMarker(spot);
     });
     // Testing
-    createMarker("Test","12 Oliver Street, Williams Lake, BC");
+    // createMarker("Test","12 Oliver Street, Williams Lake, BC");
 
 
   };
-
   // *************************************
+  // Called to show cool spot markers
+  this.showSpots = function(){
+    console.log("Show Spots");
+    var mapBounds = new google.maps.LatLngBounds();
+    // Go through the cool spot list and set the map for
+    //  each marker
+    this.spotList().forEach(function(spot){
+      spot.marker().setMap(map_global);
+      // Extend the boundry for the marker if necessary
+      mapBounds.extend(spot.marker().position);
+    });
+    // Set the center of the map by getting the center of
+    //  all of the cool spot list markers
+    map_global.setCenter(mapBounds.getCenter());
+    // Set the bounds of the map by the marker postions
+    map_global.fitBounds(mapBounds);
+  };
+  //************************
+  // Called to hide cool spots
+  this.hideSpots = function(){
+    console.log("Hide Spots");
+    this.spotList().forEach(function(spot){
+      console.log("Set Map");
+      spot.marker().setMap(null);
+    });
+  };
 }
 
 ko.applyBindings(new ViewModel());
 
-function testSpot(tSpot){
-  console.log("Test Spot");
-  tSpot.name = 'Bob';
-}
-function testProof(){
-  console.log("Test Proof");
-view_model.spotList().forEach(function(spot){
-  console.log("--Spot Name: "+spot.name);
-});
+// Build a map marker for the targetted cool spot
+function buildMarker(targetSpot){
+  console.log("Test Spot Name "+targetSpot.name());
+  // Initialize a geocoder
+  var geocoder = new google.maps.Geocoder();
+  // Make sure the address isn't blank
+  if(targetSpot.address() == ''){
+    window.alert('Address: '+targetSpot.address()+', is not valid.');
+  }else {
+      console.log("--Test getGeocode Address "+targetSpot.address());
+    // Geocode the address/area entered; want the center.
+    geocoder.geocode(
+      { address: targetSpot.address() }// keep within city
+      , function(results, status){
+        console.log("----Status: "+status);
+        // Center the map on location if an address or area is found
+        if(status == google.maps.GeocoderStatus.OK){
+          //
+          targetSpot.geoLocation(results[0].geometry.location);
+          // Create marker
+          var marker = new google.maps.Marker({
+            // map: map_global,
+            position: targetSpot.geoLocation(),// Location of marker on map
+            title: targetSpot.name(),// What will show when the marker is hovered over
+            icon: makeMarkerIcon(targetSpot.markerColor()),
+            animation: google.maps.Animation.DROP, // Shake the marker as it appears
+          });
+          targetSpot.marker(marker);
+        }else {
+          window.alert('Could not find that location - try entering a more specific place');
+        }
+      }
+    );
+  }
 }
 
 // ***********************************
