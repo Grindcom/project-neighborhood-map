@@ -7,6 +7,8 @@
 // GLOBALS
 //
 var view_model;
+// Google Map object
+var map;
 // ******************
 // Map Styles
 // Create styles to use on the map
@@ -177,7 +179,6 @@ var getGeocode = function(address){
         console.log("  Status: "+status);
         console.log("   Partial Match: " +results[0].partial_match);
         if(status == google.maps.GeocoderStatus.OK){
-          console.log(" Map "+ view_model.map());
           // self.mapPoint = results[0].geometry.location;
           console.log("   Map Point: " + results.formatted_address);
           // map.setCenter(results[0].geometry.location);
@@ -196,8 +197,7 @@ var getGeocode = function(address){
 var ViewModel = function(){
   // Use for clarity when necessary
   var self = this;
-  // Google Map object
-  var map;
+
   // Global variable to collect drawing data
   var polygon = null;
   // Provide global access to this as an object literal
