@@ -305,7 +305,35 @@ var ViewModel = function(){
   }
   //***************************
   // TODO: Zoom to area function
+  // Zoom to an area selected by user; it gets the users input from the zoom
+  //   to area text box then geocodes it for lat/long information
+  this.zoomToArea = function() {
+      // Initialize a geocoder
+      var geocoder = new google.maps.Geocoder();
+      // Get the address to zoom to
+      // TODO: Replace this with a knockout-3 data-bind(ing)
+      var address = document.getElementById('zoom-to-area-text').value;
+      // Make sure the address isn't blank
+      if(address == ''){
+          window.alert('Please ad an area or address');
+      }else {
+          // Geocode the address/area entered; want the center.
+          geocoder.geocode(
+              { address: address,
+                  componentRestrictions: {locality: 'New York'}// keep within city
+              }, function(results, status){
+                  // Center the map on location if an address or area is found
+                  if(status == google.maps.GeocoderStatus.OK){
+                      map.setCenter(results[0].geometry.location);
+                      map.setZoom(18);
+                  }else {
+                      window.alert('Could not find that location - try entering a more specific place');
+                  }
+              }
+          )
 
+      }
+  };
   //***************************
   // TODO: Within time or distance
 
