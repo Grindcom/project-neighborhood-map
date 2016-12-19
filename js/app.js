@@ -147,7 +147,8 @@ var ViewModel = function(){
   var self = this;
 
   // Global variable to collect drawing data
-  var polygon = null;
+  this.polygon = ko.observable(null);
+  this.drawingManager = ko.observable(null);
   // Provide global access to this as an object literal
   view_model = this;
   // ***************************
@@ -207,9 +208,60 @@ var ViewModel = function(){
     });
     // Testing
     // createMarker("Test","12 Oliver Street, Williams Lake, BC");
+    //***
+    // Add Drawing manager for polygon shapes
+    drawingManager(new google.maps.drawing.DrawingManager({
+      drawingMode: google.maps.drawing.OverlayType.POLYGON,
+      drawingControl: true,
+      drawingControlOptions: {
+        position: google.maps.ControlPosition.TOP_RIGHT,
+        drawingModes: [
+          google.maps.drawing.OverlayType.POLYGON
+        ]
+      }
+    }));
 
+    // Add event listener for drawing manager
+    //  that checks for the captured polygon
+    //  Once there is a polygon this function will call for a search within
+    //  the polygon area and eliminate any markers that are not in that area.
+    drawingManager().addListener('overlaycomplete', function(event){
+      console.log("Drawing Manager listener");
+      //Check for an existing polygon
+      if(self.polygon()){
+        // if there is get rid of it
+        self.polygon().setMap(null);
+        // Hide any listings
+        hideMarkers(markers);
+      }
+      // Switching the drawing mode to the HAND (no longer drawing)
+      //  So the user can click the markers
+      drawingManager.setDrawingMode(null);
+      // Create a new editable polygon from the overlay
+      self.polygon(event.overlay);
+      console.log("polygon " + polygon().getPath());
+      // Make it so the user can change the shape without re-drawing
+      self.polygon().setEditable(true);
+      // Make it so the user can move the shape around the map
+      self.polygon().setDraggable(true);
+      // Search inside the polygon
+      searchWithinPolygon();
+      // Ensure the search is re-done if the polygon is changed
+      self.polygon().getPath().addListener('set_at', searchWithinPolygon);
+      self.polygon().getPath().addListener('insert_at', searchWithinPolygon);
+      // Get the area of the polygon, result is in meters
+      var area = google.maps.geometry.spherical.computeArea(self.polygon().getPath());
+      area = area.toFixed(2);
+      console.log("  Area is " + area + "m");
+      // Get the length of the ploygon lines, result is in meters
+      var length = google.maps.geometry.spherical.computeLength(self.polygon().getPath());
+      length = length.toFixed(2);
+      console.log("  Length is " + length + "m");
+      // Show length and area
+      window.alert("The Area is " + area + " square meters and the Length is " + length + "m");
+    });
 
-  };
+  };// END OF initMap
   // *************************************
   // Called to show cool spot markers
   this.showSpots = function(){
@@ -238,8 +290,19 @@ var ViewModel = function(){
     });
   };
   //***************************
-  // TODO: Drawing function
-
+  // TODO: Toggle Drawing function
+  // Toggle the drawing manager.
+  function toggleDrawing(drawingManager){
+      if(drawingManager.map){
+          drawingManager.setMap(null);
+          // Remove any polygon
+          if(self.polygon()){
+              self.polygon().setMap(null);
+          }
+      }else{
+          drawingManager.setMap(map);
+      }
+  }
   //***************************
   // TODO: Zoom to area function
 
