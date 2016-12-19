@@ -614,7 +614,7 @@ var ViewModel = function(){
               //  html div that we want it to go to
               //  Show polyline of route.
               var directionsDisplay = new google.maps.DirectionsRenderer({
-                  map: map,
+                  map: map_global,
                   directions: response,
                   draggable: true,
                   polylineOptions: {
