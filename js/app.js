@@ -589,7 +589,44 @@ var ViewModel = function(){
   };
   //*******************************
   // TODO: Display Directions
+  // Information for browser based call can be found https://developers.google.com/maps/documentation/directions/
+  // And for using the API from JavaScript, here: https://developers.google.com/maps/documentation/javascript/directions
+  this.displayDirections = function(position){
+      hideMarkers(markers);
+      // Get the destination address from the user entered value.
+      // TODO: Change to knockoutjs data-bind(ing)
+      var destinationAddress = document.getElementById('search-within-time-text').value;
+      // Get the mode again from the user entered value
+      // TODO: Change to knockoutjs data-bind(ing)
+      var mode = document.getElementById('mode').value;
+      //
+      directionsService.route({
+          // The origin is the passed in marker's position
+          origin: position,
+          // The destination is user entered address.
+          destination: destinationAddress,
+          travelMode: google.maps.TravelMode[mode]
+      },function(response, status){
+          // If the route is valid and call is successful...
+          if(status === google.maps.DirectionsStatus.OK){
+              // Get a directions renderer to place the route on the map, could also
+              //  show the directions by setting the 'panel' parameter with the
+              //  html div that we want it to go to
+              //  Show polyline of route.
+              var directionsDisplay = new google.maps.DirectionsRenderer({
+                  map: map,
+                  directions: response,
+                  draggable: true,
+                  polylineOptions: {
+                      strokeColor: 'green'
+                  }
+              });
+          }else {
+              window.alert('Directions request failed due to '+status);
+          }
+      });
 
+  };
 }
 
 ko.applyBindings(new ViewModel());
