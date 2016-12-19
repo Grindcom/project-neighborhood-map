@@ -203,7 +203,7 @@ var ViewModel = function(){
     self.spotList().forEach(function(spot){
       // console.log("Spot List, Address: "+spot.address());
       // createMarker(spot.name(),spot.address());
-      buildMarker(spot);
+      self.buildMarker(spot);
     });
     // Testing
     // createMarker("Test","12 Oliver Street, Williams Lake, BC");
@@ -258,6 +258,43 @@ var ViewModel = function(){
   //******************************
   // TODO: Create markers for places
 
+  //*******************************
+  // TODO: Build cool spot markers
+  // Build a map marker for the targetted cool spot
+  this.buildMarker = function(targetSpot){
+    console.log("Test Spot Name "+targetSpot.name());
+    // Initialize a geocoder
+    var geocoder = new google.maps.Geocoder();
+    // Make sure the address isn't blank
+    if(targetSpot.address() == ''){
+      window.alert('Address: '+targetSpot.address()+', is not valid.');
+    }else {
+        console.log("--Test getGeocode Address "+targetSpot.address());
+      // Geocode the address/area entered; want the center.
+      geocoder.geocode(
+        { address: targetSpot.address() }// keep within city
+        , function(results, status){
+          console.log("----Status: "+status);
+          // Center the map on location if an address or area is found
+          if(status == google.maps.GeocoderStatus.OK){
+            //
+            targetSpot.geoLocation(results[0].geometry.location);
+            // Create marker
+            var marker = new google.maps.Marker({
+              // map: map_global,
+              position: targetSpot.geoLocation(),// Location of marker on map
+              title: targetSpot.name(),// What will show when the marker is hovered over
+              icon: self.makeMarkerIcon(targetSpot.markerColor()),
+              animation: google.maps.Animation.DROP, // Shake the marker as it appears
+            });
+            targetSpot.marker(marker);
+          }else {
+            window.alert('Could not find that location - try entering a more specific place');
+          }
+        }
+      );
+    }
+  };
   //******************************
   // TODO: get place details
 
@@ -291,41 +328,7 @@ var ViewModel = function(){
 
 ko.applyBindings(new ViewModel());
 
-// Build a map marker for the targetted cool spot
-function buildMarker(targetSpot){
-  console.log("Test Spot Name "+targetSpot.name());
-  // Initialize a geocoder
-  var geocoder = new google.maps.Geocoder();
-  // Make sure the address isn't blank
-  if(targetSpot.address() == ''){
-    window.alert('Address: '+targetSpot.address()+', is not valid.');
-  }else {
-      console.log("--Test getGeocode Address "+targetSpot.address());
-    // Geocode the address/area entered; want the center.
-    geocoder.geocode(
-      { address: targetSpot.address() }// keep within city
-      , function(results, status){
-        console.log("----Status: "+status);
-        // Center the map on location if an address or area is found
-        if(status == google.maps.GeocoderStatus.OK){
-          //
-          targetSpot.geoLocation(results[0].geometry.location);
-          // Create marker
-          var marker = new google.maps.Marker({
-            // map: map_global,
-            position: targetSpot.geoLocation(),// Location of marker on map
-            title: targetSpot.name(),// What will show when the marker is hovered over
-            icon: makeMarkerIcon(targetSpot.markerColor()),
-            animation: google.maps.Animation.DROP, // Shake the marker as it appears
-          });
-          targetSpot.marker(marker);
-        }else {
-          window.alert('Could not find that location - try entering a more specific place');
-        }
-      }
-    );
-  }
-}
+
 
 // ***********************************
 //  HELPER FUNCTIONS
