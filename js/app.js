@@ -149,6 +149,9 @@ var ViewModel = function(){
   // Global variable to collect drawing data
   this.polygon = ko.observable(null);
   this.drawingManager = ko.observable(null);
+  // *************************
+  // List of markers for places
+  this.placeMarkers = ko.observableArray([]);
   // Provide global access to this as an object literal
   view_model = this;
   // ***************************
@@ -472,10 +475,71 @@ var ViewModel = function(){
 
   //******************************
   // TODO: Search by text places
-
+  // Called when 'go' button for search places is clicked
+  //  It will go a nearby search using the entered query string or place.
+  function textSearchPlaces(){
+      var bounds = map_global.getBounds();
+      hideMarkers(placeMarkers);
+      var placesService = new google.maps.places.PlacesService(map);
+      // TODO: Change to knockoutjs data-bind(ing)
+      placesService.textSearch({
+          query:
+           document.getElementById('places-search').value,
+          bounds: bounds
+      },function(results, status){
+          if(status === google.maps.places.PlacesServiceStatus.OK){
+              createMarkersForPlaces(results);
+          }
+      });
+  }
   //******************************
   // TODO: Create markers for places
-
+  // Create markers for all places that are searched for 
+  this.createMarkersForPlaces = function(places){
+      var mapBounds = new google.maps.LatLngBounds();
+      places.forEach(function(place){
+          // Marker icon parameters
+          var icon = {
+              url: place.icon,// special icon
+              size: new google.maps.Size(35, 35),
+              origin: new google.maps.Point(0,0),
+              anchor: new google.maps.Point(15,34),
+              scaledSize: new google.maps.Size(25,25)
+          };
+          // Create a marker
+          var marker = new google.maps.Marker({
+              map: map_global,
+              icon: icon,
+              title: place.name,
+              position: place.geometry.location,
+              id: place.place_id
+          });
+          // Info window for place search result information details
+          var placeInfoWindow = new google.maps.InfoWindow();
+          // Event listener for when the marker is clicked
+          marker.addListener('click',function(){
+              if(placeInfoWindow.marker == this){
+                  console.log("This infowindow already is on this marker");
+              }else {
+                // TODO: Make this function
+                  getPlacesDetails(this, placeInfoWindow);
+              }
+          });
+          // Add markers to the placeMarker array
+          self.placeMarkers().push(marker);
+          if(place.geometry.viewport){
+              // Only geocodes have viewport.
+              mapBounds.union(place.geometry.viewport);
+          }else {// adjust map bounds if necessary to acomadate results
+              mapBounds.extend(place.geometry.location);
+          }
+          // Move the center of the map to the marker that
+          //  is in the middle of of the grouping
+          map_global.setCenter(mapBounds.getCenter());
+          // Make sure the map shows all markers
+          map_global.fitBounds(mapBounds);
+      });
+  };
   //*******************************
   // TODO: Build cool spot markers
   // Build a map marker for the targetted cool spot
