@@ -147,7 +147,7 @@ var createMarker = function(title, address){
     console.log("Create Marker for "+title+" @ "+address);
   // Get the location literal from a geocoder
   var markPoint = getGeocode(address);
-  console.log("   Mark Point: "+markPoint);
+  console.log("Create Marker: Mark Point - "+markPoint);
   // Make a new marker
   var marker = new google.maps.Marker({
     position: markPoint,// Location of marker on map
@@ -155,6 +155,7 @@ var createMarker = function(title, address){
     icon: makeMarkerIcon('070B57'),
     animation: google.maps.Animation.DROP, // Shake the marker as it appears
   });
+  console.log("  createMarker: "+marker);
   return marker;
 }
 // Get the geo coded lat and long from an address
@@ -167,13 +168,13 @@ var getGeocode = function(address){
   // Make sure the address isn't blank
   if(address == ''){
     window.alert('Address: '+address+', is not valid.');
-    return null;
   }else {
-      console.log("getGeocode "+address);
+      console.log("----getGeocode Address "+address);
     // Geocode the address/area entered; want the center.
     geocoder.geocode(
       { address: address }// keep within city
       , function(results, status){
+
         // Center the map on location if an address or area is found
         console.log("   Map "+map_global);
         console.log("  Status: "+status);
@@ -181,18 +182,17 @@ var getGeocode = function(address){
         if(status == google.maps.GeocoderStatus.OK){
           map_global.setCenter(results[0].geometry.location);
           map_global.setZoom(18);
-          // self.mapPoint = results[0].geometry.location;
-          console.log("   Map Point: " + results.formatted_address);
-          // map.setCenter(results[0].geometry.location);
-          // map.setZoom(18);
+          self.mapPoint = results[0].geometry.location;
+          console.log("   Map Point: " + self.mapPoint);
+          // return self.mapPoint;
+          //
+          testProof();
         }else {
           window.alert('Could not find that location - try entering a more specific place');
         }
       }
     );
-
   }
-  return self.mapPoint;
 }
 
 //*******************
@@ -254,12 +254,14 @@ var ViewModel = function(){
       title: 'Center of Williams Lake'
     });
     // set up markers for the cool spots
-    // self.spotList().forEach(function(spot){
-    //   console.log("Spot List, Address: "+spot.address());
-    //   createMarker(spot.name(),spot.address());
-    // });
+    self.spotList().forEach(function(spot){
+      console.log("Spot List, Address: "+spot.address());
+      // createMarker(spot.name(),spot.address());
+      testSpot(spot);
+    });
     // Testing
     createMarker("Test","12 Oliver Street, Williams Lake, BC");
+
 
   };
 
@@ -267,6 +269,17 @@ var ViewModel = function(){
 }
 
 ko.applyBindings(new ViewModel());
+
+function testSpot(tSpot){
+  console.log("Test Spot");
+  tSpot.name = 'Bob';
+}
+function testProof(){
+  console.log("Test Proof");
+view_model.spotList().forEach(function(spot){
+  console.log("--Spot Name: "+spot.name);
+});
+}
 
 // ***********************************
 //  HELPER FUNCTIONS
