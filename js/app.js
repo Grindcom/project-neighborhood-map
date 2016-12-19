@@ -494,7 +494,7 @@ var ViewModel = function(){
   }
   //******************************
   // TODO: Create markers for places
-  // Create markers for all places that are searched for 
+  // Create markers for all places that are searched for
   this.createMarkersForPlaces = function(places){
       var mapBounds = new google.maps.LatLngBounds();
       places.forEach(function(place){
@@ -579,7 +579,56 @@ var ViewModel = function(){
   };
   //******************************
   // TODO: get place details
+  //  The PLACE DETAILS search; most detailed so it is only executed
+  //      when a marker is selected, indicating the user wants more
+  //      details about the place
+  this.getPlacesDetails = function(marker,detailInfoWindow){
+      var service = new google.maps.places.PlacesService(map_global);
+      service.getDetails({
+          placeId: marker.id
+      }, function(place, status){
+          if(status === google.maps.places.PlacesServiceStatus.OK){
+            // TODO: Change to knockoutJS data-bind(ing's)
+              // Set the marker property on this infowindow so it isn't created again.
+              detailInfoWindow.marker = marker;
+              var innerHTML = '<div>';
+              if(place.name){
+                  innerHTML += '<strong>'+ place.name +'</strong>';
+              }
+              if(place.formatted_address){
+                  innerHTML += '<br>' + place.formatted_address;
+              }
+              if(place.formatted_phone_number){
+                  innerHTML += '<br>' + place.formatted_phone_number;
+              }
+              if(place.opening_hours){
+                  innerHTML += '<br><br><strong>Hours:</strong><br>'+
+                  place.opening_hours.weekday_text[0]+'<br>'+
+                  place.opening_hours.weekday_text[1]+'<br>'+
+                  place.opening_hours.weekday_text[2]+'<br>'+
+                  place.opening_hours.weekday_text[3]+'<br>'+
+                  place.opening_hours.weekday_text[4]+'<br>'+
+                  place.opening_hours.weekday_text[5]+'<br>'+
+                  place.opening_hours.weekday_text[6]+'<br>';
+              }
+              // TODO: Change to knockoutJS data-bind(ing's)
+              if(place.photos){
+                  //
+                  innerHTML += '<br><br><img src="'+ place.photos[0].getUrl({maxHeight: 100, maxWidth: 200}) + '">';
 
+              }
+              // TODO: Change to knockoutJS data-bind(ing's)
+              // Place HTML
+              detailInfoWindow.setContent(innerHTML);
+              // Open marker info window with details
+              detailInfoWindow.open(map, marker);
+              // add a close click listener
+              detailInfoWindow.addListener('closeclick',function(){
+                  detailInfoWindow.marker = null;
+              });
+          }
+      });
+  };
   //*****************************
   // TODO: Search within polygon
 
