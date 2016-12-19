@@ -93,7 +93,7 @@ var favSpots = [{
 },{
   name: 'Bean Counter Bistro & Coffee Bar',
   type: 'Bistro',
-  address: '180 3 Ave N, Williams Lake, BC',
+  address: 'Suite B 180 3rd Ave N, Williams Lake, BC',
   geoLocation: '',
   reviews: [],
   imgSrc: '',
@@ -109,7 +109,7 @@ var favSpots = [{
 },{
   name: 'The Laughing Loon',
   type: 'Pub',
-  address: '1730A Broadway Ave S, Williams Lake, BC',
+  address: '1730 Broadway Ave S, Williams Lake, BC',
   geoLocation: '',
   reviews: [],
   imgSrc: '',
@@ -118,6 +118,7 @@ var favSpots = [{
 //*******************
 //
 var CoolSpot = function(data){
+  var self = this;
   //
   this.name = ko.observable(data.name);
   //
@@ -132,7 +133,63 @@ var CoolSpot = function(data){
   this.imgAttribution = ko.observable(data.imgAttribution);
   //
   this.reviews = ko.observableArray(data.reviews);
-  // TODO: Add computed observables; get more information about this spot.
+  // TODO: Add computed observables; get more information about this spot, map marker, etc.
+  // Map marker for this object
+  this.marker = ko.computed(function(){
+    console.log("Marker, computed");
+    return null;
+  });
+}
+// Create a google maps marker for the address parameter
+var createMarker = function(title, address){
+    console.log("Create Marker for "+title+" @ "+address);
+  // Get the location literal from a geocoder
+  var markPoint = getGeocode(address);
+  console.log("   Mark Point: "+markPoint);
+  // Make a new marker
+  var marker = new google.maps.Marker({
+    position: markPoint,// Location of marker on map
+    title: title,// What will show when the marker is hovered over
+    icon: makeMarkerIcon('070B57'),
+    animation: google.maps.Animation.DROP, // Shake the marker as it appears
+  });
+  return marker;
+}
+// Get the geo coded lat and long from an address
+var getGeocode = function(address){
+  console.log("  Get Geocode for "+address);
+  var self = this;
+  var mapPoint = null;
+  // Initialize a geocoder
+  var geocoder = new google.maps.Geocoder();
+  // Make sure the address isn't blank
+  if(address == ''){
+    window.alert('Address: '+address+', is not valid.');
+    return null;
+  }else {
+      console.log("getGeocode "+address);
+    // Geocode the address/area entered; want the center.
+    geocoder.geocode(
+      { address: address,
+        componentRestrictions: {locality: 'BC'}// keep within city
+      }, function(results, status){
+        // Center the map on location if an address or area is found
+        console.log("  Status: "+status);
+        console.log("   Partial Match: " +results[0].partial_match);
+        if(status == google.maps.GeocoderStatus.OK){
+          console.log(" Map "+ view_model.map());
+          // self.mapPoint = results[0].geometry.location;
+          console.log("   Map Point: " + results.formatted_address);
+          // map.setCenter(results[0].geometry.location);
+          // map.setZoom(18);
+        }else {
+          window.alert('Could not find that location - try entering a more specific place');
+        }
+      }
+    );
+
+  }
+  return self.mapPoint;
 }
 
 //*******************
@@ -141,6 +198,8 @@ var ViewModel = function(){
   var self = this;
   // Google Map object
   var map;
+  // Global variable to collect drawing data
+  var polygon = null;
   // Provide global access to this as an object literal
   view_model = this;
   // ***************************
@@ -190,9 +249,33 @@ var ViewModel = function(){
       map: map,
       title: 'Center of Williams Lake'
     });
+    // set up markers for the cool spots
+    self.spotList().forEach(function(spot){
+      console.log("Spot List, Address: "+spot.address());
+      createMarker(spot.name(),spot.address());
+    });
+
   };
 
   // *************************************
 }
 
 ko.applyBindings(new ViewModel());
+
+// ***********************************
+//  HELPER FUNCTIONS
+// This function will make a custom marker, Using the supplied color as
+//  its base.
+function makeMarkerIcon(markerColor){
+  // This method of created an image is replaced in v3.10 of the Google Maps JavaScript API (see https://developers.google.com/maps/documentation/javascript/markers for mor detailse)
+  var markerImage = new google.maps.MarkerImage(
+    // place.icon url
+    'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
+    '|40|_|%E2%80%A2',
+    new google.maps.Size(21,34),
+    new google.maps.Point(0,0),
+    new google.maps.Point(10,34),
+    new google.maps.Size(21,34)
+  );
+  return markerImage;
+}
