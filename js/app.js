@@ -237,6 +237,42 @@ var ViewModel = function(){
       spot.marker().setMap(null);
     });
   };
+  //***************************
+  // TODO: Drawing function
+
+  //***************************
+  // TODO: Zoom to area function
+
+  //***************************
+  // TODO: Within time or distance
+
+  //****************************
+  // TODO: Display markers within time/distance
+
+  //*****************************
+  // TODO: Search by nearby places
+
+  //******************************
+  // TODO: Search by text places
+
+  //******************************
+  // TODO: Create markers for places
+
+  //******************************
+  // TODO: get place details
+
+  //*****************************
+  // TODO: Search within polygon
+
+  //******************************
+  // TODO: populateInfoWindow
+
+  //*******************************
+  // TODO: Make Marker Icon (possible a helper function)
+
+  //*******************************
+  // TODO: Display Directions
+
 }
 
 ko.applyBindings(new ViewModel());
