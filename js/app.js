@@ -336,7 +336,59 @@ var ViewModel = function(){
   };
   //***************************
   // TODO: Within time or distance
+  // Search for listings within a given time from a location given by user.
+  //  User can also supply mode of travel.
+  // TODO: Add distance functionality
+  this.searchWithinTime = function(){
+      //
+      // Initialize the distance matrix
+      var distanceMatrixService = new google.maps.DistanceMatrixService;
+      // Get the address entered by user
+      // TODO: Change to knockout-3 data-bind(ing)
+      var address = document.getElementById('search-within-time-text').value;
+      // Check to make sure the address isn't blank
+      if(address == ''){
+          window.alert('You need to enter an address');
+      }else {
+          //
+          // TODO: Add hideMarkers function somewhere
+          hideMarkers(self.spotList().markers);
+          // Use the distance matrix service to calculate the duration of the
+          //  routes between all the markers (origin), and the destination address
+          //  entered by the user.
+          var origins = [];
+          self.spotList().markers.forEach(function(marker){
+              // Put all the origins into an origin matrix
+              //
+              // TODO: Convert and add an origins array
+              origins.push(marker.position);
+          });
+          // address given by user is now the destination
+          var destination = address;
+          // TODO: Change to knockout-3 data-bind(ing)
+          var mode = document.getElementById('mode').value;
+          //
+          // Call the google distance matrix service;
+          //  Find the how to here: https://developers.google.com/maps/documentation/javascript/distancematrix
+          distanceMatrixService.getDistanceMatrix({
+              origins: origins,
+              destinations: [destination],
+              travelMode: google.maps.TravelMode[mode],
+              unitSystem: google.maps.UnitSystem.IMPERIAL,
+          }, function(response, status){
+              // This is the callback function that results will be sent to
+              //
+              if(status !== google.maps.DistanceMatrixStatus.OK){
+                  window.alert("Error was: " + status);
+              }else {
+                  //
+                  // TODO: Add this function somewhere
+                  displayMarkersWithinTime(response);
+              }
+          });
 
+      }
+  };
   //****************************
   // TODO: Display markers within time/distance
 
