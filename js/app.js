@@ -8,7 +8,7 @@
 //
 var view_model;
 // Google Map object
-var map;
+var map_global;
 // ******************
 // Map Styles
 // Create styles to use on the map
@@ -172,13 +172,15 @@ var getGeocode = function(address){
       console.log("getGeocode "+address);
     // Geocode the address/area entered; want the center.
     geocoder.geocode(
-      { address: address,
-        componentRestrictions: {locality: 'BC'}// keep within city
-      }, function(results, status){
+      { address: address }// keep within city
+      , function(results, status){
         // Center the map on location if an address or area is found
+        console.log("   Map "+map_global);
         console.log("  Status: "+status);
         console.log("   Partial Match: " +results[0].partial_match);
         if(status == google.maps.GeocoderStatus.OK){
+          map_global.setCenter(results[0].geometry.location);
+          map_global.setZoom(18);
           // self.mapPoint = results[0].geometry.location;
           console.log("   Map Point: " + results.formatted_address);
           // map.setCenter(results[0].geometry.location);
@@ -241,19 +243,23 @@ var ViewModel = function(){
       // Set the styles property to use the above array
       styles: mapStyles
     });
+    // Set the new map to the Global map variable
+    map_global = map;
     // Set up the lat/long literal for a map marker.
     var williams_lake = {lat: 52.1417, lng: -122.1417};
     // Set the marker with the position and the map object created above.
     var marker = new google.maps.Marker({
       position: williams_lake,
-      map: map,
+      map: map_global,
       title: 'Center of Williams Lake'
     });
     // set up markers for the cool spots
-    self.spotList().forEach(function(spot){
-      console.log("Spot List, Address: "+spot.address());
-      createMarker(spot.name(),spot.address());
-    });
+    // self.spotList().forEach(function(spot){
+    //   console.log("Spot List, Address: "+spot.address());
+    //   createMarker(spot.name(),spot.address());
+    // });
+    // Testing
+    createMarker("Test","12 Oliver Street, Williams Lake, BC");
 
   };
 
