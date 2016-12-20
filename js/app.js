@@ -758,10 +758,22 @@ var ViewModel = function(){
 
   };
   //**********************************
-  // TODO: Make a function that does something when the 
+  // TODO: Make a function that does something when the
   //  spot name is clicked
-  this.shakeNameMarker = function(){
-    console.log("Shake Name");
+  this.shakeNameMarker = function(obj){
+    console.log("Shake Name: " + obj.name());
+    //
+    self.currentSpot(obj);
+    // TODO: Figure out why the currentSpot isn't working
+    // console.log("Current Name: "+self.currentSpot.name());
+    // If the marker isn't visible show it with a drop
+    if(map_global.getBounds().contains(obj.marker().getPosition()) === null){
+      obj.marker().setMap(map_global);
+    }else {
+      console.log(" What?");
+      obj.marker().setAnimation(google.maps.Animation.BOUNCE);
+    }
+
   };
 }
 
