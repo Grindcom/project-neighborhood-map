@@ -45,7 +45,8 @@ Start Date: Dec. 13, 2016 -->
       <hr>
       <div id="locations" class="location-list">
         <ul data-bind="foreach: spotList">
-          <li data-bind="text: name">
+          <!-- TODO: Change mouse pointer on hover over -->
+          <li data-bind="text: name, click: $parent.shakeNameMarker">
 
           </li>
         </ul>

@@ -757,6 +757,12 @@ var ViewModel = function(){
       });
 
   };
+  //**********************************
+  // TODO: Make a function that does something when the 
+  //  spot name is clicked
+  this.shakeNameMarker = function(){
+    console.log("Shake Name");
+  };
 }
 
 ko.applyBindings(new ViewModel());
