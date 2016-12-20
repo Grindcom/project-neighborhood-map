@@ -177,7 +177,8 @@ var ViewModel = function(){
     'duration': 350,
     'easing':'ease-out(.32,2,.55,.27)'
   });
-  // Toggle button
+  // ************************
+  // Menu Toggle button
   this.menuToggle = function(){
     slideout.toggle();
   };
