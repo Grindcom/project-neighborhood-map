@@ -177,19 +177,23 @@ var ViewModel = function(){
     'duration': 350,
     'easing':'ease-out(.32,2,.55,.27)'
   });
-  // ************************
-  // Menu Toggle button
+  /**
+  * @description Menu Toggle button
+  */
   this.menuToggle = function(){
     slideout.toggle();
   };
-  //************************
-  // GOOGLE MAP STUFF
-  // Initialize google map
+  /**
+  * @description GOOGLE MAP STUFF,
+  * Initialize google map
+  * @param {google.maps} map
+  */
   this.initMap = function(map){
     // lat/long literal for a map and map marker.
     var williams_lake = {lat: 52.1417, lng: -122.1417};
     // Constructor that creates a new map - only center and zoom are required
     //  The first parameter is the element on the page to place the map,
+    // TODO: Change to a jQuery reference(?)
     map = new google.maps.Map(document.getElementById('map'),{
       // Set initial location to Williams Lake
       center: williams_lake,
@@ -214,8 +218,6 @@ var ViewModel = function(){
       // createMarker(spot.name(),spot.address());
       self.buildMarker(spot);
     });
-    // Testing
-    // createMarker("Test","12 Oliver Street, Williams Lake, BC");
     //***
     // Add Drawing manager for polygon shapes
     self.drawingManager(new google.maps.drawing.DrawingManager({
@@ -270,14 +272,17 @@ var ViewModel = function(){
     });
 
   };// END OF initMap
-  // *************************************
-  // Called to show cool spot markers
+  /**
+  * @desctiption Called to show cool spot
+  * markers on the map. Uses the ViewModel
+  * (self) spotList.
+  */
   this.showSpots = function(){
     console.log("Show Spots");
     var mapBounds = new google.maps.LatLngBounds();
     // Go through the cool spot list and set the map for
     //  each marker
-    this.spotList().forEach(function(spot){
+    self.spotList().forEach(function(spot){
       spot.marker().setMap(map_global);
       // Extend the boundry for the marker if necessary
       mapBounds.extend(spot.marker().position);
@@ -288,8 +293,9 @@ var ViewModel = function(){
     // Set the bounds of the map by the marker postions
     map_global.fitBounds(mapBounds);
   };
-  //************************
-  // Called to hide cool spots
+  /**
+  * @description Called to hide cool spots
+  */
   this.hideSpots = function(){
     console.log("Hide Spots");
     this.spotList().forEach(function(spot){
@@ -297,12 +303,14 @@ var ViewModel = function(){
       spot.marker().setMap(null);
     });
   };
-  //***************************
-  // Toggle Drawing function
-  // Toggling the drawing manager
-  //  Either starts drawing mode so user can
-  //  draw a polyline box around an area of
-  //  interst OR clears the box from the map.
+  /**
+  * @description Toggle Drawing function
+  * Toggling the drawing manager
+  *  Either starts drawing mode so user can
+  *  draw a polyline box around an area of
+  *  interst OR clears the box from the map.
+  * Uses the viewModel drawingManager.
+  */
   this.toggleDrawing = function(){
       if(self.drawingManager().map){
           self.drawingManager().setMap(null);
@@ -315,31 +323,34 @@ var ViewModel = function(){
           self.drawingManager().setMap(map_global);
       }
   };
-  //***************************
-  // TODO: Zoom to area function
-  // Zoom to an area selected by user; it gets the users input from the zoom
-  //   to area text box then geocodes it for lat/long information
+  /**
+  * @description Zoom to area function
+  * Zoom to an area selected by user; it
+  * gets the users input from the zoom
+  * to area text box then geocodes it for
+  * lat/long information
+  */
   this.zoomToArea = function() {
-    console.log("Zoom to Area");
       // Initialize a geocoder
       var geocoder = new google.maps.Geocoder();
       // Get the address to zoom to
-
       // Make sure the address isn't blank
       if(self.favouriteArea() == ''){
+        // Alert user if there is nothing in
+        // the favouriteArea text box
           window.alert('Please ad an area or address');
       }else {
           // Geocode the address/area entered; want the center.
           geocoder.geocode(
               { address: self.favouriteArea()
               }, function(results, status){
-                console.log("  Zoom: status "+status);
                   // Center the map on location if an address or area is found
                   if(status == google.maps.GeocoderStatus.OK){
                     console.log("    location "+results[0].geometry.location );
                       map_global.setCenter(results[0].geometry.location);
                       map_global.setZoom(15);
                   }else {
+                    // Alert the user if the status is anything but OK
                       window.alert('Could not find that location - try entering a more specific place');
                   }
               }
@@ -347,11 +358,12 @@ var ViewModel = function(){
 
       }
   };
-  //***************************
-  // TODO: Within time or distance
-  // Search for listings within a given time from a location given by user.
-  //  User can also supply mode of travel.
-  // TODO: Add distance functionality
+  /**
+  * @description Search for listings within a given time
+  * from a location given by user.
+  *  User can also supply mode of travel.
+  * TODO: Add distance functionality
+  */
   this.searchWithinTime = function(){
       //
       // Initialize the distance matrix
@@ -361,10 +373,11 @@ var ViewModel = function(){
       var address = document.getElementById('search-within-time-text').value;
       // Check to make sure the address isn't blank
       if(address == ''){
+        // Alert the user that there is nothing
+        // in the search by time text box.
           window.alert('You need to enter an address');
       }else {
-          //
-          // TODO: Add hideMarkers function somewhere
+          // Hide all markers first.
           hideMarkers(self.spotList().markers);
           // Use the distance matrix service to calculate the duration of the
           //  routes between all the markers (origin), and the destination address
@@ -372,8 +385,6 @@ var ViewModel = function(){
           var origins = [];
           self.spotList().markers.forEach(function(marker){
               // Put all the origins into an origin matrix
-              //
-              // TODO: Convert and add an origins array
               origins.push(marker.position);
           });
           // address given by user is now the destination
@@ -395,16 +406,20 @@ var ViewModel = function(){
                   window.alert("Error was: " + status);
               }else {
                   //
-                  // TODO: Add this function somewhere
+                  // Display all markers that are within the
+                  // given time period
                   displayMarkersWithinTime(response);
               }
           });
 
       }
   };
-  //****************************
-  // TODO: Display markers within time/distance
-  //  This is a refactored version of the course example.
+  /**
+  * @description Display markers within time/distance
+  *  This is a refactored version of the course example.
+  * @param {object[]} response - result of a call to distanceMatrixService.getDistanceMatrix.
+  * Sent to a callback function which calls this one.
+  */
   this.displayMarkersWithinTime = function(response){
       var origins = response.originAddresses;
       var destivations = response.destinationAddress;
@@ -476,6 +491,7 @@ var ViewModel = function(){
       });
       //
       if(!atLeastOne){
+        // Alert user that there wasn't any good results found
           window.alert('Sorry, nothing found within your selected time window.')
       }
 
