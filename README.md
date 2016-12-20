@@ -5,14 +5,15 @@ A single page application utilizing the google maps API (and others) to showcase
 This app starts with a google map located at Williams Lake, BC - including a marker at the center of the town.  There is a hidden, slideout menu that can be accessed by a standard 'hamburger' button.
 ### Search
 Once the menu is toggled open, the user will see a list of cool spots as well as multiple ways to explore the 'Puddle' for fun things to do.  There are a few search options:  
-1. Show all the cool spot markers at once; they will drop in from the top of the map.
-2. Sketch out an area of interest to see if there are any cool spots inside it.
-  1. If there are any markers outside the sketch they will either be hidden or not shown.
-  2. When toggled off the sketch will be removed, but the markers will be left in place.
+1. Show all the cool spot markers at once; they will drop in from the top of the map.  
+2. Sketch out an area of interest to see if there are any cool spots inside it;  
+  1. If there are any markers outside the sketch they will either be hidden or not shown.  
+  2. When toggled off the sketch will be removed, but the markers will be left in place.  
 3. Search by an area; enter an area of interest in the text box then click zoom to swoop in to the zone.
-4. Select one of the listed cool spots;
-    1. If all markers are showing, the selected spots' marker will shake.
-    2. If the markers aren't showing, the spots' marker will drop onto the map.
+4. Select one of the listed cool spots;  
+    1. If all markers are showing, the selected spots' marker will shake.  
+    2. If the markers aren't showing, the spots' marker will drop onto the map.  
+
 ## Requirements
 
 ### Libraries, Frameworks and API's
