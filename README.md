@@ -5,7 +5,7 @@ A single page application utilizing the google maps API (and others) to showcase
 This app starts with a google map located at Williams Lake, BC - including a marker at the center of the town.  There is a hidden, slideout menu that can be accessed by a standard 'hamburger' button.
 ### Search
 Once the menu is toggled open, the user will see a list of cool spots as well as multiple ways to explore the 'Puddle' for fun things to do.  There are a few search options:  
-1.  A
+1. A 
 2.  B
  1. c
 3. C
