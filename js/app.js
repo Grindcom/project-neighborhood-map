@@ -149,9 +149,13 @@ var ViewModel = function(){
   // Global variable to collect drawing data
   this.polygon = ko.observable(null);
   this.drawingManager = ko.observable(null);
+  //**************************
+  // TEXT BOXES
+  this.favouriteArea = ko.observable('');
   // *************************
   // List of markers for places
   this.placeMarkers = ko.observableArray([]);
+  // **************************
   // Provide global access to this as an object literal
   view_model = this;
   // ***************************
@@ -312,24 +316,25 @@ var ViewModel = function(){
   // Zoom to an area selected by user; it gets the users input from the zoom
   //   to area text box then geocodes it for lat/long information
   this.zoomToArea = function() {
+    console.log("Zoom to Area");
       // Initialize a geocoder
       var geocoder = new google.maps.Geocoder();
       // Get the address to zoom to
-      // TODO: Replace this with a knockout JS data-bind(ing)
-      var address = document.getElementById('zoom-to-area-text').value;
+
       // Make sure the address isn't blank
-      if(address == ''){
+      if(self.favouriteArea() == ''){
           window.alert('Please ad an area or address');
       }else {
           // Geocode the address/area entered; want the center.
           geocoder.geocode(
-              { address: address,
-                  componentRestrictions: {locality: 'New York'}// keep within city
+              { address: self.favouriteArea()
               }, function(results, status){
+                console.log("  Zoom: status "+status);
                   // Center the map on location if an address or area is found
                   if(status == google.maps.GeocoderStatus.OK){
-                      map.setCenter(results[0].geometry.location);
-                      map.setZoom(18);
+                    console.log("    location "+results[0].geometry.location );
+                      map_global.setCenter(results[0].geometry.location);
+                      map_global.setZoom(15);
                   }else {
                       window.alert('Could not find that location - try entering a more specific place');
                   }
