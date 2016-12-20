@@ -239,19 +239,19 @@ var ViewModel = function(){
       }
       // Switching the drawing mode to the HAND (no longer drawing)
       //  So the user can click the markers
-      drawingManager.setDrawingMode(null);
+      self.drawingManager().setDrawingMode(null);
       // Create a new editable polygon from the overlay
       self.polygon(event.overlay);
-      console.log("polygon " + polygon().getPath());
+      console.log("polygon " + self.polygon().getPath());
       // Make it so the user can change the shape without re-drawing
       self.polygon().setEditable(true);
       // Make it so the user can move the shape around the map
       self.polygon().setDraggable(true);
       // Search inside the polygon
-      searchWithinPolygon();
+      self.searchWithinPolygon();
       // Ensure the search is re-done if the polygon is changed
-      self.polygon().getPath().addListener('set_at', searchWithinPolygon);
-      self.polygon().getPath().addListener('insert_at', searchWithinPolygon);
+      self.polygon().getPath().addListener('set_at', self.searchWithinPolygon);
+      self.polygon().getPath().addListener('insert_at', self.searchWithinPolygon);
       // Get the area of the polygon, result is in meters
       var area = google.maps.geometry.spherical.computeArea(self.polygon().getPath());
       area = area.toFixed(2);
@@ -295,7 +295,8 @@ var ViewModel = function(){
   //***************************
   // TODO: Toggle Drawing function
   // Toggle the drawing manager.
-  function toggleDrawing(drawingManager){
+  this.toggleDrawing = function(drawingManager){
+    console.log("Toggle Drawing");
       if(drawingManager.map){
           drawingManager.setMap(null);
           // Remove any polygon
@@ -303,9 +304,9 @@ var ViewModel = function(){
               self.polygon().setMap(null);
           }
       }else{
-          drawingManager.setMap(map);
+          self.drawingManager().setMap(map_global);
       }
-  }
+  };
   //***************************
   // TODO: Zoom to area function
   // Zoom to an area selected by user; it gets the users input from the zoom
@@ -430,7 +431,7 @@ var ViewModel = function(){
                   var marker = null;
                   if(i < markers.length){
                       marker = markers[i];
-                      marker.setMap(map);
+                      marker.setMap(map_global);
                   }
                   //
                   // Obviously at least one marker is within range
@@ -631,7 +632,18 @@ var ViewModel = function(){
   };
   //*****************************
   // TODO: Search within polygon
-
+  // Search inside the polygon
+  this.searchWithinPolygon = function(){
+      self.spotList().forEach(function(spot){
+        console.log(" Search Within Poly: target "+spot.name());
+          // Check if the markers position is inside the global polygon area
+          if(google.maps.geometry.poly.containsLocation(spot.marker().position,self.polygon())){
+              spot.marker().setMap(map_global);// its inside so add it to the map
+          }else{
+              spot.marker().setMap(null);// its not inside so remove it
+          }
+      });
+  };
   //******************************
   // TODO: populateInfoWindow
   // This function will populate the infowindow when the marker is clicked.
