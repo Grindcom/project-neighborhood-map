@@ -297,17 +297,20 @@ var ViewModel = function(){
     });
   };
   //***************************
-  // TODO: Toggle Drawing function
-  // Toggle the drawing manager.
-  this.toggleDrawing = function(drawingManager){
-    console.log("Toggle Drawing");
-      if(drawingManager.map){
-          drawingManager.setMap(null);
+  // Toggle Drawing function
+  // Toggling the drawing manager
+  //  Either starts drawing mode so user can
+  //  draw a polyline box around an area of
+  //  interst OR clears the box from the map.
+  this.toggleDrawing = function(){
+      if(self.drawingManager().map){
+          self.drawingManager().setMap(null);
           // Remove any polygon
           if(self.polygon()){
               self.polygon().setMap(null);
           }
       }else{
+        console.log("  No map");
           self.drawingManager().setMap(map_global);
       }
   };
@@ -767,7 +770,9 @@ var ViewModel = function(){
     // TODO: Figure out why the currentSpot isn't working
     // console.log("Current Name: "+self.currentSpot.name());
     // If the marker isn't visible show it with a drop
-    if(map_global.getBounds().contains(obj.marker().getPosition()) === null){
+    if(map_global.getBounds().contains(obj.marker().getPosition()) !== null){
+      // TODO: Find a way to check when the marker is on the map.  This way doesn't work.
+      console.log(" Why?");
       obj.marker().setMap(map_global);
     }else {
       console.log(" What?");
