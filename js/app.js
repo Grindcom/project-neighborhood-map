@@ -199,6 +199,24 @@ var ViewModel = function(){
       center: williams_lake,
       // Zoom can go up to 21.
       zoom: 13,
+      mapTypeControl: true,
+      // Place the Map control in the top right corner
+      mapTypeControlOptions: {
+        position: google.maps.ControlPosition.TOP_RIGHT
+      },
+      zoomControl: true,
+      // Place the zoom control at top right
+      // but below the type control
+      zoomControlOptions: {
+        position: google.maps.ControlPosition.RIGHT_TOP
+      },
+      // scaleControl: true,
+      streetViewControl: true,
+      // Place the street view icon below the zoom control
+      // In the top right area of the map
+      streetViewControlOptions: {
+        position: google.maps.ControlPosition.RIGHT_TOP
+      },
       // Set the styles property to use the above array
       styles: mapStyles
     });
@@ -312,16 +330,16 @@ var ViewModel = function(){
   * Uses the viewModel drawingManager.
   */
   this.toggleDrawing = function(){
-      if(self.drawingManager().map){
-          self.drawingManager().setMap(null);
-          // Remove any polygon
-          if(self.polygon()){
-              self.polygon().setMap(null);
-          }
-      }else{
-        console.log("  No map");
-          self.drawingManager().setMap(map_global);
+    if(self.drawingManager().map){
+      self.drawingManager().setMap(null);
+      // Remove any polygon
+      if(self.polygon()){
+        self.polygon().setMap(null);
       }
+    }else{
+      console.log("  No map");
+      self.drawingManager().setMap(map_global);
+    }
   };
   /**
   * @description Zoom to area function
@@ -331,32 +349,32 @@ var ViewModel = function(){
   * lat/long information
   */
   this.zoomToArea = function() {
-      // Initialize a geocoder
-      var geocoder = new google.maps.Geocoder();
-      // Get the address to zoom to
-      // Make sure the address isn't blank
-      if(self.favouriteArea() == ''){
-        // Alert user if there is nothing in
-        // the favouriteArea text box
-          window.alert('Please ad an area or address');
-      }else {
-          // Geocode the address/area entered; want the center.
-          geocoder.geocode(
-              { address: self.favouriteArea()
-              }, function(results, status){
-                  // Center the map on location if an address or area is found
-                  if(status == google.maps.GeocoderStatus.OK){
-                    console.log("    location "+results[0].geometry.location );
-                      map_global.setCenter(results[0].geometry.location);
-                      map_global.setZoom(15);
-                  }else {
-                    // Alert the user if the status is anything but OK
-                      window.alert('Could not find that location - try entering a more specific place');
-                  }
-              }
-          )
+    // Initialize a geocoder
+    var geocoder = new google.maps.Geocoder();
+    // Get the address to zoom to
+    // Make sure the address isn't blank
+    if(self.favouriteArea() == ''){
+      // Alert user if there is nothing in
+      // the favouriteArea text box
+      window.alert('Please ad an area or address');
+    }else {
+      // Geocode the address/area entered; want the center.
+      geocoder.geocode(
+        { address: self.favouriteArea()
+        }, function(results, status){
+          // Center the map on location if an address or area is found
+          if(status == google.maps.GeocoderStatus.OK){
+            console.log("    location "+results[0].geometry.location );
+            map_global.setCenter(results[0].geometry.location);
+            map_global.setZoom(15);
+          }else {
+            // Alert the user if the status is anything but OK
+            window.alert('Could not find that location - try entering a more specific place');
+          }
+        }
+      )
 
-      }
+    }
   };
   /**
   * @description Search for listings within a given time
@@ -365,135 +383,135 @@ var ViewModel = function(){
   * TODO: Add distance functionality
   */
   this.searchWithinTime = function(){
-      //
-      // Initialize the distance matrix
-      var distanceMatrixService = new google.maps.DistanceMatrixService;
-      // Get the address entered by user
+    //
+    // Initialize the distance matrix
+    var distanceMatrixService = new google.maps.DistanceMatrixService;
+    // Get the address entered by user
+    // TODO: Change to knockout JS data-bind(ing)
+    var address = document.getElementById('search-within-time-text').value;
+    // Check to make sure the address isn't blank
+    if(address == ''){
+      // Alert the user that there is nothing
+      // in the search by time text box.
+      window.alert('You need to enter an address');
+    }else {
+      // Hide all markers first.
+      hideMarkers(self.spotList().markers);
+      // Use the distance matrix service to calculate the duration of the
+      //  routes between all the markers (origin), and the destination address
+      //  entered by the user.
+      var origins = [];
+      self.spotList().markers.forEach(function(marker){
+        // Put all the origins into an origin matrix
+        origins.push(marker.position);
+      });
+      // address given by user is now the destination
+      var destination = address;
       // TODO: Change to knockout JS data-bind(ing)
-      var address = document.getElementById('search-within-time-text').value;
-      // Check to make sure the address isn't blank
-      if(address == ''){
-        // Alert the user that there is nothing
-        // in the search by time text box.
-          window.alert('You need to enter an address');
-      }else {
-          // Hide all markers first.
-          hideMarkers(self.spotList().markers);
-          // Use the distance matrix service to calculate the duration of the
-          //  routes between all the markers (origin), and the destination address
-          //  entered by the user.
-          var origins = [];
-          self.spotList().markers.forEach(function(marker){
-              // Put all the origins into an origin matrix
-              origins.push(marker.position);
-          });
-          // address given by user is now the destination
-          var destination = address;
-          // TODO: Change to knockout JS data-bind(ing)
-          var mode = document.getElementById('mode').value;
+      var mode = document.getElementById('mode').value;
+      //
+      // Call the google distance matrix service;
+      //  Find the how to here: https://developers.google.com/maps/documentation/javascript/distancematrix
+      distanceMatrixService.getDistanceMatrix({
+        origins: origins,
+        destinations: [destination],
+        travelMode: google.maps.TravelMode[mode],
+        unitSystem: google.maps.UnitSystem.IMPERIAL,
+      }, function(response, status){
+        // This is the callback function that results will be sent to
+        //
+        if(status !== google.maps.DistanceMatrixStatus.OK){
+          window.alert("Error was: " + status);
+        }else {
           //
-          // Call the google distance matrix service;
-          //  Find the how to here: https://developers.google.com/maps/documentation/javascript/distancematrix
-          distanceMatrixService.getDistanceMatrix({
-              origins: origins,
-              destinations: [destination],
-              travelMode: google.maps.TravelMode[mode],
-              unitSystem: google.maps.UnitSystem.IMPERIAL,
-          }, function(response, status){
-              // This is the callback function that results will be sent to
-              //
-              if(status !== google.maps.DistanceMatrixStatus.OK){
-                  window.alert("Error was: " + status);
-              }else {
-                  //
-                  // Display all markers that are within the
-                  // given time period
-                  displayMarkersWithinTime(response);
-              }
-          });
+          // Display all markers that are within the
+          // given time period
+          displayMarkersWithinTime(response);
+        }
+      });
 
-      }
+    }
   };
   /**
-  * @description Display markers within time/distance
+  * @description Display markers within time/distance. As filtered by the calling function.
   *  This is a refactored version of the course example.
   * @param {object[]} response - result of a call to distanceMatrixService.getDistanceMatrix.
   * Sent to a callback function which calls this one.
   */
   this.displayMarkersWithinTime = function(response){
-      var origins = response.originAddresses;
-      var destivations = response.destinationAddress;
-      // TODO: Change to knockout JS data-bind(ing)
-      var maxDuration = document.getElementById('max-duration').value;
-      //
-      var atLeastOne = false;
-      var i = 0;
-      // Go through each response address and compare the time it
-      //  takes
-      response.rows.forEach(function(results){
-          results.elements.forEach(function(result){
+    var origins = response.originAddresses;
+    var destivations = response.destinationAddress;
+    // TODO: Change to knockout JS data-bind(ing)
+    var maxDuration = document.getElementById('max-duration').value;
+    //
+    var atLeastOne = false;
+    var i = 0;
+    // Go through each response address and compare the time it
+    //  takes
+    response.rows.forEach(function(results){
+      results.elements.forEach(function(result){
 
-              // The distance .value is returned in feet - set by the UnitSystem parameter - but the .text is in miles.
-              //  if you want to change the logic to show markers in a distance, you need the value for distance; 'result.distance.value' only need text here tho.
-              var distanceText = null;
-              // Make sure the result has a distance
-              if(result.distance){
-                  distanceText = result.distance.text;
-              }else {
-                  // If not, Skip the rest, there is no valid result
-                  return;
-              }
-              // Duration value is given in seconds, convert to minutes.
-              var duration = result.duration.value/60;
-              // Also need the duration text
-              var durationText = result.duration.text;
-              if(duration <= maxDuration){
-                  //
-                  // set the marker for this result.
-                  // indavidual marker, to be used later in this function as well.
-                  // TODO: This will require extra thought
-                  var marker = null;
-                  if(i < markers.length){
-                      marker = markers[i];
-                      marker.setMap(map_global);
-                  }
-                  //
-                  // Obviously at least one marker is within range
-                  atLeastOne = true;
-                  // Create a mini infowindow to open immediately and
-                  //  contain the distance and duration
-                  // TODO: Change to knockoutjs data-bind(ing)
-                  var infowindow = new google.maps.InfoWindow({
-                      content: durationText + ' away, about ' + distanceText +
-                      '<div><button type=\"button\" id=\"display-directions\" onClick='+
-                      '\"displayDirections(&quot;'+ origins[i] +'&quot;);\">View Route</button></div>'
-                  });
-
-                  // Assign this local infowindow to the marker so the marker will be re-shown on the larger infowindow
-                  //  if the view changes.
-                  //  The reason to use markers[] instead of marker is because marker is local and markers[] is the actual global value.
-                  if(marker){
-                    // TODO: Requires extra thought
-                      markers[i].infowindow = infowindow;
-                      // event listener for infowindow click, to close this local infowindow.
-                      google.maps.event.addListener(marker, 'click', function(){
-                          marker.infowindow.close();
-                      });
-
-                  }
-                  // Show the marker
-                  infowindow.open(map_global, marker);
-              }
-              // increment i for marker selection
-              i = i + 1;
+        // The distance .value is returned in feet - set by the UnitSystem parameter - but the .text is in miles.
+        //  if you want to change the logic to show markers in a distance, you need the value for distance; 'result.distance.value' only need text here tho.
+        var distanceText = null;
+        // Make sure the result has a distance
+        if(result.distance){
+          distanceText = result.distance.text;
+        }else {
+          // If not, Skip the rest, there is no valid result
+          return;
+        }
+        // Duration value is given in seconds, convert to minutes.
+        var duration = result.duration.value/60;
+        // Also need the duration text
+        var durationText = result.duration.text;
+        if(duration <= maxDuration){
+          //
+          // set the marker for this result.
+          // indavidual marker, to be used later in this function as well.
+          // TODO: This will require extra thought
+          var marker = null;
+          if(i < markers.length){
+            marker = markers[i];
+            marker.setMap(map_global);
+          }
+          //
+          // Obviously at least one marker is within range
+          atLeastOne = true;
+          // Create a mini infowindow to open immediately and
+          //  contain the distance and duration
+          // TODO: Change to knockoutjs data-bind(ing)
+          var infowindow = new google.maps.InfoWindow({
+            content: durationText + ' away, about ' + distanceText +
+            '<div><button type=\"button\" id=\"display-directions\" onClick='+
+            '\"displayDirections(&quot;'+ origins[i] +'&quot;);\">View Route</button></div>'
           });
 
+          // Assign this local infowindow to the marker so the marker will be re-shown on the larger infowindow
+          //  if the view changes.
+          //  The reason to use markers[] instead of marker is because marker is local and markers[] is the actual global value.
+          if(marker){
+            // TODO: Requires extra thought
+            markers[i].infowindow = infowindow;
+            // event listener for infowindow click, to close this local infowindow.
+            google.maps.event.addListener(marker, 'click', function(){
+              marker.infowindow.close();
+            });
+
+          }
+          // Show the marker
+          infowindow.open(map_global, marker);
+        }
+        // increment i for marker selection
+        i = i + 1;
       });
-      //
-      if(!atLeastOne){
-        // Alert user that there wasn't any good results found
-          window.alert('Sorry, nothing found within your selected time window.')
-      }
+
+    });
+    //
+    if(!atLeastOne){
+      // Alert user that there wasn't any good results found
+      window.alert('Sorry, nothing found within your selected time window.')
+    }
 
   };
   //*****************************
@@ -504,67 +522,67 @@ var ViewModel = function(){
   // Called when 'go' button for search places is clicked
   //  It will go a nearby search using the entered query string or place.
   function textSearchPlaces(){
-      var bounds = map_global.getBounds();
-      hideMarkers(placeMarkers);
-      var placesService = new google.maps.places.PlacesService(map);
-      // TODO: Change to knockoutjs data-bind(ing)
-      placesService.textSearch({
-          query:
-           document.getElementById('places-search').value,
-          bounds: bounds
-      },function(results, status){
-          if(status === google.maps.places.PlacesServiceStatus.OK){
-              createMarkersForPlaces(results);
-          }
-      });
+    var bounds = map_global.getBounds();
+    hideMarkers(placeMarkers);
+    var placesService = new google.maps.places.PlacesService(map);
+    // TODO: Change to knockoutjs data-bind(ing)
+    placesService.textSearch({
+      query:
+      document.getElementById('places-search').value,
+      bounds: bounds
+    },function(results, status){
+      if(status === google.maps.places.PlacesServiceStatus.OK){
+        createMarkersForPlaces(results);
+      }
+    });
   }
   //******************************
   // TODO: Create markers for places
   // Create markers for all places that are searched for
   this.createMarkersForPlaces = function(places){
-      var mapBounds = new google.maps.LatLngBounds();
-      places.forEach(function(place){
-          // Marker icon parameters
-          var icon = {
-              url: place.icon,// special icon
-              size: new google.maps.Size(35, 35),
-              origin: new google.maps.Point(0,0),
-              anchor: new google.maps.Point(15,34),
-              scaledSize: new google.maps.Size(25,25)
-          };
-          // Create a marker
-          var marker = new google.maps.Marker({
-              map: map_global,
-              icon: icon,
-              title: place.name,
-              position: place.geometry.location,
-              id: place.place_id
-          });
-          // Info window for place search result information details
-          var placeInfoWindow = new google.maps.InfoWindow();
-          // Event listener for when the marker is clicked
-          marker.addListener('click',function(){
-              if(placeInfoWindow.marker == this){
-                  console.log("This infowindow already is on this marker");
-              }else {
-                // TODO: Make this function
-                  getPlacesDetails(this, placeInfoWindow);
-              }
-          });
-          // Add markers to the placeMarker array
-          self.placeMarkers().push(marker);
-          if(place.geometry.viewport){
-              // Only geocodes have viewport.
-              mapBounds.union(place.geometry.viewport);
-          }else {// adjust map bounds if necessary to acomadate results
-              mapBounds.extend(place.geometry.location);
-          }
-          // Move the center of the map to the marker that
-          //  is in the middle of of the grouping
-          map_global.setCenter(mapBounds.getCenter());
-          // Make sure the map shows all markers
-          map_global.fitBounds(mapBounds);
+    var mapBounds = new google.maps.LatLngBounds();
+    places.forEach(function(place){
+      // Marker icon parameters
+      var icon = {
+        url: place.icon,// special icon
+        size: new google.maps.Size(35, 35),
+        origin: new google.maps.Point(0,0),
+        anchor: new google.maps.Point(15,34),
+        scaledSize: new google.maps.Size(25,25)
+      };
+      // Create a marker
+      var marker = new google.maps.Marker({
+        map: map_global,
+        icon: icon,
+        title: place.name,
+        position: place.geometry.location,
+        id: place.place_id
       });
+      // Info window for place search result information details
+      var placeInfoWindow = new google.maps.InfoWindow();
+      // Event listener for when the marker is clicked
+      marker.addListener('click',function(){
+        if(placeInfoWindow.marker == this){
+          console.log("This infowindow already is on this marker");
+        }else {
+          // TODO: Make this function
+          getPlacesDetails(this, placeInfoWindow);
+        }
+      });
+      // Add markers to the placeMarker array
+      self.placeMarkers().push(marker);
+      if(place.geometry.viewport){
+        // Only geocodes have viewport.
+        mapBounds.union(place.geometry.viewport);
+      }else {// adjust map bounds if necessary to acomadate results
+        mapBounds.extend(place.geometry.location);
+      }
+      // Move the center of the map to the marker that
+      //  is in the middle of of the grouping
+      map_global.setCenter(mapBounds.getCenter());
+      // Make sure the map shows all markers
+      map_global.fitBounds(mapBounds);
+    });
   };
   //*******************************
   // TODO: Build cool spot markers
@@ -577,7 +595,7 @@ var ViewModel = function(){
     if(targetSpot.address() == ''){
       window.alert('Address: '+targetSpot.address()+', is not valid.');
     }else {
-        console.log("--Test getGeocode Address "+targetSpot.address());
+      console.log("--Test getGeocode Address "+targetSpot.address());
       // Geocode the address/area entered; want the center.
       geocoder.geocode(
         { address: targetSpot.address() }// keep within city
@@ -609,65 +627,65 @@ var ViewModel = function(){
   //      when a marker is selected, indicating the user wants more
   //      details about the place
   this.getPlacesDetails = function(marker,detailInfoWindow){
-      var service = new google.maps.places.PlacesService(map_global);
-      service.getDetails({
-          placeId: marker.id
-      }, function(place, status){
-          if(status === google.maps.places.PlacesServiceStatus.OK){
-            // TODO: Change to knockoutJS data-bind(ing's)
-              // Set the marker property on this infowindow so it isn't created again.
-              detailInfoWindow.marker = marker;
-              var innerHTML = '<div>';
-              if(place.name){
-                  innerHTML += '<strong>'+ place.name +'</strong>';
-              }
-              if(place.formatted_address){
-                  innerHTML += '<br>' + place.formatted_address;
-              }
-              if(place.formatted_phone_number){
-                  innerHTML += '<br>' + place.formatted_phone_number;
-              }
-              if(place.opening_hours){
-                  innerHTML += '<br><br><strong>Hours:</strong><br>'+
-                  place.opening_hours.weekday_text[0]+'<br>'+
-                  place.opening_hours.weekday_text[1]+'<br>'+
-                  place.opening_hours.weekday_text[2]+'<br>'+
-                  place.opening_hours.weekday_text[3]+'<br>'+
-                  place.opening_hours.weekday_text[4]+'<br>'+
-                  place.opening_hours.weekday_text[5]+'<br>'+
-                  place.opening_hours.weekday_text[6]+'<br>';
-              }
-              // TODO: Change to knockoutJS data-bind(ing's)
-              if(place.photos){
-                  //
-                  innerHTML += '<br><br><img src="'+ place.photos[0].getUrl({maxHeight: 100, maxWidth: 200}) + '">';
+    var service = new google.maps.places.PlacesService(map_global);
+    service.getDetails({
+      placeId: marker.id
+    }, function(place, status){
+      if(status === google.maps.places.PlacesServiceStatus.OK){
+        // TODO: Change to knockoutJS data-bind(ing's)
+        // Set the marker property on this infowindow so it isn't created again.
+        detailInfoWindow.marker = marker;
+        var innerHTML = '<div>';
+        if(place.name){
+          innerHTML += '<strong>'+ place.name +'</strong>';
+        }
+        if(place.formatted_address){
+          innerHTML += '<br>' + place.formatted_address;
+        }
+        if(place.formatted_phone_number){
+          innerHTML += '<br>' + place.formatted_phone_number;
+        }
+        if(place.opening_hours){
+          innerHTML += '<br><br><strong>Hours:</strong><br>'+
+          place.opening_hours.weekday_text[0]+'<br>'+
+          place.opening_hours.weekday_text[1]+'<br>'+
+          place.opening_hours.weekday_text[2]+'<br>'+
+          place.opening_hours.weekday_text[3]+'<br>'+
+          place.opening_hours.weekday_text[4]+'<br>'+
+          place.opening_hours.weekday_text[5]+'<br>'+
+          place.opening_hours.weekday_text[6]+'<br>';
+        }
+        // TODO: Change to knockoutJS data-bind(ing's)
+        if(place.photos){
+          //
+          innerHTML += '<br><br><img src="'+ place.photos[0].getUrl({maxHeight: 100, maxWidth: 200}) + '">';
 
-              }
-              // TODO: Change to knockoutJS data-bind(ing's)
-              // Place HTML
-              detailInfoWindow.setContent(innerHTML);
-              // Open marker info window with details
-              detailInfoWindow.open(map, marker);
-              // add a close click listener
-              detailInfoWindow.addListener('closeclick',function(){
-                  detailInfoWindow.marker = null;
-              });
-          }
-      });
+        }
+        // TODO: Change to knockoutJS data-bind(ing's)
+        // Place HTML
+        detailInfoWindow.setContent(innerHTML);
+        // Open marker info window with details
+        detailInfoWindow.open(map, marker);
+        // add a close click listener
+        detailInfoWindow.addListener('closeclick',function(){
+          detailInfoWindow.marker = null;
+        });
+      }
+    });
   };
   //*****************************
   // TODO: Search within polygon
   // Search inside the polygon
   this.searchWithinPolygon = function(){
-      self.spotList().forEach(function(spot){
-        console.log(" Search Within Poly: target "+spot.name());
-          // Check if the markers position is inside the global polygon area
-          if(google.maps.geometry.poly.containsLocation(spot.marker().position,self.polygon())){
-              spot.marker().setMap(map_global);// its inside so add it to the map
-          }else{
-              spot.marker().setMap(null);// its not inside so remove it
-          }
-      });
+    self.spotList().forEach(function(spot){
+      console.log(" Search Within Poly: target "+spot.name());
+      // Check if the markers position is inside the global polygon area
+      if(google.maps.geometry.poly.containsLocation(spot.marker().position,self.polygon())){
+        spot.marker().setMap(map_global);// its inside so add it to the map
+      }else{
+        spot.marker().setMap(null);// its not inside so remove it
+      }
+    });
   };
   //******************************
   // TODO: populateInfoWindow
@@ -675,50 +693,50 @@ var ViewModel = function(){
   //  We'll only allow one infowindow at a time.  When clicked it will be
   //  populated with the related information
   this.populateInfoWindow = function(marker, infowindow){
-      // Make sure the infowindow is not already opened on this marker
-      if(infowindow.marker != marker){
-          infowindow.marker = marker;
-          // Add the marker title to an element in the infowindow
-          infowindow.setContent('<div>'+ marker.title +'</div>');
-          // Open the content on the map
-          infowindow.open(map_global, marker);
-          // Clear the marker property if the infowindow is closed.
-          infowindow.addListener('closeclick',function(){
-              infowindow.setMarker(null);
-          });
-          // Set up street view stuff
-          var streetViewService = new google.maps.StreetViewService();
-          var radius = 50;// 50 meters
-          //
-          function getStreetView(data, status){
-              if(status == google.maps.StreetViewStatus.OK){
-                  var nearStreetViewLocation = data.location.latLng;
-                  // Get the direction to face in order to see the fron of the building
-                  var heading = google.maps.geometry.spherical.computeHeading(
-                      nearStreetViewLocation, marker.position
-                  );
-                  // Create a div for the street view image
-                  infowindow.setContent('<div>'+marker.title+'</div><div id="pano"></div>');
-                  var panoramaOptions = {
-                      position: nearStreetViewLocation,
-                      pov: {
-                          heading: heading,
-                          pitch: 30// looking up or down at building
-                      }
-                  };
-                  var panorama = new google.maps.StreetViewPanorama(
-                      document.getElementById('pano'), panoramaOptions
-                  );
-              } else {
-                  infowindow.setContent('<div>'+ marker.title +'</div>' + '<div>No Street View Found</div>');
-              }
-          }
-          // Use the streetview service to get the closest streetview image
-          //  within 50 meters of the markers position
-          streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
-          // Open the infowindow on the correct marker.
-          infowindow.open(map_global, marker);
+    // Make sure the infowindow is not already opened on this marker
+    if(infowindow.marker != marker){
+      infowindow.marker = marker;
+      // Add the marker title to an element in the infowindow
+      infowindow.setContent('<div>'+ marker.title +'</div>');
+      // Open the content on the map
+      infowindow.open(map_global, marker);
+      // Clear the marker property if the infowindow is closed.
+      infowindow.addListener('closeclick',function(){
+        infowindow.setMarker(null);
+      });
+      // Set up street view stuff
+      var streetViewService = new google.maps.StreetViewService();
+      var radius = 50;// 50 meters
+      //
+      function getStreetView(data, status){
+        if(status == google.maps.StreetViewStatus.OK){
+          var nearStreetViewLocation = data.location.latLng;
+          // Get the direction to face in order to see the fron of the building
+          var heading = google.maps.geometry.spherical.computeHeading(
+            nearStreetViewLocation, marker.position
+          );
+          // Create a div for the street view image
+          infowindow.setContent('<div>'+marker.title+'</div><div id="pano"></div>');
+          var panoramaOptions = {
+            position: nearStreetViewLocation,
+            pov: {
+              heading: heading,
+              pitch: 30// looking up or down at building
+            }
+          };
+          var panorama = new google.maps.StreetViewPanorama(
+            document.getElementById('pano'), panoramaOptions
+          );
+        } else {
+          infowindow.setContent('<div>'+ marker.title +'</div>' + '<div>No Street View Found</div>');
+        }
       }
+      // Use the streetview service to get the closest streetview image
+      //  within 50 meters of the markers position
+      streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+      // Open the infowindow on the correct marker.
+      infowindow.open(map_global, marker);
+    }
   };
   //*******************************
   // TODO: Make Marker Icon (possible a helper function)
@@ -742,39 +760,39 @@ var ViewModel = function(){
   // Information for browser based call can be found https://developers.google.com/maps/documentation/directions/
   // And for using the API from JavaScript, here: https://developers.google.com/maps/documentation/javascript/directions
   this.displayDirections = function(position){
-      hideMarkers(markers);
-      // Get the destination address from the user entered value.
-      // TODO: Change to knockoutjs data-bind(ing)
-      var destinationAddress = document.getElementById('search-within-time-text').value;
-      // Get the mode again from the user entered value
-      // TODO: Change to knockoutjs data-bind(ing)
-      var mode = document.getElementById('mode').value;
-      //
-      directionsService.route({
-          // The origin is the passed in marker's position
-          origin: position,
-          // The destination is user entered address.
-          destination: destinationAddress,
-          travelMode: google.maps.TravelMode[mode]
-      },function(response, status){
-          // If the route is valid and call is successful...
-          if(status === google.maps.DirectionsStatus.OK){
-              // Get a directions renderer to place the route on the map, could also
-              //  show the directions by setting the 'panel' parameter with the
-              //  html div that we want it to go to
-              //  Show polyline of route.
-              var directionsDisplay = new google.maps.DirectionsRenderer({
-                  map: map_global,
-                  directions: response,
-                  draggable: true,
-                  polylineOptions: {
-                      strokeColor: 'green'
-                  }
-              });
-          }else {
-              window.alert('Directions request failed due to '+status);
+    hideMarkers(markers);
+    // Get the destination address from the user entered value.
+    // TODO: Change to knockoutjs data-bind(ing)
+    var destinationAddress = document.getElementById('search-within-time-text').value;
+    // Get the mode again from the user entered value
+    // TODO: Change to knockoutjs data-bind(ing)
+    var mode = document.getElementById('mode').value;
+    //
+    directionsService.route({
+      // The origin is the passed in marker's position
+      origin: position,
+      // The destination is user entered address.
+      destination: destinationAddress,
+      travelMode: google.maps.TravelMode[mode]
+    },function(response, status){
+      // If the route is valid and call is successful...
+      if(status === google.maps.DirectionsStatus.OK){
+        // Get a directions renderer to place the route on the map, could also
+        //  show the directions by setting the 'panel' parameter with the
+        //  html div that we want it to go to
+        //  Show polyline of route.
+        var directionsDisplay = new google.maps.DirectionsRenderer({
+          map: map_global,
+          directions: response,
+          draggable: true,
+          polylineOptions: {
+            strokeColor: 'green'
           }
-      });
+        });
+      }else {
+        window.alert('Directions request failed due to '+status);
+      }
+    });
 
   };
   //**********************************
