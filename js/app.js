@@ -508,16 +508,15 @@ var ViewModel = function(){
   this.displayMarkersWithinTime = function(response){
     var origins = response.originAddresses;
     var destivations = response.destinationAddress;
-    // TODO: Change to knockout JS data-bind(ing)
-    var maxDuration = document.getElementById('max-duration').value;
     //
     var atLeastOne = false;
+    // Incrementing reference to identify marker
+    // that is within the time range selected
     var i = 0;
     // Go through each response address and compare the time it
     //  takes
     response.rows.forEach(function(results){
       results.elements.forEach(function(result){
-
         // The distance .value is returned in feet - set by the UnitSystem parameter - but the .text is in miles.
         //  if you want to change the logic to show markers in a distance, you need the value for distance; 'result.distance.value' only need text here tho.
         var distanceText = null;
@@ -533,11 +532,10 @@ var ViewModel = function(){
         var duration = result.duration.value/60;
         // Also need the duration text
         var durationText = result.duration.text;
-        if(duration <= maxDuration){
-          //
+        // If the route duration is less than the selected time
+        if(duration <= self.selectedTime()){
           // set the marker for this result.
           // indavidual marker, to be used later in this function as well.
-          // TODO: This will require extra thought
           var marker = null;
           if(i < self.spotList().length){
             marker = self.spotList()[i].marker();
