@@ -38,9 +38,15 @@ Start Date: Dec. 13, 2016 -->
       <h4>Draw Area</h4>
       <button type="button" id="toggle-button" data-bind="click: toggleDrawing">Toggle</button>
       <h4>By Favorite Area</h4>
-      <input type="text" name="" placeholder="Enter your favourit Area" data-bind="textInput: favouriteArea">
+      <input type="text" name="" placeholder="Enter your favourit Area" data-bind="textInput: favoriteAreaText">
       <button type="button" id="zoom-to-area-button" data-bind="click: zoomToArea">Zoom</button>
       <h4>By Time or Distance</h4>
+      <select id="max-duration" class="search-by-time-section" data-bind="options: timeOptions, optionsText: 'text', optionsValue: 'value', value: selectedTime, optionsCaption: 'Choose a time...'">
+      </select>
+      <select class="search-by-time-section" id="travel-mode" data-bind="options: travelModes, optionsText: 'text', optionsValue: 'value', value: selectedMode, optionsCaption: 'Choose a mode of travel'">
+      </select>
+      <input type="text" id="search-within-time-text" placeholder="Ex. Glendale or 365 Mackenzie Ave. N." data-bind="textInput: timeSearchText">
+      <button type="button" id="search-by-time-button" data-bind="click: searchWithinTime">Go</button>
       <h4>By Nearby Locations</h4>
       <hr>
       <div id="locations" class="location-list">

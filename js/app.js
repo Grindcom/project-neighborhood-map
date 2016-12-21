@@ -75,48 +75,84 @@ var mapStyles = [
   }
 ]
 // ******************
+// Time durations
+var durations = [
+  {
+    value: '10',
+    text: '10 min'
+  },{
+    value: '15',
+    text: '15 min'
+  },{
+    value: '30',
+    text: '30 min'
+  },{
+    value: '60',
+    text: '1 hour'
+  }
+]
+// ******************
+// Possible transportation modes
+var modes = [
+  {
+    value: 'DRIVING',
+    text: 'drive'
+  },{
+    value: 'WALKING',
+    text: 'walk'
+  },{
+    value: 'BICYCLING',
+    text: 'bike'
+  },{
+    value: 'TRANSIT',
+    text: 'transit ride'
+  }
+]
+// ******************
 // Favorite locations
-var favSpots = [{
-  name: 'Oliver Street Bar and Grill',
-  type: 'Pub',
-  address: '23 Oliver St, Williams Lake, BC',
-  geoLocation: '',
-  reviews: [],
-  imgSrc: '',
-  imgAttribution: ''
-},{
-  name: 'Mings Palace',
-  type: 'Restaurant',
-  address: '12 Oliver Street, Williams Lake, BC',
-  geoLocation: '',
-  reviews: [],
-  imgSrc: '',
-  imgAttribution: ''
-},{
-  name: 'Bean Counter Bistro & Coffee Bar',
-  type: 'Bistro',
-  address: 'Suite B 180 3rd Ave N, Williams Lake, BC',
-  geoLocation: '',
-  reviews: [],
-  imgSrc: '',
-  imgAttribution: ''
-},{
-  name: 'Overlander Pub',
-  type: 'Pub',
-  address: '1118 Lakeview Crescent, Williams Lake, BC',
-  geoLocation: '',
-  reviews: [],
-  imgSrc: '',
-  imgAttribution: ''
-},{
-  name: 'The Laughing Loon',
-  type: 'Pub',
-  address: '1730 Broadway Ave S, Williams Lake, BC',
-  geoLocation: '',
-  reviews: [],
-  imgSrc: '',
-  imgAttribution: ''
-}]
+var favSpots = [
+  {
+    name: 'Oliver Street Bar and Grill',
+    type: 'Pub',
+    address: '23 Oliver St, Williams Lake, BC',
+    geoLocation: '',
+    reviews: [],
+    imgSrc: '',
+    imgAttribution: ''
+  },{
+    name: 'Mings Palace',
+    type: 'Restaurant',
+    address: '12 Oliver Street, Williams Lake, BC',
+    geoLocation: '',
+    reviews: [],
+    imgSrc: '',
+    imgAttribution: ''
+  },{
+    name: 'Bean Counter Bistro & Coffee Bar',
+    type: 'Bistro',
+    address: 'Suite B 180 3rd Ave N, Williams Lake, BC',
+    geoLocation: '',
+    reviews: [],
+    imgSrc: '',
+    imgAttribution: ''
+  },{
+    name: 'Overlander Pub',
+    type: 'Pub',
+    address: '1118 Lakeview Crescent, Williams Lake, BC',
+    geoLocation: '',
+    reviews: [],
+    imgSrc: '',
+    imgAttribution: ''
+  },{
+    name: 'The Laughing Loon',
+    type: 'Pub',
+    address: '1730 Broadway Ave S, Williams Lake, BC',
+    geoLocation: '',
+    reviews: [],
+    imgSrc: '',
+    imgAttribution: ''
+  }
+]
 //*******************
 //
 var CoolSpot = function(data){
@@ -145,19 +181,40 @@ var CoolSpot = function(data){
 var ViewModel = function(){
   // Use for clarity when necessary
   var self = this;
-
-  // Global variable to collect drawing data
+  // **************************
+  // Provide global access to this as an object literal
+  view_model = this;
+  //**********************************
+  // Local variables to collect drawing data
   this.polygon = ko.observable(null);
   this.drawingManager = ko.observable(null);
   //**************************
   // TEXT BOXES
-  this.favouriteArea = ko.observable('');
+  //  Favourite Area search input
+  this.favoriteAreaText = ko.observable('');
+  //  Zoom to Area search input
+  this.timeSearchText = ko.observable('');
   // *************************
   // List of markers for places
   this.placeMarkers = ko.observableArray([]);
-  // **************************
-  // Provide global access to this as an object literal
-  view_model = this;
+  // ***************************
+  // List of time durations for time to search option
+  this.timeOptions = ko.observableArray([]);
+  // Fill timeOptions with pre defined options
+  durations.forEach(function(duration){
+    self.timeOptions.push(duration);
+  });
+  // Selected time for search
+  this.selectedTime = ko.observable('');
+  // ***************************
+  // List of possible transportation modes
+  this.travelModes = ko.observableArray([]);
+  // Fill the possible Modes from the pre defined options
+  modes.forEach(function(mode){
+    self.travelModes.push(mode);
+  });
+  // Selected Mode of travel
+  this.selectedMode = ko.observable('');
   // ***************************
   // List of favorites locations
   this.spotList = ko.observableArray([]);
@@ -185,7 +242,9 @@ var ViewModel = function(){
   };
   /**
   * @description GOOGLE MAP STUFF,
-  * Initialize google map
+  * Initialize google map.  This function is
+  * given as the callback function for the
+  * google maps api source script in index.html and only called once.
   * @param {google.maps} map
   */
   this.initMap = function(map){
@@ -315,11 +374,21 @@ var ViewModel = function(){
   * @description Called to hide cool spots
   */
   this.hideSpots = function(){
-    console.log("Hide Spots");
     this.spotList().forEach(function(spot){
-      console.log("Set Map");
       spot.marker().setMap(null);
     });
+  };
+  /**
+  * @description Hide markers that are sent
+  * in an array. Sets each markers map object
+  * to null.
+  * @param {object[]} markers - an array of google map markers.
+  */
+  this.hideMarkers = function(markers){
+    console.log("Hide Markers");
+    markers.forEach(function(marker){
+      marker.setMap(null);
+    })
   };
   /**
   * @description Toggle Drawing function
@@ -337,7 +406,6 @@ var ViewModel = function(){
         self.polygon().setMap(null);
       }
     }else{
-      console.log("  No map");
       self.drawingManager().setMap(map_global);
     }
   };
@@ -353,14 +421,14 @@ var ViewModel = function(){
     var geocoder = new google.maps.Geocoder();
     // Get the address to zoom to
     // Make sure the address isn't blank
-    if(self.favouriteArea() == ''){
+    if(self.favoriteAreaText() == ''){
       // Alert user if there is nothing in
-      // the favouriteArea text box
+      // the favoriteAreaText text box
       window.alert('Please ad an area or address');
     }else {
       // Geocode the address/area entered; want the center.
       geocoder.geocode(
-        { address: self.favouriteArea()
+        { address: self.favoriteAreaText()
         }, function(results, status){
           // Center the map on location if an address or area is found
           if(status == google.maps.GeocoderStatus.OK){
@@ -377,7 +445,7 @@ var ViewModel = function(){
     }
   };
   /**
-  * @description Search for listings within a given time
+  * @description Search for cool spots within a given time
   * from a location given by user.
   *  User can also supply mode of travel.
   * TODO: Add distance functionality
@@ -387,28 +455,26 @@ var ViewModel = function(){
     // Initialize the distance matrix
     var distanceMatrixService = new google.maps.DistanceMatrixService;
     // Get the address entered by user
-    // TODO: Change to knockout JS data-bind(ing)
-    var address = document.getElementById('search-within-time-text').value;
     // Check to make sure the address isn't blank
-    if(address == ''){
+    if(self.timeSearchText() == ''){
       // Alert the user that there is nothing
       // in the search by time text box.
       window.alert('You need to enter an address');
     }else {
-      // Hide all markers first.
-      hideMarkers(self.spotList().markers);
+      console.log(" Search Within Time");
+      // Hide all cool spot markers first.
+      self.hideSpots();
       // Use the distance matrix service to calculate the duration of the
       //  routes between all the markers (origin), and the destination address
       //  entered by the user.
       var origins = [];
-      self.spotList().markers.forEach(function(marker){
+      self.spotList().forEach(function(spot){
         // Put all the origins into an origin matrix
-        origins.push(marker.position);
+        origins.push(spot.marker().position);
       });
       // address given by user is now the destination
-      var destination = address;
-      // TODO: Change to knockout JS data-bind(ing)
-      var mode = document.getElementById('mode').value;
+      var destination = self.timeSearchText();
+      var mode = self.selectedMode();
       //
       // Call the google distance matrix service;
       //  Find the how to here: https://developers.google.com/maps/documentation/javascript/distancematrix
@@ -421,12 +487,13 @@ var ViewModel = function(){
         // This is the callback function that results will be sent to
         //
         if(status !== google.maps.DistanceMatrixStatus.OK){
+          // Alert user there was an error and what it was
           window.alert("Error was: " + status);
         }else {
           //
           // Display all markers that are within the
           // given time period
-          displayMarkersWithinTime(response);
+          self.displayMarkersWithinTime(response);
         }
       });
 
@@ -458,7 +525,8 @@ var ViewModel = function(){
         if(result.distance){
           distanceText = result.distance.text;
         }else {
-          // If not, Skip the rest, there is no valid result
+          // If not, Skip the rest, there is no valid result and alert the user.
+          window.alert("There are no cool spots in that area.")
           return;
         }
         // Duration value is given in seconds, convert to minutes.
@@ -471,8 +539,8 @@ var ViewModel = function(){
           // indavidual marker, to be used later in this function as well.
           // TODO: This will require extra thought
           var marker = null;
-          if(i < markers.length){
-            marker = markers[i];
+          if(i < self.spotList().length){
+            marker = self.spotList()[i].marker();
             marker.setMap(map_global);
           }
           //
@@ -492,7 +560,7 @@ var ViewModel = function(){
           //  The reason to use markers[] instead of marker is because marker is local and markers[] is the actual global value.
           if(marker){
             // TODO: Requires extra thought
-            markers[i].infowindow = infowindow;
+            self.spotList()[i].marker().infowindow = infowindow;
             // event listener for infowindow click, to close this local infowindow.
             google.maps.event.addListener(marker, 'click', function(){
               marker.infowindow.close();
