@@ -177,7 +177,9 @@ var CoolSpot = function(data){
   // Map marker for this object
   this.marker = ko.observable(null);
 }
-//*******************
+/**
+* ViewModel
+*/
 var ViewModel = function(){
   // Use for clarity when necessary
   var self = this;
@@ -240,6 +242,11 @@ var ViewModel = function(){
   this.menuToggle = function(){
     slideout.toggle();
   };
+  /**
+  * Direction Service object for finding routes
+  */
+  var directionsService = null;
+  this.routes = ko.observableArray([]);
   /**
   * @description GOOGLE MAP STUFF,
   * Initialize google map.  This function is
@@ -347,7 +354,10 @@ var ViewModel = function(){
       // Show length and area
       window.alert("The Area is " + area + " square meters and the Length is " + length + "m");
     });
-
+    /*
+    * Initialize the direction service
+    */
+    directionsService = new google.maps.DirectionsService();
   };// END OF initMap
   /**
   * @desctiption Called to show cool spot
@@ -550,14 +560,15 @@ var ViewModel = function(){
           var infowindow = new google.maps.InfoWindow({
             content: durationText + ' away, about ' + distanceText +
             '<div><button type=\"button\" id=\"display-directions\" onClick='+
-            '\"displayDirections(&quot;'+ origins[i] +'&quot;);\">View Route</button></div>'
+            '\"view_model.displayDirections(&quot;'+ origins[i] +'&quot;);\">View Route</button></div>'
           });
 
           // Assign this local infowindow to the marker so the marker will be re-shown on the larger infowindow
           //  if the view changes.
           //  The reason to use markers[] instead of marker is because marker is local and markers[] is the actual global value.
           if(marker){
-            // TODO: Requires extra thought
+            // Assign the infowindow to the indicated
+            // spotList element
             self.spotList()[i].marker().infowindow = infowindow;
             // event listener for infowindow click, to close this local infowindow.
             google.maps.event.addListener(marker, 'click', function(){
@@ -580,6 +591,18 @@ var ViewModel = function(){
     }
 
   };
+  /**
+  * Clear Directions off the map
+  */
+  this.clearRoutes = function(){
+    console.log("Clear Routes: "+self.routes().length);
+    self.routes().forEach(function(route){
+      route.setMap(null);
+    });
+    // Clean all routes from array.
+    self.routes.removeAll();
+  };
+
   //*****************************
   // TODO: Search by nearby places
 
@@ -821,19 +844,20 @@ var ViewModel = function(){
     );
     return markerImage;
   };
-  //*******************************
-  // TODO: Display Directions
-  // Information for browser based call can be found https://developers.google.com/maps/documentation/directions/
-  // And for using the API from JavaScript, here: https://developers.google.com/maps/documentation/javascript/directions
+  /**
+  * TODO: Display Directions
+  * Information for browser based call can be found https://developers.google.com/maps/documentation/directions/
+  * And for using the API from JavaScript, here:
+  * https://developers.google.com/maps/documentation/javascript/directions
+  */
   this.displayDirections = function(position){
-    hideMarkers(markers);
-    // Get the destination address from the user entered value.
+    self.hideSpots();
+    //Get the destination address from the user entered value.
     // TODO: Change to knockoutjs data-bind(ing)
-    var destinationAddress = document.getElementById('search-within-time-text').value;
+    var destinationAddress = self.timeSearchText();
     // Get the mode again from the user entered value
     // TODO: Change to knockoutjs data-bind(ing)
-    var mode = document.getElementById('mode').value;
-    //
+    var mode = self.selectedMode();
     directionsService.route({
       // The origin is the passed in marker's position
       origin: position,
@@ -847,6 +871,8 @@ var ViewModel = function(){
         //  show the directions by setting the 'panel' parameter with the
         //  html div that we want it to go to
         //  Show polyline of route.
+        // TODO: Make an observableArray to hold the directions for
+        // multiple routes.
         var directionsDisplay = new google.maps.DirectionsRenderer({
           map: map_global,
           directions: response,
@@ -855,7 +881,9 @@ var ViewModel = function(){
             strokeColor: 'green'
           }
         });
+        self.routes.push(directionsDisplay);
       }else {
+        // Direction request failed, notify user
         window.alert('Directions request failed due to '+status);
       }
     });
