@@ -595,7 +595,6 @@ var ViewModel = function(){
   * Clear Directions off the map
   */
   this.clearRoutes = function(){
-    console.log("Clear Routes: "+self.routes().length);
     self.routes().forEach(function(route){
       route.setMap(null);
     });
@@ -906,6 +905,7 @@ var ViewModel = function(){
     }else {
       console.log(" What?");
       obj.marker().setAnimation(google.maps.Animation.BOUNCE);
+      setTimeout(function(){ obj.marker().setAnimation(null); }, 2000);
     }
 
   };
