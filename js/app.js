@@ -359,27 +359,7 @@ var ViewModel = function(){
     */
     directionsService = new google.maps.DirectionsService();
   };// END OF initMap
-  /**
-  * @desctiption Called to show cool spot
-  * markers on the map. Uses the ViewModel
-  * (self) spotList.
-  */
-  this.showSpots = function(){
-    console.log("Show Spots");
-    var mapBounds = new google.maps.LatLngBounds();
-    // Go through the cool spot list and set the map for
-    //  each marker
-    self.spotList().forEach(function(spot){
-      spot.marker().setMap(map_global);
-      // Extend the boundry for the marker if necessary
-      mapBounds.extend(spot.marker().position);
-    });
-    // Set the center of the map by getting the center of
-    //  all of the cool spot list markers
-    map_global.setCenter(mapBounds.getCenter());
-    // Set the bounds of the map by the marker postions
-    map_global.fitBounds(mapBounds);
-  };
+
   /**
   * @description Called to hide cool spots
   */
@@ -910,7 +890,32 @@ var ViewModel = function(){
 
   };
 }
+//
+/**
+* @description Called to show cool spot
+* markers on the map. Uses the ViewModel
+* (self) spotList.
+*/
+ViewModel.prototype.showSpots = function(){
+  console.log("Show Spots");
+  var mapBounds = new google.maps.LatLngBounds();
+  // Go through the cool spot list and set the map for
+  //  each marker
+  this.spotList().forEach(function(spot){
+    spot.marker().setMap(map_global);
+    // Extend the boundry for the marker if necessary
+    mapBounds.extend(spot.marker().position);
+  });
+  // Set the center of the map by getting the center of
+  //  all of the cool spot list markers
+  map_global.setCenter(mapBounds.getCenter());
+  // Set the bounds of the map by the marker postions
+  map_global.fitBounds(mapBounds);
+};
 
+/**
+* @description Entry point for Neighborhood Map
+*/
 ko.applyBindings(new ViewModel());
 
 
