@@ -360,14 +360,7 @@ var ViewModel = function(){
     directionsService = new google.maps.DirectionsService();
   };// END OF initMap
 
-  /**
-  * @description Called to hide cool spots
-  */
-  this.hideSpots = function(){
-    this.spotList().forEach(function(spot){
-      spot.marker().setMap(null);
-    });
-  };
+
   /**
   * @description Hide markers that are sent
   * in an array. Sets each markers map object
@@ -912,7 +905,14 @@ ViewModel.prototype.showSpots = function(){
   // Set the bounds of the map by the marker postions
   map_global.fitBounds(mapBounds);
 };
-
+/**
+* @description Called to hide cool spots
+*/
+ViewModel.prototype.hideSpots = function(){
+  this.spotList().forEach(function(spot){
+    spot.marker().setMap(null);
+  });
+};
 /**
 * @description Entry point for Neighborhood Map
 */
