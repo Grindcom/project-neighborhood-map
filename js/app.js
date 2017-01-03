@@ -361,18 +361,7 @@ var ViewModel = function(){
   };// END OF initMap
 
 
-  /**
-  * @description Hide markers that are sent
-  * in an array. Sets each markers map object
-  * to null.
-  * @param {object[]} markers - an array of google map markers.
-  */
-  this.hideMarkers = function(markers){
-    console.log("Hide Markers");
-    markers.forEach(function(marker){
-      marker.setMap(null);
-    })
-  };
+
   /**
   * @description Toggle Drawing function
   * Toggling the drawing manager
@@ -912,6 +901,19 @@ ViewModel.prototype.hideSpots = function(){
   this.spotList().forEach(function(spot){
     spot.marker().setMap(null);
   });
+};
+
+/**
+* @description Hide markers that are sent
+* in an array. Sets each markers map object
+* to null.
+* @param {object[]} markers - an array of google map markers.
+*/
+ViewModel.prototype.hideMarkers = function(markers){
+  console.log("Hide Markers");
+  markers.forEach(function(marker){
+    marker.setMap(null);
+  })
 };
 /**
 * @description Entry point for Neighborhood Map
