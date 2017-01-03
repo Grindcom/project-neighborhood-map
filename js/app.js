@@ -363,41 +363,7 @@ var ViewModel = function(){
 
 
 
-  /**
-  * @description Zoom to area function
-  * Zoom to an area selected by user; it
-  * gets the users input from the zoom
-  * to area text box then geocodes it for
-  * lat/long information
-  */
-  this.zoomToArea = function() {
-    // Initialize a geocoder
-    var geocoder = new google.maps.Geocoder();
-    // Get the address to zoom to
-    // Make sure the address isn't blank
-    if(self.favoriteAreaText() == ''){
-      // Alert user if there is nothing in
-      // the favoriteAreaText text box
-      window.alert('Please ad an area or address');
-    }else {
-      // Geocode the address/area entered; want the center.
-      geocoder.geocode(
-        { address: self.favoriteAreaText()
-        }, function(results, status){
-          // Center the map on location if an address or area is found
-          if(status == google.maps.GeocoderStatus.OK){
-            console.log("    location "+results[0].geometry.location );
-            map_global.setCenter(results[0].geometry.location);
-            map_global.setZoom(15);
-          }else {
-            // Alert the user if the status is anything but OK
-            window.alert('Could not find that location - try entering a more specific place');
-          }
-        }
-      )
 
-    }
-  };
   /**
   * @description Search for cool spots within a given time
   * from a location given by user.
@@ -916,6 +882,42 @@ ViewModel.prototype.toggleDrawing = function(){
     this.drawingManager().setMap(map_global);
   }
 };
+/**
+* @description Zoom to area function
+* Zoom to an area selected by user; it
+* gets the users input from the zoom
+* to area text box then geocodes it for
+* lat/long information
+*/
+ViewModel.prototype.zoomToArea = function() {
+  // Initialize a geocoder
+  var geocoder = new google.maps.Geocoder();
+  // Get the address to zoom to
+  // Make sure the address isn't blank
+  if(this.favoriteAreaText() == ''){
+    // Alert user if there is nothing in
+    // the favoriteAreaText text box
+    window.alert('Please ad an area or address');
+  }else {
+    // Geocode the address/area entered; want the center.
+    geocoder.geocode(
+      { address: this.favoriteAreaText()
+      }, function(results, status){
+        // Center the map on location if an address or area is found
+        if(status == google.maps.GeocoderStatus.OK){
+          console.log("    location "+results[0].geometry.location );
+          map_global.setCenter(results[0].geometry.location);
+          map_global.setZoom(15);
+        }else {
+          // Alert the user if the status is anything but OK
+          window.alert('Could not find that location - try entering a more specific place');
+        }
+      }
+    )
+
+  }
+};
+
 
 /**
 * @description Entry point for Neighborhood Map
