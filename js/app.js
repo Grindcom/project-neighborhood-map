@@ -362,25 +362,7 @@ var ViewModel = function(){
 
 
 
-  /**
-  * @description Toggle Drawing function
-  * Toggling the drawing manager
-  *  Either starts drawing mode so user can
-  *  draw a polyline box around an area of
-  *  interst OR clears the box from the map.
-  * Uses the viewModel drawingManager.
-  */
-  this.toggleDrawing = function(){
-    if(self.drawingManager().map){
-      self.drawingManager().setMap(null);
-      // Remove any polygon
-      if(self.polygon()){
-        self.polygon().setMap(null);
-      }
-    }else{
-      self.drawingManager().setMap(map_global);
-    }
-  };
+
   /**
   * @description Zoom to area function
   * Zoom to an area selected by user; it
@@ -915,6 +897,26 @@ ViewModel.prototype.hideMarkers = function(markers){
     marker.setMap(null);
   })
 };
+/**
+* @description Toggle Drawing function
+* Toggling the drawing manager
+*  Either starts drawing mode so user can
+*  draw a polyline box around an area of
+*  interst OR clears the box from the map.
+* Uses the viewModel drawingManager.
+*/
+ViewModel.prototype.toggleDrawing = function(){
+  if(this.drawingManager().map){
+    this.drawingManager().setMap(null);
+    // Remove any polygon
+    if(this.polygon()){
+      this.polygon().setMap(null);
+    }
+  }else{
+    this.drawingManager().setMap(map_global);
+  }
+};
+
 /**
 * @description Entry point for Neighborhood Map
 */
