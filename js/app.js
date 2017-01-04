@@ -371,25 +371,7 @@ var ViewModel = function(){
   //*****************************
   // TODO: Search by nearby places
 
-  //******************************
-  // TODO: Search by text places
-  // Called when 'go' button for search places is clicked
-  //  It will go a nearby search using the entered query string or place.
-  function textSearchPlaces(){
-    var bounds = map_global.getBounds();
-    hideMarkers(placeMarkers);
-    var placesService = new google.maps.places.PlacesService(map);
-    // TODO: Change to knockoutjs data-bind(ing)
-    placesService.textSearch({
-      query:
-      document.getElementById('places-search').value,
-      bounds: bounds
-    },function(results, status){
-      if(status === google.maps.places.PlacesServiceStatus.OK){
-        createMarkersForPlaces(results);
-      }
-    });
-  }
+
   //******************************
   // TODO: Create markers for places
   // Create markers for all places that are searched for
@@ -923,6 +905,26 @@ ViewModel.prototype.clearRoutes = function(){
   });
   // Clean all routes from array.
   this.routes.removeAll();
+};
+/**
+* @description Search by text places
+* Called when 'go' button for search places is clicked
+*  It will go a nearby search using the entered query string or place.
+*/
+ViewModel.prototype.textSearchPlaces = function(){
+  var bounds = map_global.getBounds();
+  hideMarkers(placeMarkers);
+  var placesService = new google.maps.places.PlacesService(map);
+  // TODO: Change to knockoutjs data-bind(ing)
+  placesService.textSearch({
+    query:
+    document.getElementById('places-search').value,
+    bounds: bounds
+  },function(results, status){
+    if(status === google.maps.places.PlacesServiceStatus.OK){
+      createMarkersForPlaces(results);
+    }
+  });
 };
 
 /**
