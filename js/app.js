@@ -364,60 +364,7 @@ var ViewModel = function(){
 
 
 
-  /**
-  * @description Search for cool spots within a given time
-  * from a location given by user.
-  *  User can also supply mode of travel.
-  * TODO: Add distance functionality
-  */
-  this.searchWithinTime = function(){
-    //
-    // Initialize the distance matrix
-    var distanceMatrixService = new google.maps.DistanceMatrixService;
-    // Get the address entered by user
-    // Check to make sure the address isn't blank
-    if(self.timeSearchText() == ''){
-      // Alert the user that there is nothing
-      // in the search by time text box.
-      window.alert('You need to enter an address');
-    }else {
-      console.log(" Search Within Time");
-      // Hide all cool spot markers first.
-      self.hideSpots();
-      // Use the distance matrix service to calculate the duration of the
-      //  routes between all the markers (origin), and the destination address
-      //  entered by the user.
-      var origins = [];
-      self.spotList().forEach(function(spot){
-        // Put all the origins into an origin matrix
-        origins.push(spot.marker().position);
-      });
-      // address given by user is now the destination
-      var destination = self.timeSearchText();
-      var mode = self.selectedMode();
-      //
-      // Call the google distance matrix service;
-      //  Find the how to here: https://developers.google.com/maps/documentation/javascript/distancematrix
-      distanceMatrixService.getDistanceMatrix({
-        origins: origins,
-        destinations: [destination],
-        travelMode: google.maps.TravelMode[mode],
-        unitSystem: google.maps.UnitSystem.IMPERIAL,
-      }, function(response, status){
-        // This is the callback function that results will be sent to
-        //
-        if(status !== google.maps.DistanceMatrixStatus.OK){
-          // Alert user there was an error and what it was
-          window.alert("Error was: " + status);
-        }else {
-          // Display all markers that are within the
-          // given time period
-          self.displayMarkersWithinTime(self,response);
-        }
-      });
 
-    }
-  };
 
   /**
   * Clear Directions off the map
@@ -922,7 +869,60 @@ ViewModel.prototype.displayMarkersWithinTime = function(self,response){
   }
 
 };
+/**
+* @description Search for cool spots within a given time
+* from a location given by user.
+*  User can also supply mode of travel.
+* TODO: Add distance functionality
+*/
+ViewModel.prototype.searchWithinTime = function(){
+  //
+  // Initialize the distance matrix
+  var distanceMatrixService = new google.maps.DistanceMatrixService;
+  // Get the address entered by user
+  // Check to make sure the address isn't blank
+  if(this.timeSearchText() == ''){
+    // Alert the user that there is nothing
+    // in the search by time text box.
+    window.alert('You need to enter an address');
+  }else {
+    console.log(" Search Within Time");
+    // Hide all cool spot markers first.
+    this.hideSpots();
+    // Use the distance matrix service to calculate the duration of the
+    //  routes between all the markers (origin), and the destination address
+    //  entered by the user.
+    var origins = [];
+    this.spotList().forEach(function(spot){
+      // Put all the origins into an origin matrix
+      origins.push(spot.marker().position);
+    });
+    // address given by user is now the destination
+    var destination = this.timeSearchText();
+    var mode = this.selectedMode();
+    //
+    // Call the google distance matrix service;
+    //  Find the how to here: https://developers.google.com/maps/documentation/javascript/distancematrix
+    distanceMatrixService.getDistanceMatrix({
+      origins: origins,
+      destinations: [destination],
+      travelMode: google.maps.TravelMode[mode],
+      unitSystem: google.maps.UnitSystem.IMPERIAL,
+    }, function(response, status){
+      // This is the callback function that results will be sent to
+      //
+      if(status !== google.maps.DistanceMatrixStatus.OK){
+        // Alert user there was an error and what it was
+        window.alert("Error was: " + status);
+      }else {
+        // Display all markers that are within the
+        // given time period
+        view_model.displayMarkersWithinTime(view_model,response);
+      }
+    });
 
+  }
+};
 /**
 * @description Entry point for Neighborhood Map
 */
