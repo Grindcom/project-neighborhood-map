@@ -366,16 +366,7 @@ var ViewModel = function(){
 
 
 
-  /**
-  * Clear Directions off the map
-  */
-  this.clearRoutes = function(){
-    self.routes().forEach(function(route){
-      route.setMap(null);
-    });
-    // Clean all routes from array.
-    self.routes.removeAll();
-  };
+
 
   //*****************************
   // TODO: Search by nearby places
@@ -923,6 +914,17 @@ ViewModel.prototype.searchWithinTime = function(){
 
   }
 };
+/**
+* @description Clear Directions off the map
+*/
+ViewModel.prototype.clearRoutes = function(){
+  this.routes().forEach(function(route){
+    route.setMap(null);
+  });
+  // Clean all routes from array.
+  this.routes.removeAll();
+};
+
 /**
 * @description Entry point for Neighborhood Map
 */
