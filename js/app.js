@@ -597,8 +597,7 @@ var ViewModel = function(){
 }
 //
 /**
-* TODO: Make Marker Icon (possible a helper function)
-* This function will make a custom marker, Using the supplied color as
+* @description This function will make a custom marker, Using the supplied color as
 *  its base.
 * @param {object} markerColor - Hex color to make marker.
 */
