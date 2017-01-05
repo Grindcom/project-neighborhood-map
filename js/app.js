@@ -373,43 +373,7 @@ var ViewModel = function(){
 
 
 
-  //*******************************
-  // TODO: Build cool spot markers
-  // Build a map marker for the targetted cool spot
-  this.buildMarker = function(targetSpot){
-    console.log("Test Spot Name "+targetSpot.name());
-    // Initialize a geocoder
-    var geocoder = new google.maps.Geocoder();
-    // Make sure the address isn't blank
-    if(targetSpot.address() == ''){
-      window.alert('Address: '+targetSpot.address()+', is not valid.');
-    }else {
-      console.log("--Test getGeocode Address "+targetSpot.address());
-      // Geocode the address/area entered; want the center.
-      geocoder.geocode(
-        { address: targetSpot.address() }// keep within city
-        , function(results, status){
-          console.log("----Status: "+status);
-          // Center the map on location if an address or area is found
-          if(status == google.maps.GeocoderStatus.OK){
-            //
-            targetSpot.geoLocation(results[0].geometry.location);
-            // Create marker
-            var marker = new google.maps.Marker({
-              // map: map_global,
-              position: targetSpot.geoLocation(),// Location of marker on map
-              title: targetSpot.name(),// What will show when the marker is hovered over
-              icon: self.makeMarkerIcon(targetSpot.markerColor()),
-              animation: google.maps.Animation.DROP, // Shake the marker as it appears
-            });
-            targetSpot.marker(marker);
-          }else {
-            window.alert('Could not find that location - try entering a more specific place');
-          }
-        }
-      );
-    }
-  };
+
   //******************************
   // TODO: get place details
   //  The PLACE DETAILS search; most detailed so it is only executed
@@ -615,6 +579,45 @@ ViewModel.prototype.makeMarkerIcon = function(markerColor){
   return markerImage;
 };
 /**
+* @description Build a map marker for the targetted cool spot
+* @param {object[]} targetSpot - JSON object containing the spot infromation.
+*/
+ViewModel.prototype.buildMarker = function(targetSpot){
+  var self = this;
+  console.log("Test Spot Name "+targetSpot.name());
+  // Initialize a geocoder
+  var geocoder = new google.maps.Geocoder();
+  // Make sure the address isn't blank
+  if(targetSpot.address() == ''){
+    window.alert('Address: '+targetSpot.address()+', is not valid.');
+  }else {
+    console.log("--Test getGeocode Address "+targetSpot.address());
+    // Geocode the address/area entered; want the center.
+    geocoder.geocode(
+      { address: targetSpot.address() }// keep within city
+      , function(results, status){
+        console.log("----Status: "+status);
+        // Center the map on location if an address or area is found
+        if(status == google.maps.GeocoderStatus.OK){
+          //
+          targetSpot.geoLocation(results[0].geometry.location);
+          // Create marker
+          var marker = new google.maps.Marker({
+            // map: map_global,
+            position: targetSpot.geoLocation(),// Location of marker on map
+            title: targetSpot.name(),// What will show when the marker is hovered over
+            icon: self.makeMarkerIcon(targetSpot.markerColor()),
+            animation: google.maps.Animation.DROP, // Shake the marker as it appears
+          });
+          targetSpot.marker(marker);
+        }else {
+          window.alert('Could not find that location - try entering a more specific place');
+        }
+      }
+    );
+  }
+};
+/**
 * @description Called to show cool spot
 * markers on the map. Uses the ViewModel
 * (self) spotList.
@@ -720,7 +723,10 @@ ViewModel.prototype.zoomToArea = function() {
 * @param {object[]} response - result of a call to distanceMatrixService.getDistanceMatrix.
 * Sent to a callback function which calls this one.
 */
-ViewModel.prototype.displayMarkersWithinTime = function(self,response){
+ViewModel.prototype.displayMarkersWithinTime = function(response){
+  // As this is in a prototype for ViewModel, 'this' is
+  // ViewModel, so create 'self' for clarity.
+  var self = this;
   var origins = response.originAddresses;
   var destivations = response.destinationAddress;
   //
@@ -805,6 +811,7 @@ ViewModel.prototype.displayMarkersWithinTime = function(self,response){
 */
 ViewModel.prototype.searchWithinTime = function(){
   //
+  var self = this;
   // Initialize the distance matrix
   var distanceMatrixService = new google.maps.DistanceMatrixService;
   // Get the address entered by user
@@ -845,7 +852,7 @@ ViewModel.prototype.searchWithinTime = function(){
       }else {
         // Display all markers that are within the
         // given time period
-        view_model.displayMarkersWithinTime(view_model,response);
+        self.displayMarkersWithinTime(response);
       }
     });
 
