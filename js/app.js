@@ -600,7 +600,7 @@ var ViewModel = function(){
 * TODO: Make Marker Icon (possible a helper function)
 * This function will make a custom marker, Using the supplied color as
 *  its base.
-* @param {}
+* @param {object} markerColor - Hex color to make marker.
 */
 ViewModel.prototype.makeMarkerIcon = function(markerColor){
   // This method of created an image is replaced in v3.10 of the Google Maps JavaScript API (see https://developers.google.com/maps/documentation/javascript/markers for mor detailse)
