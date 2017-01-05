@@ -527,23 +527,7 @@ var ViewModel = function(){
       infowindow.open(map_global, marker);
     }
   };
-  //*******************************
-  // TODO: Make Marker Icon (possible a helper function)
-  // This function will make a custom marker, Using the supplied color as
-  //  its base.
-  this.makeMarkerIcon = function(markerColor){
-    // This method of created an image is replaced in v3.10 of the Google Maps JavaScript API (see https://developers.google.com/maps/documentation/javascript/markers for mor detailse)
-    var markerImage = new google.maps.MarkerImage(
-      // place.icon url
-      'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
-      '|40|_|%E2%80%A2',
-      new google.maps.Size(21,34),
-      new google.maps.Point(0,0),
-      new google.maps.Point(10,34),
-      new google.maps.Size(21,34)
-    );
-    return markerImage;
-  };
+
   /**
   * TODO: Display Directions
   * Information for browser based call can be found https://developers.google.com/maps/documentation/directions/
@@ -612,6 +596,25 @@ var ViewModel = function(){
   };
 }
 //
+/**
+* TODO: Make Marker Icon (possible a helper function)
+* This function will make a custom marker, Using the supplied color as
+*  its base.
+* @param {}
+*/
+ViewModel.prototype.makeMarkerIcon = function(markerColor){
+  // This method of created an image is replaced in v3.10 of the Google Maps JavaScript API (see https://developers.google.com/maps/documentation/javascript/markers for mor detailse)
+  var markerImage = new google.maps.MarkerImage(
+    // place.icon url
+    'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
+    '|40|_|%E2%80%A2',
+    new google.maps.Size(21,34),
+    new google.maps.Point(0,0),
+    new google.maps.Point(10,34),
+    new google.maps.Size(21,34)
+  );
+  return markerImage;
+};
 /**
 * @description Called to show cool spot
 * markers on the map. Uses the ViewModel
