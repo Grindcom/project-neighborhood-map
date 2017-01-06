@@ -610,21 +610,17 @@ ViewModel.prototype.buildMarker = function(targetSpot){
             icon: icon,
             animation: google.maps.Animation.DROP, // Shake the marker as it appears
           });
-          //**
           // Make a contrasting icon for mouse hover over
           var hoverOverIcon = self.makeMarkerIcon(targetSpot.markerHighlightColor());
-          //**
           // Add a mousover listener to change color on hover
           marker.addListener('mouseover',function(){
             this.setIcon(hoverOverIcon);
           });
-          //**
           // Add a mouseout listener so the icon changes
           // back when the mouse leaves
           marker.addListener('mouseout',function(){
             this.setIcon(icon);
           });
-          //**
           // Add the marker to the spot
           targetSpot.marker(marker);
         }else {
