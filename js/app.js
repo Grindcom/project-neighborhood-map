@@ -186,6 +186,9 @@ var ViewModel = function(){
   // **************************
   // Provide global access to this as an object literal
   view_model = this;
+  //****************************
+  // InfoWindow for markers
+  this.largeInfowindow = ko.observable(null);
   //**********************************
   // Local variables to collect drawing data
   this.polygon = ko.observable(null);
@@ -207,7 +210,7 @@ var ViewModel = function(){
     self.timeOptions.push(duration);
   });
   // Selected time for search
-  this.selectedTime = ko.observable('');
+  this.selectedTime = ko.observable(null);
   // ***************************
   // List of possible transportation modes
   this.travelModes = ko.observableArray([]);
@@ -222,7 +225,7 @@ var ViewModel = function(){
   this.spotList = ko.observableArray([]);
   // Load the favorite location list with static data
   favSpots.forEach(function(location){
-    self.spotList.push(new CoolSpot(location));
+    self.spotList().push(new CoolSpot(location));
   });
   // Set the Current cool spot
   this.currentSpot = ko.observable(this.spotList()[0]);
@@ -243,7 +246,7 @@ var ViewModel = function(){
     slideout.toggle();
   };
   /**
-  * Direction Service object for finding routes
+  * @description Direction Service object for finding routes
   */
   var directionsService = null;
   this.routes = ko.observableArray([]);
@@ -303,6 +306,9 @@ var ViewModel = function(){
       self.buildMarker(spot);
     });
     //***
+    // Create a new InfoWindow
+    self.largeInfowindow = new google.maps.InfoWindow();
+    //***
     // Add Drawing manager for polygon shapes
     self.drawingManager(new google.maps.drawing.DrawingManager({
       drawingMode: google.maps.drawing.OverlayType.POLYGON,
@@ -359,357 +365,21 @@ var ViewModel = function(){
     */
     directionsService = new google.maps.DirectionsService();
   };// END OF initMap
-  /**
-  * @desctiption Called to show cool spot
-  * markers on the map. Uses the ViewModel
-  * (self) spotList.
-  */
-  this.showSpots = function(){
-    console.log("Show Spots");
-    var mapBounds = new google.maps.LatLngBounds();
-    // Go through the cool spot list and set the map for
-    //  each marker
-    self.spotList().forEach(function(spot){
-      spot.marker().setMap(map_global);
-      // Extend the boundry for the marker if necessary
-      mapBounds.extend(spot.marker().position);
-    });
-    // Set the center of the map by getting the center of
-    //  all of the cool spot list markers
-    map_global.setCenter(mapBounds.getCenter());
-    // Set the bounds of the map by the marker postions
-    map_global.fitBounds(mapBounds);
-  };
-  /**
-  * @description Called to hide cool spots
-  */
-  this.hideSpots = function(){
-    this.spotList().forEach(function(spot){
-      spot.marker().setMap(null);
-    });
-  };
-  /**
-  * @description Hide markers that are sent
-  * in an array. Sets each markers map object
-  * to null.
-  * @param {object[]} markers - an array of google map markers.
-  */
-  this.hideMarkers = function(markers){
-    console.log("Hide Markers");
-    markers.forEach(function(marker){
-      marker.setMap(null);
-    })
-  };
-  /**
-  * @description Toggle Drawing function
-  * Toggling the drawing manager
-  *  Either starts drawing mode so user can
-  *  draw a polyline box around an area of
-  *  interst OR clears the box from the map.
-  * Uses the viewModel drawingManager.
-  */
-  this.toggleDrawing = function(){
-    if(self.drawingManager().map){
-      self.drawingManager().setMap(null);
-      // Remove any polygon
-      if(self.polygon()){
-        self.polygon().setMap(null);
-      }
-    }else{
-      self.drawingManager().setMap(map_global);
-    }
-  };
-  /**
-  * @description Zoom to area function
-  * Zoom to an area selected by user; it
-  * gets the users input from the zoom
-  * to area text box then geocodes it for
-  * lat/long information
-  */
-  this.zoomToArea = function() {
-    // Initialize a geocoder
-    var geocoder = new google.maps.Geocoder();
-    // Get the address to zoom to
-    // Make sure the address isn't blank
-    if(self.favoriteAreaText() == ''){
-      // Alert user if there is nothing in
-      // the favoriteAreaText text box
-      window.alert('Please ad an area or address');
-    }else {
-      // Geocode the address/area entered; want the center.
-      geocoder.geocode(
-        { address: self.favoriteAreaText()
-        }, function(results, status){
-          // Center the map on location if an address or area is found
-          if(status == google.maps.GeocoderStatus.OK){
-            console.log("    location "+results[0].geometry.location );
-            map_global.setCenter(results[0].geometry.location);
-            map_global.setZoom(15);
-          }else {
-            // Alert the user if the status is anything but OK
-            window.alert('Could not find that location - try entering a more specific place');
-          }
-        }
-      )
 
-    }
-  };
-  /**
-  * @description Search for cool spots within a given time
-  * from a location given by user.
-  *  User can also supply mode of travel.
-  * TODO: Add distance functionality
-  */
-  this.searchWithinTime = function(){
-    //
-    // Initialize the distance matrix
-    var distanceMatrixService = new google.maps.DistanceMatrixService;
-    // Get the address entered by user
-    // Check to make sure the address isn't blank
-    if(self.timeSearchText() == ''){
-      // Alert the user that there is nothing
-      // in the search by time text box.
-      window.alert('You need to enter an address');
-    }else {
-      console.log(" Search Within Time");
-      // Hide all cool spot markers first.
-      self.hideSpots();
-      // Use the distance matrix service to calculate the duration of the
-      //  routes between all the markers (origin), and the destination address
-      //  entered by the user.
-      var origins = [];
-      self.spotList().forEach(function(spot){
-        // Put all the origins into an origin matrix
-        origins.push(spot.marker().position);
-      });
-      // address given by user is now the destination
-      var destination = self.timeSearchText();
-      var mode = self.selectedMode();
-      //
-      // Call the google distance matrix service;
-      //  Find the how to here: https://developers.google.com/maps/documentation/javascript/distancematrix
-      distanceMatrixService.getDistanceMatrix({
-        origins: origins,
-        destinations: [destination],
-        travelMode: google.maps.TravelMode[mode],
-        unitSystem: google.maps.UnitSystem.IMPERIAL,
-      }, function(response, status){
-        // This is the callback function that results will be sent to
-        //
-        if(status !== google.maps.DistanceMatrixStatus.OK){
-          // Alert user there was an error and what it was
-          window.alert("Error was: " + status);
-        }else {
-          //
-          // Display all markers that are within the
-          // given time period
-          self.displayMarkersWithinTime(response);
-        }
-      });
 
-    }
-  };
-  /**
-  * @description Display markers within time/distance. As filtered by the calling function.
-  *  This is a refactored version of the course example.
-  * @param {object[]} response - result of a call to distanceMatrixService.getDistanceMatrix.
-  * Sent to a callback function which calls this one.
-  */
-  this.displayMarkersWithinTime = function(response){
-    var origins = response.originAddresses;
-    var destivations = response.destinationAddress;
-    //
-    var atLeastOne = false;
-    // Incrementing reference to identify marker
-    // that is within the time range selected
-    var i = 0;
-    // Go through each response address and compare the time it
-    //  takes
-    response.rows.forEach(function(results){
-      results.elements.forEach(function(result){
-        // The distance .value is returned in feet - set by the UnitSystem parameter - but the .text is in miles.
-        //  if you want to change the logic to show markers in a distance, you need the value for distance; 'result.distance.value' only need text here tho.
-        var distanceText = null;
-        // Make sure the result has a distance
-        if(result.distance){
-          distanceText = result.distance.text;
-        }else {
-          // If not, Skip the rest, there is no valid result and alert the user.
-          window.alert("There are no cool spots in that area.")
-          return;
-        }
-        // Duration value is given in seconds, convert to minutes.
-        var duration = result.duration.value/60;
-        // Also need the duration text
-        var durationText = result.duration.text;
-        // If the route duration is less than the selected time
-        if(duration <= self.selectedTime()){
-          // set the marker for this result.
-          // indavidual marker, to be used later in this function as well.
-          var marker = null;
-          if(i < self.spotList().length){
-            marker = self.spotList()[i].marker();
-            marker.setMap(map_global);
-          }
-          //
-          // Obviously at least one marker is within range
-          atLeastOne = true;
-          // Create a mini infowindow to open immediately and
-          //  contain the distance and duration
-          // TODO: Change to knockoutjs data-bind(ing)
-          var infowindow = new google.maps.InfoWindow({
-            content: durationText + ' away, about ' + distanceText +
-            '<div><button type=\"button\" id=\"display-directions\" onClick='+
-            '\"view_model.displayDirections(&quot;'+ origins[i] +'&quot;);\">View Route</button></div>'
-          });
 
-          // Assign this local infowindow to the marker so the marker will be re-shown on the larger infowindow
-          //  if the view changes.
-          //  The reason to use markers[] instead of marker is because marker is local and markers[] is the actual global value.
-          if(marker){
-            // Assign the infowindow to the indicated
-            // spotList element
-            self.spotList()[i].marker().infowindow = infowindow;
-            // event listener for infowindow click, to close this local infowindow.
-            google.maps.event.addListener(marker, 'click', function(){
-              marker.infowindow.close();
-            });
 
-          }
-          // Show the marker
-          infowindow.open(map_global, marker);
-        }
-        // increment i for marker selection
-        i = i + 1;
-      });
 
-    });
-    //
-    if(!atLeastOne){
-      // Alert user that there wasn't any good results found
-      window.alert('Sorry, nothing found within your selected time window.')
-    }
 
-  };
-  /**
-  * Clear Directions off the map
-  */
-  this.clearRoutes = function(){
-    console.log("Clear Routes: "+self.routes().length);
-    self.routes().forEach(function(route){
-      route.setMap(null);
-    });
-    // Clean all routes from array.
-    self.routes.removeAll();
-  };
+
+
 
   //*****************************
   // TODO: Search by nearby places
 
-  //******************************
-  // TODO: Search by text places
-  // Called when 'go' button for search places is clicked
-  //  It will go a nearby search using the entered query string or place.
-  function textSearchPlaces(){
-    var bounds = map_global.getBounds();
-    hideMarkers(placeMarkers);
-    var placesService = new google.maps.places.PlacesService(map);
-    // TODO: Change to knockoutjs data-bind(ing)
-    placesService.textSearch({
-      query:
-      document.getElementById('places-search').value,
-      bounds: bounds
-    },function(results, status){
-      if(status === google.maps.places.PlacesServiceStatus.OK){
-        createMarkersForPlaces(results);
-      }
-    });
-  }
-  //******************************
-  // TODO: Create markers for places
-  // Create markers for all places that are searched for
-  this.createMarkersForPlaces = function(places){
-    var mapBounds = new google.maps.LatLngBounds();
-    places.forEach(function(place){
-      // Marker icon parameters
-      var icon = {
-        url: place.icon,// special icon
-        size: new google.maps.Size(35, 35),
-        origin: new google.maps.Point(0,0),
-        anchor: new google.maps.Point(15,34),
-        scaledSize: new google.maps.Size(25,25)
-      };
-      // Create a marker
-      var marker = new google.maps.Marker({
-        map: map_global,
-        icon: icon,
-        title: place.name,
-        position: place.geometry.location,
-        id: place.place_id
-      });
-      // Info window for place search result information details
-      var placeInfoWindow = new google.maps.InfoWindow();
-      // Event listener for when the marker is clicked
-      marker.addListener('click',function(){
-        if(placeInfoWindow.marker == this){
-          console.log("This infowindow already is on this marker");
-        }else {
-          // TODO: Make this function
-          getPlacesDetails(this, placeInfoWindow);
-        }
-      });
-      // Add markers to the placeMarker array
-      self.placeMarkers().push(marker);
-      if(place.geometry.viewport){
-        // Only geocodes have viewport.
-        mapBounds.union(place.geometry.viewport);
-      }else {// adjust map bounds if necessary to acomadate results
-        mapBounds.extend(place.geometry.location);
-      }
-      // Move the center of the map to the marker that
-      //  is in the middle of of the grouping
-      map_global.setCenter(mapBounds.getCenter());
-      // Make sure the map shows all markers
-      map_global.fitBounds(mapBounds);
-    });
-  };
-  //*******************************
-  // TODO: Build cool spot markers
-  // Build a map marker for the targetted cool spot
-  this.buildMarker = function(targetSpot){
-    console.log("Test Spot Name "+targetSpot.name());
-    // Initialize a geocoder
-    var geocoder = new google.maps.Geocoder();
-    // Make sure the address isn't blank
-    if(targetSpot.address() == ''){
-      window.alert('Address: '+targetSpot.address()+', is not valid.');
-    }else {
-      console.log("--Test getGeocode Address "+targetSpot.address());
-      // Geocode the address/area entered; want the center.
-      geocoder.geocode(
-        { address: targetSpot.address() }// keep within city
-        , function(results, status){
-          console.log("----Status: "+status);
-          // Center the map on location if an address or area is found
-          if(status == google.maps.GeocoderStatus.OK){
-            //
-            targetSpot.geoLocation(results[0].geometry.location);
-            // Create marker
-            var marker = new google.maps.Marker({
-              // map: map_global,
-              position: targetSpot.geoLocation(),// Location of marker on map
-              title: targetSpot.name(),// What will show when the marker is hovered over
-              icon: self.makeMarkerIcon(targetSpot.markerColor()),
-              animation: google.maps.Animation.DROP, // Shake the marker as it appears
-            });
-            targetSpot.marker(marker);
-          }else {
-            window.alert('Could not find that location - try entering a more specific place');
-          }
-        }
-      );
-    }
-  };
+
+
+
   //******************************
   // TODO: get place details
   //  The PLACE DETAILS search; most detailed so it is only executed
@@ -762,20 +432,7 @@ var ViewModel = function(){
       }
     });
   };
-  //*****************************
-  // TODO: Search within polygon
-  // Search inside the polygon
-  this.searchWithinPolygon = function(){
-    self.spotList().forEach(function(spot){
-      console.log(" Search Within Poly: target "+spot.name());
-      // Check if the markers position is inside the global polygon area
-      if(google.maps.geometry.poly.containsLocation(spot.marker().position,self.polygon())){
-        spot.marker().setMap(map_global);// its inside so add it to the map
-      }else{
-        spot.marker().setMap(null);// its not inside so remove it
-      }
-    });
-  };
+
   //******************************
   // TODO: populateInfoWindow
   // This function will populate the infowindow when the marker is clicked.
@@ -827,23 +484,7 @@ var ViewModel = function(){
       infowindow.open(map_global, marker);
     }
   };
-  //*******************************
-  // TODO: Make Marker Icon (possible a helper function)
-  // This function will make a custom marker, Using the supplied color as
-  //  its base.
-  this.makeMarkerIcon = function(markerColor){
-    // This method of created an image is replaced in v3.10 of the Google Maps JavaScript API (see https://developers.google.com/maps/documentation/javascript/markers for mor detailse)
-    var markerImage = new google.maps.MarkerImage(
-      // place.icon url
-      'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
-      '|40|_|%E2%80%A2',
-      new google.maps.Size(21,34),
-      new google.maps.Point(0,0),
-      new google.maps.Point(10,34),
-      new google.maps.Size(21,34)
-    );
-    return markerImage;
-  };
+
   /**
   * TODO: Display Directions
   * Information for browser based call can be found https://developers.google.com/maps/documentation/directions/
@@ -906,11 +547,411 @@ var ViewModel = function(){
     }else {
       console.log(" What?");
       obj.marker().setAnimation(google.maps.Animation.BOUNCE);
+      setTimeout(function(){ obj.marker().setAnimation(null); }, 2000);
     }
 
   };
 }
+//
 
+/**
+* @description This function will make a custom marker, Using the supplied color as
+*  its base.
+* @param {object} markerColor - Hex color to make marker.
+*/
+ViewModel.prototype.makeMarkerIcon = function(markerColor){
+  // This method of created an image is replaced in v3.10 of the Google Maps JavaScript API (see https://developers.google.com/maps/documentation/javascript/markers for mor detailse)
+  var markerImage = new google.maps.MarkerImage(
+    // place.icon url
+    'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
+    '|40|_|%E2%80%A2',
+    new google.maps.Size(21,34),
+    new google.maps.Point(0,0),
+    new google.maps.Point(10,34),
+    new google.maps.Size(21,34)
+  );
+  return markerImage;
+};
+/**
+* @description Build a map marker for the targetted cool spot
+* @param {object[]} targetSpot - JSON object containing the spot infromation.
+*/
+ViewModel.prototype.buildMarker = function(targetSpot){
+  var self = this;
+  console.log("Test Spot Name "+targetSpot.name());
+  // Initialize a geocoder
+  var geocoder = new google.maps.Geocoder();
+  // Make sure the address isn't blank
+  if(targetSpot.address() == ''){
+    window.alert('Address: '+targetSpot.address()+', is not valid.');
+  }else {
+    console.log("--Test getGeocode Address "+targetSpot.address());
+    // Geocode the address/area entered; want the center.
+    geocoder.geocode(
+      { address: targetSpot.address() }// keep within city
+      , function(results, status){
+        console.log("----Status: "+status);
+        // Center the map on location if an address or area is found
+        if(status == google.maps.GeocoderStatus.OK){
+          //
+          targetSpot.geoLocation(results[0].geometry.location);
+          // Create marker
+          var marker = new google.maps.Marker({
+            // map: map_global,
+            position: targetSpot.geoLocation(),// Location of marker on map
+            title: targetSpot.name(),// What will show when the marker is hovered over
+            icon: self.makeMarkerIcon(targetSpot.markerColor()),
+            animation: google.maps.Animation.DROP, // Shake the marker as it appears
+          });
+          targetSpot.marker(marker);
+        }else {
+          window.alert('Could not find that location - try entering a more specific place');
+        }
+      }
+    );
+  }
+};
+/**
+* @description Called to show cool spot
+* markers on the map. Uses the ViewModel
+* (self) spotList.
+*/
+ViewModel.prototype.showSpots = function(){
+  console.log("Show Spots");
+  var mapBounds = new google.maps.LatLngBounds();
+  // Go through the cool spot list and set the map for
+  //  each marker
+  this.spotList().forEach(function(spot){
+    spot.marker().setMap(map_global);
+    // Extend the boundry for the marker if necessary
+    mapBounds.extend(spot.marker().position);
+  });
+  // Set the center of the map by getting the center of
+  //  all of the cool spot list markers
+  map_global.setCenter(mapBounds.getCenter());
+  // Set the bounds of the map by the marker postions
+  map_global.fitBounds(mapBounds);
+};
+/**
+* @description Called to hide cool spots
+*/
+ViewModel.prototype.hideSpots = function(){
+  this.spotList().forEach(function(spot){
+    spot.marker().setMap(null);
+  });
+};
+/**
+* @description Hide markers that are sent
+* in an array. Sets each markers map object
+* to null.
+* @param {object[]} markers - an array of google map markers.
+*/
+ViewModel.prototype.hideMarkers = function(markers){
+  console.log("Hide Markers");
+  markers.forEach(function(marker){
+    marker.setMap(null);
+  })
+};
+/**
+* @description Toggle Drawing function
+* Toggling the drawing manager
+*  Either starts drawing mode so user can
+*  draw a polyline box around an area of
+*  interst OR clears the box from the map.
+* Uses the viewModel drawingManager.
+*/
+ViewModel.prototype.toggleDrawing = function(){
+  if(this.drawingManager().map){
+    this.drawingManager().setMap(null);
+    // Remove any polygon
+    if(this.polygon()){
+      this.polygon().setMap(null);
+    }
+  }else{
+    this.drawingManager().setMap(map_global);
+  }
+};
+/**
+* @description Zoom to area function
+* Zoom to an area selected by user; it
+* gets the users input from the zoom
+* to area text box then geocodes it for
+* lat/long information
+*/
+ViewModel.prototype.zoomToArea = function() {
+  // Initialize a geocoder
+  var geocoder = new google.maps.Geocoder();
+  // Get the address to zoom to
+  // Make sure the address isn't blank
+  if(this.favoriteAreaText() == ''){
+    // Alert user if there is nothing in
+    // the favoriteAreaText text box
+    window.alert('Please ad an area or address');
+  }else {
+    // Geocode the address/area entered; want the center.
+    geocoder.geocode(
+      { address: this.favoriteAreaText()
+      }, function(results, status){
+        // Center the map on location if an address or area is found
+        if(status == google.maps.GeocoderStatus.OK){
+          console.log("    location "+results[0].geometry.location );
+          map_global.setCenter(results[0].geometry.location);
+          map_global.setZoom(15);
+        }else {
+          // Alert the user if the status is anything but OK
+          window.alert('Could not find that location - try entering a more specific place');
+        }
+      }
+    )
+
+  }
+};
+/**
+* @description Display markers within time/distance. As filtered by the calling function.
+*  This is a refactored version of the course example.
+* @param {objec} self - 'this' of the ViewModel object, should not be necessary; find a more
+* elegant solution later.
+* @param {object[]} response - result of a call to distanceMatrixService.getDistanceMatrix.
+* Sent to a callback function which calls this one.
+*/
+ViewModel.prototype.displayMarkersWithinTime = function(response){
+  // As this is in a prototype for ViewModel, 'this' is
+  // ViewModel, so create 'self' for clarity.
+  var self = this;
+  var origins = response.originAddresses;
+  var destivations = response.destinationAddress;
+  //
+  var atLeastOne = false;
+  // Incrementing reference to identify marker
+  // that is within the time range selected
+  var i = 0;
+  // Go through each response address and compare the time it
+  //  takes
+  response.rows.forEach(function(results){
+    results.elements.forEach(function(result){
+      // The distance .value is returned in feet - set by the UnitSystem parameter - but the .text is in miles.
+      //  if you want to change the logic to show markers in a distance, you need the value for distance; 'result.distance.value' only need text here tho.
+      var distanceText = null;
+      // Make sure the result has a distance
+      if(result.distance){
+        distanceText = result.distance.text;
+      }else {
+        // If not, Skip the rest, there is no valid result and alert the user.
+        window.alert("There are no cool spots in that area.")
+        return;
+      }
+      // Duration value is given in seconds, convert to minutes.
+      var duration = result.duration.value/60;
+      // Also need the duration text
+      var durationText = result.duration.text;
+      // If the route duration is less than the selected time
+      console.log("  selected Time: "+self.selectedTime());
+      if(duration <= self.selectedTime()){
+        // set the marker for this result.
+        // indavidual marker, to be used later in this function as well.
+        var marker = null;
+        if(i < self.spotList().length){
+          marker = self.spotList()[i].marker();
+          marker.setMap(map_global);
+        }
+        //
+        // Obviously at least one marker is within range
+        atLeastOne = true;
+        // Create a mini infowindow to open immediately and
+        //  contain the distance and duration
+        // TODO: Change to knockoutjs data-bind(ing)
+        var infowindow = new google.maps.InfoWindow({
+          content: durationText + ' away, about ' + distanceText +
+          '<div><button type=\"button\" id=\"display-directions\" onClick='+
+          '\"view_model.displayDirections(&quot;'+ origins[i] +'&quot;);\">View Route</button></div>'
+        });
+
+        // Assign this local infowindow to the marker so the marker will be re-shown on the larger infowindow
+        //  if the view changes.
+        //  The reason to use markers[] instead of marker is because marker is local and markers[] is the actual global value.
+        if(marker){
+          // Assign the infowindow to the indicated
+          // spotList element
+          self.spotList()[i].marker().infowindow = infowindow;
+          // event listener for infowindow click, to close this local infowindow.
+          google.maps.event.addListener(marker, 'click', function(){
+            marker.infowindow.close();
+          });
+
+        }
+        // Show the marker
+        infowindow.open(map_global, marker);
+      }
+      // increment i for marker selection
+      i = i + 1;
+    });
+
+  });
+  //
+  if(!atLeastOne){
+    // Alert user that there wasn't any good results found
+    window.alert('Sorry, nothing found within your selected time window.')
+  }
+
+};
+//*****************************
+// TODO: Set the callback function for when the polygon is moved
+/**
+* @description Search inside the polygon
+*/
+ViewModel.prototype.searchWithinPolygon = function(){
+  var self = this;
+  this.spotList().forEach(function(spot){
+    console.log(" Search Within Poly: target "+spot.name());
+    // Check if the markers position is inside the global polygon area
+    if(google.maps.geometry.poly.containsLocation(spot.marker().position,self.polygon())){
+      spot.marker().setMap(map_global);// its inside so add it to the map
+    }else{
+      spot.marker().setMap(null);// its not inside so remove it
+    }
+  });
+};
+/**
+* @description Search for cool spots within a given time
+* from a location given by user.
+*  User can also supply mode of travel.
+* TODO: Add distance functionality
+*/
+ViewModel.prototype.searchWithinTime = function(){
+  //
+  var self = this;
+  // Initialize the distance matrix
+  var distanceMatrixService = new google.maps.DistanceMatrixService;
+  // Get the address entered by user
+  // Check to make sure the address isn't blank
+  if(this.timeSearchText() == ''){
+    // Alert the user that there is nothing
+    // in the search by time text box.
+    window.alert('You need to enter an address');
+  }else {
+    console.log(" Search Within Time");
+    // Hide all cool spot markers first.
+    this.hideSpots();
+    // Use the distance matrix service to calculate the duration of the
+    //  routes between all the markers (origin), and the destination address
+    //  entered by the user.
+    var origins = [];
+    this.spotList().forEach(function(spot){
+      // Put all the origins into an origin matrix
+      origins.push(spot.marker().position);
+    });
+    // address given by user is now the destination
+    var destination = this.timeSearchText();
+    var mode = this.selectedMode();
+    //
+    // Call the google distance matrix service;
+    //  Find the how to here: https://developers.google.com/maps/documentation/javascript/distancematrix
+    distanceMatrixService.getDistanceMatrix({
+      origins: origins,
+      destinations: [destination],
+      travelMode: google.maps.TravelMode[mode],
+      unitSystem: google.maps.UnitSystem.IMPERIAL,
+    }, function(response, status){
+      // This is the callback function that results will be sent to
+      //
+      if(status !== google.maps.DistanceMatrixStatus.OK){
+        // Alert user there was an error and what it was
+        window.alert("Error was: " + status);
+      }else {
+        // Display all markers that are within the
+        // given time period
+        self.displayMarkersWithinTime(response);
+      }
+    });
+
+  }
+};
+/**
+* @description Clear Directions off the map
+*/
+ViewModel.prototype.clearRoutes = function(){
+  this.routes().forEach(function(route){
+    route.setMap(null);
+  });
+  // Clean all routes from array.
+  this.routes.removeAll();
+};
+/**
+* @description Search by text places
+* Called when 'go' button for search places is clicked
+*  It will go a nearby search using the entered query string or place.
+TODO Add this functionality
+*/
+ViewModel.prototype.textSearchPlaces = function(){
+  var bounds = map_global.getBounds();
+  this.hideMarkers(placeMarkers);
+  var placesService = new google.maps.places.PlacesService(map);
+  // TODO: Change to knockoutjs data-bind(ing)
+  placesService.textSearch({
+    query:
+    document.getElementById('places-search').value,
+    bounds: bounds
+  },function(results, status){
+    if(status === google.maps.places.PlacesServiceStatus.OK){
+      createMarkersForPlaces(results);
+    }
+  });
+};
+/**
+* @description
+* TODO: Create markers for places
+* Create markers for all places that are searched for
+* @param {object[]} places - An array of objects containing place marker information; icon, name, geometry, place_id,
+*/
+ViewModel.prototype.createMarkersForPlaces = function(places){
+  console.log("Create Markers for Places");
+  var mapBounds = new google.maps.LatLngBounds();
+  places.forEach(function(place){
+    // Marker icon parameters
+    var icon = {
+      url: place.icon,// special icon
+      size: new google.maps.Size(35, 35),
+      origin: new google.maps.Point(0,0),
+      anchor: new google.maps.Point(15,34),
+      scaledSize: new google.maps.Size(25,25)
+    };
+    // Create a marker
+    var marker = new google.maps.Marker({
+      map: map_global,
+      icon: icon,
+      title: place.name,
+      position: place.geometry.location,
+      id: place.place_id
+    });
+    // Info window for place search result information details
+    var placeInfoWindow = new google.maps.InfoWindow();
+    // Event listener for when the marker is clicked
+    marker.addListener('click',function(){
+      if(placeInfoWindow.marker == this){
+        console.log("This infowindow already is on this marker");
+      }else {
+        // TODO: Make this function
+        getPlacesDetails(this, placeInfoWindow);
+      }
+    });
+    // Add markers to the placeMarker array
+    self.placeMarkers().push(marker);
+    if(place.geometry.viewport){
+      // Only geocodes have viewport.
+      mapBounds.union(place.geometry.viewport);
+    }else {// adjust map bounds if necessary to acomadate results
+      mapBounds.extend(place.geometry.location);
+    }
+    // Move the center of the map to the marker that
+    //  is in the middle of of the grouping
+    map_global.setCenter(mapBounds.getCenter());
+    // Make sure the map shows all markers
+    map_global.fitBounds(mapBounds);
+  });
+};
+/**
+* @description Entry point for Neighborhood Map
+*/
 ko.applyBindings(new ViewModel());
 
 
