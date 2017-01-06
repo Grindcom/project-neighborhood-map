@@ -186,6 +186,9 @@ var ViewModel = function(){
   // **************************
   // Provide global access to this as an object literal
   view_model = this;
+  //****************************
+  // InfoWindow for markers
+  this.largeInfowindow = ko.observable(null);
   //**********************************
   // Local variables to collect drawing data
   this.polygon = ko.observable(null);
@@ -302,6 +305,9 @@ var ViewModel = function(){
       // createMarker(spot.name(),spot.address());
       self.buildMarker(spot);
     });
+    //***
+    // Create a new InfoWindow
+    self.largeInfowindow = new google.maps.InfoWindow();
     //***
     // Add Drawing manager for polygon shapes
     self.drawingManager(new google.maps.drawing.DrawingManager({
@@ -634,7 +640,6 @@ ViewModel.prototype.hideSpots = function(){
     spot.marker().setMap(null);
   });
 };
-
 /**
 * @description Hide markers that are sent
 * in an array. Sets each markers map object
@@ -701,8 +706,6 @@ ViewModel.prototype.zoomToArea = function() {
 
   }
 };
-
-
 /**
 * @description Display markers within time/distance. As filtered by the calling function.
 *  This is a refactored version of the course example.
