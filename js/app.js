@@ -541,16 +541,18 @@ var ViewModel = function(){
     //
     self.currentSpot(obj);
     // TODO: Figure out why the currentSpot isn't working
-    // console.log("Current Name: "+self.currentSpot.name());
-    // If the marker isn't visible show it with a drop
-    if(map_global.getBounds().contains(obj.marker().getPosition()) !== null){
-      // TODO: Find a way to check when the marker is on the map.  This way doesn't work.
-      console.log(" Why?");
+    // If the marker isn't presant on the map place it.
+    if(!obj.marker().getMap()){
       obj.marker().setMap(map_global);
-    }else {
-      console.log(" What?");
+    }
+    // If there is an animation clear it
+    if(obj.marker().getAnimation() === google.maps.Animation.BOUNCE){
+      console.log(" Clear Animation");
+      obj.marker().setAnimation(null);
+    } else {
+      // If not, add a bounce to the marker
+      console.log(" Bounce marker");
       obj.marker().setAnimation(google.maps.Animation.BOUNCE);
-      setTimeout(function(){ obj.marker().setAnimation(null); }, 300);
     }
 
   };
