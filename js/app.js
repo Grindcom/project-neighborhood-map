@@ -222,7 +222,7 @@ var ViewModel = function(){
   this.spotList = ko.observableArray([]);
   // Load the favorite location list with static data
   favSpots.forEach(function(location){
-    self.spotList.push(new CoolSpot(location));
+    self.spotList().push(new CoolSpot(location));
   });
   // Set the Current cool spot
   this.currentSpot = ko.observable(this.spotList()[0]);
@@ -243,7 +243,7 @@ var ViewModel = function(){
     slideout.toggle();
   };
   /**
-  * Direction Service object for finding routes
+  * @description Direction Service object for finding routes
   */
   var directionsService = null;
   this.routes = ko.observableArray([]);
@@ -426,20 +426,7 @@ var ViewModel = function(){
       }
     });
   };
-  //*****************************
-  // TODO: Search within polygon
-  // Search inside the polygon
-  this.searchWithinPolygon = function(){
-    self.spotList().forEach(function(spot){
-      console.log(" Search Within Poly: target "+spot.name());
-      // Check if the markers position is inside the global polygon area
-      if(google.maps.geometry.poly.containsLocation(spot.marker().position,self.polygon())){
-        spot.marker().setMap(map_global);// its inside so add it to the map
-      }else{
-        spot.marker().setMap(null);// its not inside so remove it
-      }
-    });
-  };
+
   //******************************
   // TODO: populateInfoWindow
   // This function will populate the infowindow when the marker is clicked.
@@ -560,6 +547,7 @@ var ViewModel = function(){
   };
 }
 //
+
 /**
 * @description This function will make a custom marker, Using the supplied color as
 *  its base.
@@ -802,6 +790,23 @@ ViewModel.prototype.displayMarkersWithinTime = function(response){
     window.alert('Sorry, nothing found within your selected time window.')
   }
 
+};
+//*****************************
+// TODO: Set the callback function for when the polygon is moved
+/**
+* @description Search inside the polygon
+*/
+ViewModel.prototype.searchWithinPolygon = function(){
+  var self = this;
+  this.spotList().forEach(function(spot){
+    console.log(" Search Within Poly: target "+spot.name());
+    // Check if the markers position is inside the global polygon area
+    if(google.maps.geometry.poly.containsLocation(spot.marker().position,self.polygon())){
+      spot.marker().setMap(map_global);// its inside so add it to the map
+    }else{
+      spot.marker().setMap(null);// its not inside so remove it
+    }
+  });
 };
 /**
 * @description Search for cool spots within a given time
