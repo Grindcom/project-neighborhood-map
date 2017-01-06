@@ -168,6 +168,8 @@ var CoolSpot = function(data){
   //
   this.markerColor = ko.observable('070B57');
   //
+  this.markerHighlightColor = ko.observable('FFFF24')
+  //
   this.imgSrc = ko.observable(data.imgSrc);
   //
   this.imgAttribution = ko.observable(data.imgAttribution);
@@ -301,9 +303,10 @@ var ViewModel = function(){
     });
     // set up markers for the cool spots
     self.spotList().forEach(function(spot){
-      // console.log("Spot List, Address: "+spot.address());
-      // createMarker(spot.name(),spot.address());
+      //**
+      // Build the marker for this spot
       self.buildMarker(spot);
+
     });
     //***
     // Create a new InfoWindow
@@ -595,14 +598,34 @@ ViewModel.prototype.buildMarker = function(targetSpot){
         if(status == google.maps.GeocoderStatus.OK){
           //
           targetSpot.geoLocation(results[0].geometry.location);
+          //**
+          // Make an icon with the spots selected color
+          var icon = self.makeMarkerIcon(targetSpot.markerColor());
+          //**
           // Create marker
           var marker = new google.maps.Marker({
             // map: map_global,
             position: targetSpot.geoLocation(),// Location of marker on map
             title: targetSpot.name(),// What will show when the marker is hovered over
-            icon: self.makeMarkerIcon(targetSpot.markerColor()),
+            icon: icon,
             animation: google.maps.Animation.DROP, // Shake the marker as it appears
           });
+          //**
+          // Make a contrasting icon for mouse hover over
+          var hoverOverIcon = self.makeMarkerIcon(targetSpot.markerHighlightColor());
+          //**
+          // Add a mousover listener to change color on hover
+          marker.addListener('mouseover',function(){
+            this.setIcon(hoverOverIcon);
+          });
+          //**
+          // Add a mouseout listener so the icon changes
+          // back when the mouse leaves
+          marker.addListener('mouseout',function(){
+            this.setIcon(icon);
+          });
+          //**
+          // Add the marker to the spot
           targetSpot.marker(marker);
         }else {
           window.alert('Could not find that location - try entering a more specific place');
