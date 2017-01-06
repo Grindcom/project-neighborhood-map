@@ -533,9 +533,12 @@ var ViewModel = function(){
     });
 
   };
-  //**********************************
-  // TODO: Make a function that does something when the
-  //  spot name is clicked
+  /**
+  * @description Toggle the marker object to bounce or stop
+  * bouncing each time it is called. Makes sure the marker is
+  * on the map.
+  * @param {object} obj - used to access marker object
+  */
   this.shakeNameMarker = function(obj){
     console.log("Shake Name: " + obj.name());
     //
@@ -554,7 +557,6 @@ var ViewModel = function(){
       console.log(" Bounce marker");
       obj.marker().setAnimation(google.maps.Animation.BOUNCE);
     }
-
   };
 }
 //
