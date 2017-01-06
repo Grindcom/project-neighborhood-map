@@ -550,7 +550,7 @@ var ViewModel = function(){
     }else {
       console.log(" What?");
       obj.marker().setAnimation(google.maps.Animation.BOUNCE);
-      setTimeout(function(){ obj.marker().setAnimation(null); }, 2000);
+      setTimeout(function(){ obj.marker().setAnimation(null); }, 300);
     }
 
   };
@@ -581,19 +581,16 @@ ViewModel.prototype.makeMarkerIcon = function(markerColor){
 */
 ViewModel.prototype.buildMarker = function(targetSpot){
   var self = this;
-  console.log("Test Spot Name "+targetSpot.name());
   // Initialize a geocoder
   var geocoder = new google.maps.Geocoder();
   // Make sure the address isn't blank
   if(targetSpot.address() == ''){
     window.alert('Address: '+targetSpot.address()+', is not valid.');
   }else {
-    console.log("--Test getGeocode Address "+targetSpot.address());
     // Geocode the address/area entered; want the center.
     geocoder.geocode(
       { address: targetSpot.address() }// keep within city
       , function(results, status){
-        console.log("----Status: "+status);
         // Center the map on location if an address or area is found
         if(status == google.maps.GeocoderStatus.OK){
           //
