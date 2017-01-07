@@ -308,7 +308,7 @@ var ViewModel = function(){
     });
     //***
     // Create a new InfoWindow
-    self.largeInfowindow = new google.maps.InfoWindow();
+    self.largeInfowindow(new google.maps.InfoWindow());
     //***
     // Add Drawing manager for polygon shapes
     self.drawingManager(new google.maps.drawing.DrawingManager({
@@ -327,7 +327,6 @@ var ViewModel = function(){
     //  Once there is a polygon this function will call for a search within
     //  the polygon area and eliminate any markers that are not in that area.
     self.drawingManager().addListener('overlaycomplete', function(event){
-      console.log("Drawing Manager listener");
       //Check for an existing polygon
       if(self.polygon()){
         // if there is get rid of it
@@ -439,18 +438,15 @@ var ViewModel = function(){
   // This function will populate the infowindow when the marker is clicked.
   //  We'll only allow one infowindow at a time.  When clicked it will be
   //  populated with the related information
-  this.populateInfoWindow = function(marker, infowindow){
+  this.populateInfoWindow = function(marker){
     // Make sure the infowindow is not already opened on this marker
-    if(infowindow.marker != marker){
-      infowindow.marker = marker;
+    if( self.largeInfowindow().marker != marker){
+      console.log("infowindow.marker != marker");
+       self.largeInfowindow().marker = marker;
       // Add the marker title to an element in the infowindow
-      infowindow.setContent('<div>'+ marker.title +'</div>');
+       self.largeInfowindow().setContent('<div>'+ marker.title +'</div>');
       // Open the content on the map
-      infowindow.open(map_global, marker);
-      // Clear the marker property if the infowindow is closed.
-      infowindow.addListener('closeclick',function(){
-        infowindow.setMarker(null);
-      });
+       self.largeInfowindow().open(map_global, marker);
       // Set up street view stuff
       var streetViewService = new google.maps.StreetViewService();
       var radius = 50;// 50 meters
@@ -463,26 +459,26 @@ var ViewModel = function(){
             nearStreetViewLocation, marker.position
           );
           // Create a div for the street view image
-          infowindow.setContent('<div>'+marker.title+'</div><div id="pano"></div>');
+           self.largeInfowindow().setContent('<div>'+marker.title+'</div><div id="pano"></div>');
           var panoramaOptions = {
             position: nearStreetViewLocation,
             pov: {
               heading: heading,
-              pitch: 30// looking up or down at building
+              pitch: 10// looking up or down at building
             }
           };
           var panorama = new google.maps.StreetViewPanorama(
             document.getElementById('pano'), panoramaOptions
           );
         } else {
-          infowindow.setContent('<div>'+ marker.title +'</div>' + '<div>No Street View Found</div>');
+           self.largeInfowindow().setContent('<div>'+ marker.title +'</div>' + '<div>No Street View Found</div>');
         }
       }
       // Use the streetview service to get the closest streetview image
       //  within 50 meters of the markers position
       streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
       // Open the infowindow on the correct marker.
-      infowindow.open(map_global, marker);
+       self.largeInfowindow().open(map_global, marker);
     }
   };
 
@@ -595,6 +591,11 @@ ViewModel.prototype.buildMarker = function(targetSpot){
           // back when the mouse leaves
           marker.addListener('mouseout',function(){
             this.setIcon(icon);
+          });
+          // Add a click event listener to call the
+          // info window function
+          marker.addListener('click',function(){
+            self.populateInfoWindow(this);
           });
           // Add the marker to the spot
           targetSpot.marker(marker);
