@@ -348,8 +348,8 @@ var ViewModel = function(){
       // Search inside the polygon
       self.searchWithinPolygon();
       // Ensure the search is re-done if the polygon is changed
-      self.polygon().getPath().addListener('set_at', self.searchWithinPolygon);
-      self.polygon().getPath().addListener('insert_at', self.searchWithinPolygon);
+      self.polygon().getPath().addListener('set_at', function(){self.searchWithinPolygon();});
+      self.polygon().getPath().addListener('insert_at', function(){self.searchWithinPolygon();});
       // Get the area of the polygon, result is in meters
       var area = google.maps.geometry.spherical.computeArea(self.polygon().getPath());
       area = area.toFixed(2);
@@ -816,7 +816,7 @@ ViewModel.prototype.displayMarkersWithinTime = function(response){
 */
 ViewModel.prototype.searchWithinPolygon = function(){
   var self = this;
-  this.spotList().forEach(function(spot){
+  self.spotList().forEach(function(spot){
     console.log(" Search Within Poly: target "+spot.name());
     // Check if the markers position is inside the global polygon area
     if(google.maps.geometry.poly.containsLocation(spot.marker().position,self.polygon())){
