@@ -229,8 +229,6 @@ var ViewModel = function(){
   favSpots.forEach(function(location){
     self.spotList().push(new CoolSpot(location));
   });
-  // Set the Current cool spot
-  this.currentSpot = ko.observable(this.spotList()[0]);
   // *********************
   // Set up slideout menu
   var slideout = new Slideout({
@@ -533,31 +531,7 @@ var ViewModel = function(){
     });
 
   };
-  /**
-  * @description Toggle the marker object to bounce or stop
-  * bouncing each time it is called. Makes sure the marker is
-  * on the map.
-  * @param {object} obj - used to access marker object
-  */
-  this.shakeNameMarker = function(obj){
-    console.log("Shake Name: " + obj.name());
-    //
-    self.currentSpot(obj);
-    // TODO: Figure out why the currentSpot isn't working
-    // If the marker isn't presant on the map place it.
-    if(!obj.marker().getMap()){
-      obj.marker().setMap(map_global);
-    }
-    // If there is an animation clear it
-    if(obj.marker().getAnimation() === google.maps.Animation.BOUNCE){
-      console.log(" Clear Animation");
-      obj.marker().setAnimation(null);
-    } else {
-      // If not, add a bounce to the marker
-      console.log(" Bounce marker");
-      obj.marker().setAnimation(google.maps.Animation.BOUNCE);
-    }
-  };
+
 }
 //
 
@@ -629,6 +603,27 @@ ViewModel.prototype.buildMarker = function(targetSpot){
         }
       }
     );
+  }
+};
+/**
+* @description Toggle the marker object to bounce or stop
+* bouncing each time it is called. Makes sure the marker is
+* on the map.
+* @param {object} obj - used to access marker object
+*/
+ViewModel.prototype.shakeNameMarker = function(obj){
+  // If the marker isn't presant on the map place it.
+  if(!obj.marker().getMap()){
+    obj.marker().setMap(map_global);
+  }
+  // If there is an animation clear it
+  if(obj.marker().getAnimation() === google.maps.Animation.BOUNCE){
+    console.log(" Clear Animation");
+    obj.marker().setAnimation(null);
+  } else {
+    // If not, add a bounce to the marker
+    console.log(" Bounce marker");
+    obj.marker().setAnimation(google.maps.Animation.BOUNCE);
   }
 };
 /**
