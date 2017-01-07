@@ -12,8 +12,9 @@ Once the menu is toggled open, the user will see a list of cool spots as well as
   2. When toggled off the sketch will be removed, but the markers will be left in place.
 3. Search by an area; enter an area of interest in the text box then click zoom to swoop in to the zone.
 4. Select one of the listed cool spots;
-    1. If all markers are showing, the selected spots' marker will shake.
-    2. If the markers aren't showing, the spots' marker will drop onto the map.
+    1. If all markers are showing, the selected spots' marker will bounce.
+    2. If the markers aren't showing, the spots' marker will drop onto the map and start bouncing.
+    3. If a spot's marker is bouncing, slecting it again will stop it.
 
 ## Requirements
 
