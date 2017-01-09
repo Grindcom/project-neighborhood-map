@@ -32,9 +32,9 @@ Once the menu is toggled open, the user will see a list of cool spots as well as
 
 
 ### Must do's
-1. Track click events on list items using Knockout.js
-2. Create markers as part of the ViewModel (as observables is not permitted)
-3. All API's must be loaded asynchronously.
+1. [x] Track click events on list items using Knockout.js
+2. [x] Create markers as part of the ViewModel (as observables is not permitted)
+3. [ ] All API's must be loaded asynchronously.
 4. Error handling must be handled gracefully (including 3rd party API access issues); any of the following are recommened;
   1. "A message is displayed notifying the user that the data can't be loaded"(UDacity project details)  
   2. "There are no negative repercussions to the UI"(UDacity project details)
