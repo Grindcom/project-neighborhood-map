@@ -32,15 +32,15 @@ Once the menu is toggled open, the user will see a list of cool spots as well as
 
 
 ### Must do's
-1.[x] Track click events on list items using Knockout.js
+1. [x] Track click events on list items using Knockout.js
 2. [x] Create markers as part of the ViewModel (as observables is not permitted)
 3. [ ] All API's must be loaded asynchronously.
-4. Error handling must be handled gracefully (including 3rd party API access issues); any of the following are recommened;
-  1. "A message is displayed notifying the user that the data can't be loaded"(UDacity project details)  
-  2. "There are no negative repercussions to the UI"(UDacity project details)
-  3. [Special error handling](http://api.jquery.com/jquery.ajax/#jqXHR)
-  4. [Block websites](http://www.digitaltrends.com/computing/how-to-block-a-website/) that may cause issues
-  5. [Learn more here](http://ruben.verborgh.org/blog/2012/12/31/asynchronous-error-handling-in-javascript/)
+4. [ ] Error handling must be handled gracefully (including 3rd party API access issues); any of the following are recommened;
+  1. [x] "A message is displayed notifying the user that the data can't be loaded"(UDacity project details)  
+  2. [ ] "There are no negative repercussions to the UI"(UDacity project details)
+  3. [ ] [Special error handling](http://api.jquery.com/jquery.ajax/#jqXHR)
+  4. [ ] [Block websites](http://www.digitaltrends.com/computing/how-to-block-a-website/) that may cause issues
+  5. [ ] [Learn more here](http://ruben.verborgh.org/blog/2012/12/31/asynchronous-error-handling-in-javascript/)
 5. Add a full-screen map using Google Maps API; only call map API once
 6. Write code to display map markers,
   1. With at least 5 locations of interest; displayed by default.
