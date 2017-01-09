@@ -32,7 +32,7 @@ Once the menu is toggled open, the user will see a list of cool spots as well as
 
 
 ### Must do's
-[x] 1. Track click events on list items using Knockout.js
+1.[x] Track click events on list items using Knockout.js
 2. [x] Create markers as part of the ViewModel (as observables is not permitted)
 3. [ ] All API's must be loaded asynchronously.
 4. Error handling must be handled gracefully (including 3rd party API access issues); any of the following are recommened;
