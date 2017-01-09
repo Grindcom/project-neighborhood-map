@@ -155,8 +155,12 @@ var favSpots = [
 ]
 //*******************
 //
-var CoolSpot = function(data){
+var CoolSpot = function(data,id){
   var self = this;
+  //
+  this.id = id;
+  //
+  this.clickCount = ko.observable(0);
   //
   this.name = ko.observable(data.name);
   //
@@ -226,9 +230,13 @@ var ViewModel = function(){
   // List of favorites locations
   this.spotList = ko.observableArray([]);
   // Load the favorite location list with static data
+  var i = 0;
   favSpots.forEach(function(location){
-    self.spotList().push(new CoolSpot(location));
+    self.spotList().push(new CoolSpot(location,i++));
   });
+  // ***************************
+  // Current Spot selected
+  this.currentSpot = ko.observable(self.spotList()[0]);
   // *********************
   // Set up slideout menu
   var slideout = new Slideout({
@@ -365,21 +373,8 @@ var ViewModel = function(){
     */
     directionsService = new google.maps.DirectionsService();
   };// END OF initMap
-
-
-
-
-
-
-
-
-
   //*****************************
   // TODO: Search by nearby places
-
-
-
-
   //******************************
   // TODO: get place details
   //  The PLACE DETAILS search; most detailed so it is only executed
@@ -607,12 +602,26 @@ ViewModel.prototype.buildMarker = function(targetSpot){
   }
 };
 /**
+* @description Handle click events from 'Favourite spot list'
+* @param {object} obj - passed from click event handler.
+*/
+ViewModel.prototype.listClickHandler = function(obj){
+  var self = this;
+  console.log("listClickHandler: "+obj.clickCount()+" clicks");
+  // toggle the marker bounce on/off
+  self.shakeNameMarker(obj);
+  // increment click count for this spot
+  var clicks = obj.clickCount();
+  obj.clickCount(++clicks);
+}
+/**
 * @description Toggle the marker object to bounce or stop
 * bouncing each time it is called. Makes sure the marker is
 * on the map.
 * @param {object} obj - used to access marker object
 */
 ViewModel.prototype.shakeNameMarker = function(obj){
+  console.log("shakeNameMarker");
   // If the marker isn't presant on the map place it.
   if(!obj.marker().getMap()){
     obj.marker().setMap(map_global);
@@ -625,6 +634,8 @@ ViewModel.prototype.shakeNameMarker = function(obj){
     // If not, add a bounce to the marker
     console.log(" Bounce marker");
     obj.marker().setAnimation(google.maps.Animation.BOUNCE);
+    // Set the current spot
+    console.log("ID: "+obj.id);
   }
 };
 /**

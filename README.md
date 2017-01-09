@@ -14,7 +14,7 @@ Once the menu is toggled open, the user will see a list of cool spots as well as
 4. Select one of the listed cool spots;
     1. If all markers are showing, the selected spots' marker will bounce.
     2. If the markers aren't showing, the spots' marker will drop onto the map and start bouncing.
-    3. If a spot's marker is bouncing, slecting it again will stop it.
+    3. If a spot's marker is bouncing, selecting it again will stop it.
 
 ## Requirements
 
