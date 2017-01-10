@@ -51,7 +51,7 @@ header{
 #panel{
   position: relative;
   z-index: 0;
-  /*border: 5px;*/
+  border: 5px;
   /*margin-left: 25px;*/
   /*width: 100%;*/
   /*left: 0;
