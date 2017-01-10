@@ -632,7 +632,7 @@ ViewModel.prototype.shakeNameMarker = function(obj){
   }
   // If there is an animation clear it
   if(obj.marker().getAnimation() === google.maps.Animation.BOUNCE){
-    obj.marker().setAnimation(null);
+    obj.marker().setAnimation(google.maps.Animation.DROP);
   } else {
     // If not, add a bounce to the marker
     obj.marker().setAnimation(google.maps.Animation.BOUNCE);
@@ -667,6 +667,9 @@ ViewModel.prototype.showSpots = function(){
 ViewModel.prototype.hideSpots = function(){
   this.spotList().forEach(function(spot){
     spot.marker().setMap(null);
+    // Re-set animation to drop in, when marker
+    // is shown again.
+    spot.marker().setAnimation(google.maps.Animation.DROP);
   });
 };
 /**
