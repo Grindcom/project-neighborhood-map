@@ -249,9 +249,7 @@ var ViewModel = function(){
     'panel': document.getElementById('panel'),
     'menu': document.getElementById('menu'),
     'padding': 256,
-    'tolerance': 70,
-    'duration': 350,
-    'easing':'ease-out(.32,2,.55,.27)'
+    'tolerance': 70
   });
   /**
   * @description Menu Toggle button

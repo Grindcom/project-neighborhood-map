@@ -145,7 +145,6 @@ ul, ol{
     z-index: 2;
     transition: transform 300ms ease;
 }
-
 .fixed-open {
     transform: translate3d(-256px, 0px, 0px);
 }
