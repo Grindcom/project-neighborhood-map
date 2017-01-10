@@ -139,6 +139,16 @@ ul, ol{
 .slideout-open .slideout-menu {
   display: block;
 }
+.fixed {
+    backface-visibility: hidden;
+    position: fixed;
+    z-index: 2;
+    transition: transform 300ms ease;
+}
+
+.fixed-open {
+    transform: translate3d(-256px, 0px, 0px);
+}
 /*The following was found here: http://stackoverflow.com/questions/22996429/override-bootstrap-container-width*/
 @media(min-width: 768px){
   .container{
