@@ -114,7 +114,7 @@ ul, ol{
   bottom: 0;
   width: 256px;
   min-height: 100vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   z-index: 0;
   display: none;
@@ -130,15 +130,12 @@ ul, ol{
   position: relative;
   z-index: 1;
   will-change: transform;
-  background-color: #FFF; /* A background-color is required */
-  min-height: 100vh;
 }
 .slideout-open,
 .slideout-open body,
 .slideout-open .slideout-panel {
   overflow: hidden;
 }
-
 .slideout-open .slideout-menu {
   display: block;
 }
