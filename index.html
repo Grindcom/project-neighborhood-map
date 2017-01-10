@@ -34,7 +34,7 @@ Start Date: Dec. 13, 2016 -->
       <h3>My Favourites</h3>
       <div id="locations" class="location-list">
         <ul data-bind="foreach: spotList">
-          <li style="cursor: pointer" data-bind="text: name, click: function(obj){$parent.listClickHandler(obj)}">
+          <li style="cursor: pointer" data-bind="text: nameAndCount, click: function(obj){$parent.listClickHandler(obj)}">
 
           </li>
         </ul>

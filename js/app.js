@@ -179,9 +179,14 @@ var CoolSpot = function(data,id){
   this.imgAttribution = ko.observable(data.imgAttribution);
   //
   this.reviews = ko.observableArray(data.reviews);
+  //
+  this.marker = ko.observable(null);
   // TODO: Add computed observables; get more information about this spot, map marker, etc.
   // Map marker for this object
-  this.marker = ko.observable(null);
+  //
+  this.nameAndCount = ko.computed(function(){
+    return this.name() + " | " + this.clickCount() + " Likes";
+  },this);
 }
 /**
 * ViewModel
