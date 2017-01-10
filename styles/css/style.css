@@ -105,7 +105,7 @@ ul, ol{
 /* TODO: This is a temporary fix, need toggle button to move when slideout toggles */
 .toggle-button{
   margin-left: 2px;
-  border-radius: 24px;
+  border-radius: 0 24px 24px 0;
 }
 /*Slidout styles */
 .slideout-menu {
