@@ -26,7 +26,6 @@ body{
   line-height: 1;
 }
 header{
-  position: absolute;
   z-index: 100;
 }
 ul, ol{

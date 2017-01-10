@@ -29,13 +29,13 @@ Start Date: Dec. 13, 2016 -->
     <header class="sidebar-header">
       <h2 class="title">Neighborhood Locations</h2>
     </header>
-    <nav class="options-box, sidebar-menu" id="menu">
+    <nav class="sidebar-menu" id="menu">
 
       <!-- TODO: Add a Search places function -->
       <hr>
       <h3>My Favourites</h3>
       <div id="locations" class="location-list">
-        <ul data-bind="foreach: spotList">
+        <ul class="sidebar-menu__list" data-bind="foreach: spotList">
           <li class="sidebar-menu__item" style="cursor: pointer" data-bind="text: nameAndCount, click: function(obj){$parent.listClickHandler(obj)}">
           </li>
         </ul>
