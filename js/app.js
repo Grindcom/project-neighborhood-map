@@ -184,6 +184,7 @@ var CoolSpot = function(data,id){
   // TODO: Add computed observables; get more information about this spot, map marker, etc.
   // Map marker for this object
   //
+  // Return the name and clickCount together
   this.nameAndCount = ko.computed(function(){
     return this.name() + " | " + this.clickCount() + " Likes";
   },this);
@@ -611,10 +612,8 @@ ViewModel.prototype.buildMarker = function(targetSpot){
 * @param {object} obj - passed from click event handler.
 */
 ViewModel.prototype.listClickHandler = function(obj){
-  var self = this;
-  console.log("listClickHandler: "+obj.clickCount()+" clicks");
   // toggle the marker bounce on/off
-  self.shakeNameMarker(obj);
+  this.shakeNameMarker(obj);
   // increment click count for this spot
   var clicks = obj.clickCount();
   obj.clickCount(++clicks);
@@ -626,21 +625,19 @@ ViewModel.prototype.listClickHandler = function(obj){
 * @param {object} obj - used to access marker object
 */
 ViewModel.prototype.shakeNameMarker = function(obj){
-  console.log("shakeNameMarker");
+  var self = this;
   // If the marker isn't presant on the map place it.
   if(!obj.marker().getMap()){
     obj.marker().setMap(map_global);
   }
   // If there is an animation clear it
   if(obj.marker().getAnimation() === google.maps.Animation.BOUNCE){
-    console.log(" Clear Animation");
     obj.marker().setAnimation(null);
   } else {
     // If not, add a bounce to the marker
-    console.log(" Bounce marker");
     obj.marker().setAnimation(google.maps.Animation.BOUNCE);
     // Set the current spot
-    console.log("ID: "+obj.id);
+    self.currentSpot(self.spotList()[obj.id]);
   }
 };
 /**
