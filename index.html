@@ -20,19 +20,18 @@ Start Date: Dec. 13, 2016 -->
   <link href="./styles/css/bootstrap.min.css" rel="stylesheet" media="screen">
   <!-- Slideout style -->
   <link rel="stylesheet" href="./styles/css/slideout.css">
+  <!-- Color palette -->
+  <!-- <link href="./styles/css/palette.css" rel="stylesheet"> -->
   <!-- Neighborhood map Styles -->
   <link href="./styles/css/style.css" rel="stylesheet">
 
 </head>
 <body>
-  <aside class="sidebar" id="sidebar">
-    <header class="sidebar-header">
+  <aside class="light-primary-color sidebar" id="sidebar">
+    <header class="sidebar-header  default-primary-color">
       <h2 class="title">Neighborhood Locations</h2>
     </header>
     <nav class="sidebar-menu" id="menu">
-
-      <!-- TODO: Add a Search places function -->
-      <hr>
       <h3>My Favourites</h3>
       <div id="locations" class="location-list">
         <ul class="sidebar-menu__list" data-bind="foreach: spotList">
@@ -63,18 +62,18 @@ Start Date: Dec. 13, 2016 -->
 
     </nav>
   </aside>
-  <header class="topheader fixed">
-  		<h1 class="title">topheader title</h1>
-  		<!-- <a class="button button--right button-sidebar" href="#0"></a> -->
+  <header class="topheader fixed dark-primary-color">
+    <h1 class="title">Cool Spots</h1>
+    <!-- <a class="button button--right button-sidebar" href="#0"></a> -->
     <button class="toggle-button button button--right button-sidebar" data-bind="click: menuToggle">☰ </button>
   </header>
   <!-- <header class="panel-header"> -->
-    <!-- TODO: Place button on right(?) -->
-    <!-- <button class="toggle-button" data-bind="click: menuToggle">☰ Menu</button> -->
+  <!-- TODO: Place button on right(?) -->
+  <!-- <button class="toggle-button" data-bind="click: menuToggle">☰ Menu</button> -->
   <!-- </header> -->
   <main class="main" id="main">
     <!-- <div id="panel" class=""> -->
-      <div id="map"></div>
+    <div id="map"></div>
     <!-- </div> -->
   </main>
 
