@@ -58,17 +58,17 @@ header{
   right: 0;*/
 }
 .options-box{
-  background: #FFD04C;
+  /*background: #FFD04C;
   border-radius: 24px;
   /*position: absolute;*/
-  z-index: 10;
+  /*z-index: 10;
   box-shadow: 1px 1px 25px #070B57;
   height: 100%;
   width: 30%;
   padding: 5px;
   margin-top: 30px;
   text-align: left;
-  overflow-y: auto;
+  overflow-y: auto;*/
 }
 /*Must have pano for street View to work*/
 #pano {
@@ -92,6 +92,41 @@ header{
 .toggle-button{
   margin-left: 2px;
   border-radius: 24px;
+}
+/*Slidout styles */
+.slideout-menu {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 256px;
+  min-height: 100vh;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  z-index: 0;
+  display: none;
+}
+.slideout-menu-left {
+  left: 0;
+}
+
+.slideout-menu-right {
+  right: 0;
+}
+.slideout-panel {
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  background-color: #FFF; /* A background-color is required */
+  min-height: 100vh;
+}
+.slideout-open,
+.slideout-open body,
+.slideout-open .slideout-panel {
+  overflow: hidden;
+}
+
+.slideout-open .slideout-menu {
+  display: block;
 }
 /*The following was found here: http://stackoverflow.com/questions/22996429/override-bootstrap-container-width*/
 @media(min-width: 768px){

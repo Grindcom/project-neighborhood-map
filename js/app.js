@@ -248,7 +248,7 @@ var ViewModel = function(){
   var slideout = new Slideout({
     'panel': document.getElementById('panel'),
     'menu': document.getElementById('menu'),
-    'padding': 10,
+    'padding': 256,
     'tolerance': 70,
     'duration': 350,
     'easing':'ease-out(.32,2,.55,.27)'
