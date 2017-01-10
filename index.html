@@ -25,17 +25,18 @@ Start Date: Dec. 13, 2016 -->
 
 </head>
 <body>
-  <div class="container" id="main">
+  <aside class="sidebar" id="sidebar">
+    <header class="sidebar-header">
+      <h2 class="title">Neighborhood Locations</h2>
+    </header>
+    <nav class="options-box, sidebar-menu" id="menu">
 
-    <nav class="options-box" id="menu">
-      <h2>Neighborhood Locations</h2>
       <!-- TODO: Add a Search places function -->
       <hr>
       <h3>My Favourites</h3>
       <div id="locations" class="location-list">
         <ul data-bind="foreach: spotList">
-          <li style="cursor: pointer" data-bind="text: nameAndCount, click: function(obj){$parent.listClickHandler(obj)}">
-
+          <li class="sidebar-menu__item" style="cursor: pointer" data-bind="text: nameAndCount, click: function(obj){$parent.listClickHandler(obj)}">
           </li>
         </ul>
       </div>
@@ -61,15 +62,20 @@ Start Date: Dec. 13, 2016 -->
       <h4>By Nearby Locations</h4>
 
     </nav>
-    <div id="panel" class="">
-      <header class="panel-header">
-        <!-- TODO: Place button on right(?) -->
-        <button class="toggle-button" data-bind="click: menuToggle">☰ Menu</button>
-      </header>
+  </aside>
+  <header class="topheader fixed">
+  		<h1 class="title">topheader title</h1>
+  		<!-- <a class="button button--right button-sidebar" href="#0"></a> -->
+    <button class="toggle-button button button--right button-sidebar" data-bind="click: menuToggle">☰ </button>
+  </header>
+  <!-- <header class="panel-header"> -->
+    <!-- TODO: Place button on right(?) -->
+    <!-- <button class="toggle-button" data-bind="click: menuToggle">☰ Menu</button> -->
+  <!-- </header> -->
+  <div id="panel" class="">
 
-      <div id="map"></div>
-    </div>
 
+    <div id="map"></div>
   </div>
 
 
