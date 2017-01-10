@@ -35,23 +35,27 @@ ul, ol{
   margin: 2;
 }
 .container{
-  max-width: 1600px;
-  height: 100%;
+  /*max-width: 1600px;
+  height: 100%;*/
   /*position: absolute;*/
-  margin: 0;
+  /*margin: 0;*/
   /*left: 0;
   right: 0:*/
 }
-#map {
-  bottom:0px;
-  border-radius: 24px;
+/*Must have for map to work*/
+#map{
   height: 100%;
   width: 100%;
-  margin: 0;
-  padding: 0;
   position: absolute;
-  right: 0px;
-  z-index: 0;
+}
+/*Optional for map*/
+#map {
+  /*bottom:0px;*/
+  /*border-radius: 24px;*/
+  /*margin: 0;*/
+  /*padding: 0;*/
+  /*right: 0px;
+  z-index: 0;*/
 }
 /*Make sure toggle-button is always on top*/
 .toggle-button{
