@@ -646,7 +646,6 @@ ViewModel.prototype.shakeNameMarker = function(obj){
 * (self) spotList.
 */
 ViewModel.prototype.showSpots = function(){
-  console.log("Show Spots");
   var mapBounds = new google.maps.LatLngBounds();
   // Go through the cool spot list and set the map for
   //  each marker
