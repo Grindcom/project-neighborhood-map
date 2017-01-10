@@ -195,7 +195,7 @@ hr{
   text-transform: capitalize;
   color: darkred;
 }
-.sidebar-menu__item a:hover {
+.sidebar-menu__item:hover {
   color: red;
 }
 /*Top header*/
