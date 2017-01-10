@@ -15,14 +15,24 @@ Start Date: Dec. 13, 2016*/
 
 html,body {
   font-family: Arial, sans-serif;
-  height: 100%;
-  width: 100%;
+  font-size: 62.5%;
   margin: 0;
   padding: 0;
+}
+body{
+  height: 100%;
+  width: 100%;
+  font-size: 1.6rem;
+  line-height: 1;
 }
 header{
   position: absolute;
   z-index: 100;
+}
+ul, ol{
+  list-style-type: circle;
+  padding: 5;
+  margin: 2;
 }
 .container{
   max-width: 1600px;
