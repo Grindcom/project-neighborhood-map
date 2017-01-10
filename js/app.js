@@ -246,8 +246,8 @@ var ViewModel = function(){
   // *********************
   // Set up slideout menu
   var slideout = new Slideout({
-    'panel': document.getElementById('panel'),
-    'menu': document.getElementById('menu'),
+    'panel': document.getElementById('main'),
+    'menu': document.getElementById('sidebar'),
     'padding': 256,
     'tolerance': 70
   });
