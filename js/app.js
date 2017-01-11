@@ -245,6 +245,7 @@ var ViewModel = function(){
   this.currentSpot = ko.observable(self.spotList()[0]);
   // *********************
   // Set up slideout menu
+  // Referenced http://codepen.io/gearmobile/pen/ZbbQBw
   var slideout = new Slideout({
     'panel': document.getElementById('main'),
     'menu': document.getElementById('sidebar'),
@@ -252,10 +253,18 @@ var ViewModel = function(){
     'tolerance': 70,
     'side': 'right'
   });
+  // Get a reference to the first element
+  // of class 'fixed'
   var blockFixed = document.querySelector('.fixed');
+  // When a slideout 'beforeopen' event is
+  // detected, add a 'fixed-open' class to
+  // the fixed class element
   slideout.on('beforeopen',function(){
       blockFixed.classList.add('fixed-open');
   });
+  // When a slideout 'beforeclose' event is
+  // detected, remove the 'fixed-open' class to
+  // the fixed class element
   slideout.on('beforeclose',function(){
       blockFixed.classList.remove('fixed-open');
   });
