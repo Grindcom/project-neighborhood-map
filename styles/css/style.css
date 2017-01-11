@@ -49,6 +49,7 @@ ul, ol{
   padding: 5;
   margin: 1.5em;
   font-size: 1.5rem;
+
 }
 hr{
   padding: 0;
@@ -171,21 +172,26 @@ hr{
 }
 /*Side bar styles */
 .sidebar {
-  padding: 6rem 0;
+  padding: 0 0;
   text-align: center;
   background-color: palegreen;
   left: auto; /* move sidebar to right */
 }
 .sidebar-header {
   margin: 0 0 2rem 0;
+  height: 6rem;
+
 }
 .sidebar-header .title {
   text-transform: uppercase;
   margin: 0;
+  line-height: 1.25em;
+  padding-top: 0.45em;
 }
 .sidebar-menu__item {
   padding: .6rem 0;
-  margin: 0 0 2rem;
+  margin: 0 0 1rem;
+  line-height: 1.25em;
 }
 .sidebar-menu__item:last-child {
   margin-bottom: 0;
