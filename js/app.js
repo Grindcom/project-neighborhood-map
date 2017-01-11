@@ -466,7 +466,12 @@ var ViewModel = function(){
       // Set up street view stuff
       var streetViewService = new google.maps.StreetViewService();
       var radius = 50;// 50 meters
-      //
+      /**
+      * @description Parse the data received from
+      * A call to the streetview service
+      * @param data - information packet
+      * @param status -
+      */
       function getStreetView(data, status){
         if(status == google.maps.StreetViewStatus.OK){
           var nearStreetViewLocation = data.location.latLng;
@@ -476,13 +481,17 @@ var ViewModel = function(){
           );
           // Create a div for the street view image
            self.largeInfowindow().setContent('<div>'+marker.title+'</div><div id="pano"></div>');
+          // Options for the street view service
+          // request
           var panoramaOptions = {
             position: nearStreetViewLocation,
-            pov: {
+            pov: {// Point of View for street view
               heading: heading,
               pitch: 10// looking up or down at building
             }
           };
+          // get a street view panorama object and
+          // place it in the pano div. 
           var panorama = new google.maps.StreetViewPanorama(
             document.getElementById('pano'), panoramaOptions
           );
