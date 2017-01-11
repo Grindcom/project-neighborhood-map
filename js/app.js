@@ -249,7 +249,15 @@ var ViewModel = function(){
     'panel': document.getElementById('main'),
     'menu': document.getElementById('sidebar'),
     'padding': 256,
-    'tolerance': 70
+    'tolerance': 70,
+    'side': 'right'
+  });
+  var blockFixed = document.querySelector('.fixed');
+  slideout.on('beforeopen',function(){
+      blockFixed.classList.add('fixed-open');
+  });
+  slideout.on('beforeclose',function(){
+      blockFixed.classList.remove('fixed-open');
   });
   /**
   * @description Menu Toggle button
