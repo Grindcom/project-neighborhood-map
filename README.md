@@ -62,7 +62,7 @@ Once the menu is toggled open, the user will see a list of cool spots as well as
 10. [x] Add functionality to animate a map marker when either the list item associated with it or the map marker itself is selected.
 11. [ ] Add functionality to open an info window with the information described in step 9.1
   1. [ ] When a location is selected from the list view
-  2. [ ] When a marker on the map is selected
+  2. [x] When a marker on the map is selected
   3. [ ] Optionally - as an addition - the information can populate a DOM element
 12. [ ] The app's interface must be intuitive to use.
   1. [ ] Input text area to filter locations should be easy to locate
