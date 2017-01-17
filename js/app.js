@@ -614,14 +614,13 @@ ViewModel.prototype.buildMarker = function(targetSpot){
           marker.addListener('mouseover',function(){
             // Change icon color
             this.setIcon(hoverOverIcon);
-            // Emphasize the related menu list
-            self.menuListHover(targetSpot);
+            // Emphasize the related menu list item
+            self.pulseMenuListItem(targetSpot.id);
           });
           // Add a mouseout listener so the icon changes
           // back when the mouse leaves
           marker.addListener('mouseout',function(){
             this.setIcon(icon);
-
           });
           // Add a click event listener to call the
           // info window function
@@ -643,35 +642,63 @@ ViewModel.prototype.buildMarker = function(targetSpot){
 */
 ViewModel.prototype.listClickHandler = function(spot){
   var vis = spot.markerVisible();
-
+  // Toggle marker to appear and bounce OR
+  // Drop in
+  this.shakeNameMarker(spot);
+  // If the spot's marker is already visible
   if(vis){
     // increment click count for this spot
     var clicks = spot.clickCount();
     spot.clickCount(++clicks);
-  } else {
+    //
+    this.populateInfoWindow(spot.marker());
+  } else { // Otherwise set its visibility to true
     //
     spot.markerVisible(true);
     console.log("Marker visible: "+ spot.markerVisible());
-    //
-    this.populateInfoWindow(spot.marker());
   }
-
-}
+};
 /**
-* @description Shake the spot parameters marker.
+* @description
+* @param
+*/
+ViewModel.prototype.menuListMouseout = function(spot){
+  // change the color of the marker
+  if(spot.markerVisible()){
+    // Make an icon with the spots selected color
+    var icon = this.makeMarkerIcon(spot.markerColor());
+    // Set the icon to default color
+    spot.marker().setIcon(icon);
+  }
+};
+/**
+* @description Change the marker to its
+* highlight color.
 * Meant to be called on a mouseover event.
 * @param {object} spot - passed from click event
 * handler, reference to a spotList element.
 */
 ViewModel.prototype.menuListHover = function(spot){
-  // toggle the marker bounce on/off
-  this.shakeNameMarker(spot);
+  // change the color of the marker
+  if(spot.markerVisible()){
+    var icon = this.makeMarkerIcon(spot.markerHighlightColor());
+      spot.marker().setIcon(icon);
+  }
   //
   console.log('hover over '+spot.name());
+  //
+  this.pulseMenuListItem(spot.id);
+};
+/**
+* @description Make the menu-list larger and
+* smaller by animation
+* @param id - menu list item id
+*/
+ViewModel.prototype.pulseMenuListItem = function(id){
   // Animate font larger
-  $("#menu-list-"+spot.id).animate({fontSize: "3em"});
+  $("#menu-list-"+id).animate({fontSize: "1.5em"});
   // Animate font to original size
-  $("#menu-list-"+spot.id).animate({fontSize: "1em"});
+  $("#menu-list-"+id).animate({fontSize: "1em"});
 };
 /**
 * @description Toggle the marker object to bounce or stop

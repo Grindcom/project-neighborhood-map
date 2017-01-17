@@ -36,7 +36,8 @@ Start Date: Dec. 13, 2016 -->
       <div id="locations" class="location-list">
         <ul class="sidebar-menu__list" data-bind="foreach: spotList">
           <li class="sidebar-menu__item" style="cursor: pointer" data-bind="attr: {'id': 'menu-list-'+id}, text: nameAndCount, click: function(spot){$parent.listClickHandler(spot)}, event: {
-            mouseover: function(spot){ $parent.menuListHover(spot);}
+            mouseover: function(spot){ $parent.menuListHover(spot);},
+            mouseout: function(spot){ $parent.menuListMouseout(spot);}
           }">
         </li>
       </ul>
