@@ -491,7 +491,7 @@ var ViewModel = function(){
             }
           };
           // get a street view panorama object and
-          // place it in the pano div. 
+          // place it in the pano div.
           var panorama = new google.maps.StreetViewPanorama(
             document.getElementById('pano'), panoramaOptions
           );
@@ -610,12 +610,16 @@ ViewModel.prototype.buildMarker = function(targetSpot){
           var hoverOverIcon = self.makeMarkerIcon(targetSpot.markerHighlightColor());
           // Add a mousover listener to change color on hover
           marker.addListener('mouseover',function(){
+            // Change icon color
             this.setIcon(hoverOverIcon);
+            // Emphasize the related menu list
+            // self.menuListHover(targetSpot);
           });
           // Add a mouseout listener so the icon changes
           // back when the mouse leaves
           marker.addListener('mouseout',function(){
             this.setIcon(icon);
+
           });
           // Add a click event listener to call the
           // info window function
@@ -633,35 +637,48 @@ ViewModel.prototype.buildMarker = function(targetSpot){
 };
 /**
 * @description Handle click events from 'Favourite spot list'
-* @param {object} obj - passed from click event handler.
+* @param {object} spot - passed from click event handler, reference to a spotList element.
 */
-ViewModel.prototype.listClickHandler = function(obj){
+ViewModel.prototype.listClickHandler = function(spot){
   // toggle the marker bounce on/off
-  this.shakeNameMarker(obj);
+  this.shakeNameMarker(spot);
   // increment click count for this spot
-  var clicks = obj.clickCount();
-  obj.clickCount(++clicks);
+  var clicks = spot.clickCount();
+  spot.clickCount(++clicks);
 }
+/**
+* @description Shake the spot parameters marker.
+* Meant to be called on a mouseover event.
+* @param {object} spot - passed from click event
+* handler, reference to a spotList element.
+*/
+ViewModel.prototype.menuListHover = function(spot){
+  // function(spot){$(spot.).effect('shake');
+  console.log('hover over '+spot.name());
+  // $(this).effect("shake", { times:3 }, 100);
+  $("#menu-list-"+spot.id).animate({fontSize: "3em"});
+  $("#menu-list-"+spot.id).animate({fontSize: "1em"});
+};
 /**
 * @description Toggle the marker object to bounce or stop
 * bouncing each time it is called. Makes sure the marker is
 * on the map.
-* @param {object} obj - used to access marker object
+* @param {object} spot - used to access marker object
 */
-ViewModel.prototype.shakeNameMarker = function(obj){
+ViewModel.prototype.shakeNameMarker = function(spot){
   var self = this;
   // If the marker isn't presant on the map place it.
-  if(!obj.marker().getMap()){
-    obj.marker().setMap(map_global);
+  if(!spot.marker().getMap()){
+    spot.marker().setMap(map_global);
   }
   // If there is an animation clear it
-  if(obj.marker().getAnimation() === google.maps.Animation.BOUNCE){
-    obj.marker().setAnimation(google.maps.Animation.DROP);
+  if(spot.marker().getAnimation() === google.maps.Animation.BOUNCE){
+    spot.marker().setAnimation(google.maps.Animation.DROP);
   } else {
     // If not, add a bounce to the marker
-    obj.marker().setAnimation(google.maps.Animation.BOUNCE);
+    spot.marker().setAnimation(google.maps.Animation.SHAKE);
     // Set the current spot
-    self.currentSpot(self.spotList()[obj.id]);
+    self.currentSpot(self.spotList()[spot.id]);
   }
 };
 /**
