@@ -676,7 +676,7 @@ ViewModel.prototype.shakeNameMarker = function(spot){
     spot.marker().setAnimation(google.maps.Animation.DROP);
   } else {
     // If not, add a bounce to the marker
-    spot.marker().setAnimation(google.maps.Animation.SHAKE);
+    spot.marker().setAnimation(google.maps.Animation.BOUNCE);
     // Set the current spot
     self.currentSpot(self.spotList()[spot.id]);
   }
