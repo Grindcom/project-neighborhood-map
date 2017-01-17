@@ -181,6 +181,8 @@ var CoolSpot = function(data,id){
   this.reviews = ko.observableArray(data.reviews);
   //
   this.marker = ko.observable(null);
+  //
+  this.markerVisible = ko.observable(false);
   // TODO: Add computed observables; get more information about this spot, map marker, etc.
   // Map marker for this object
   //
@@ -613,7 +615,7 @@ ViewModel.prototype.buildMarker = function(targetSpot){
             // Change icon color
             this.setIcon(hoverOverIcon);
             // Emphasize the related menu list
-            // self.menuListHover(targetSpot);
+            self.menuListHover(targetSpot);
           });
           // Add a mouseout listener so the icon changes
           // back when the mouse leaves
@@ -640,11 +642,19 @@ ViewModel.prototype.buildMarker = function(targetSpot){
 * @param {object} spot - passed from click event handler, reference to a spotList element.
 */
 ViewModel.prototype.listClickHandler = function(spot){
+  var vis = spot.markerVisible();
   // toggle the marker bounce on/off
   this.shakeNameMarker(spot);
-  // increment click count for this spot
-  var clicks = spot.clickCount();
-  spot.clickCount(++clicks);
+  if(vis){
+    // increment click count for this spot
+    var clicks = spot.clickCount();
+    spot.clickCount(++clicks);
+  } else {
+    //
+    spot.markerVisible(true);
+    console.log("Marker visible: "+ spot.markerVisible());
+  }
+
 }
 /**
 * @description Shake the spot parameters marker.
