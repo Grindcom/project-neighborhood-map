@@ -643,8 +643,7 @@ ViewModel.prototype.buildMarker = function(targetSpot){
 */
 ViewModel.prototype.listClickHandler = function(spot){
   var vis = spot.markerVisible();
-  // toggle the marker bounce on/off
-  this.shakeNameMarker(spot);
+
   if(vis){
     // increment click count for this spot
     var clicks = spot.clickCount();
@@ -653,6 +652,8 @@ ViewModel.prototype.listClickHandler = function(spot){
     //
     spot.markerVisible(true);
     console.log("Marker visible: "+ spot.markerVisible());
+    //
+    this.populateInfoWindow(spot.marker());
   }
 
 }
@@ -663,10 +664,13 @@ ViewModel.prototype.listClickHandler = function(spot){
 * handler, reference to a spotList element.
 */
 ViewModel.prototype.menuListHover = function(spot){
-  // function(spot){$(spot.).effect('shake');
+  // toggle the marker bounce on/off
+  this.shakeNameMarker(spot);
+  //
   console.log('hover over '+spot.name());
-  // $(this).effect("shake", { times:3 }, 100);
+  // Animate font larger
   $("#menu-list-"+spot.id).animate({fontSize: "3em"});
+  // Animate font to original size
   $("#menu-list-"+spot.id).animate({fontSize: "1em"});
 };
 /**
