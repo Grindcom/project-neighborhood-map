@@ -67,5 +67,5 @@ Once the menu is toggled open, the user will see a list of cool spots as well as
 12. [ ] The app's interface must be intuitive to use.
   1. [ ] Input text area to filter locations should be easy to locate
   2. [ ] It should be easy to understand what set of locations is being filtered
-  3. [ ] Selecting a location via list item or map marker should cause the related map marker to bounce *OR* **animate** in some way to catch the users attention
-  4. [ ] Associated info window should open above the map marker with additional information
+  3. [x] Selecting a location via list item or map marker should cause the related map marker to bounce *OR* **animate** in some way to catch the users attention
+  4. [x] Associated info window should open above the map marker with additional information
