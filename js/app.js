@@ -363,7 +363,7 @@ var ViewModel = function(){
         // if there is get rid of it
         self.polygon().setMap(null);
         // Hide any listings
-        hideMarkers(markers);
+        self.hideMarkers(self.placeMarkers());
       }
       // Switching the drawing mode to the HAND (no longer drawing)
       //  So the user can click the markers
@@ -997,7 +997,7 @@ TODO Add this functionality
 */
 ViewModel.prototype.textSearchPlaces = function(){
   var bounds = map_global.getBounds();
-  this.hideMarkers(placeMarkers);
+  this.hideMarkers(this.placeMarkers());
   var placesService = new google.maps.places.PlacesService(map);
   // TODO: Change to knockoutjs data-bind(ing)
   placesService.textSearch({
