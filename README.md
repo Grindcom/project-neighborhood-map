@@ -49,8 +49,8 @@ Once the menu is toggled open, the user will see a list of cool spots as well as
 7. [x] Implement a list view of the above 5 locations  
 8. [ ] Provide a filter option that
   1. [x] Uses an input field to filter the list view and the map markers that are displayed
-  2. [ ] The list view and the markers should update accordingly in real time.
-  3. [ ] May be a text input or a dropdown menu
+  2. [x] The list view and the markers should update accordingly in real time.
+  3. [x] May be a text input or a dropdown menu
 9. [ ] Add functionality with third-party API's
   1. [ ] Provide information when a map marker or list view entry is clicked
     1. [ ] Yelp reviews
