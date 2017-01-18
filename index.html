@@ -32,6 +32,11 @@ Start Date: Dec. 13, 2016 -->
                 <h2 class="title">Neighborhood Locations</h2>
             </header>
             <nav class="sidebar-menu" id="menu">
+                                <hr>
+                <h3>All Cool Spots</h3>
+                <button type="button" id="show-button" data-bind="click: showSpots">Show</button>
+                <button type="button" name="hide-button" data-bind="click: hideSpots">Hide</button>
+                <hr>
                 <h3 id="fav-h3" class="row-h2" data-bind="click: toggleSubMenu">My Favourites</h3>
                 <div id="sub-fav" class="location-list">
                     <ul class="sidebar-menu__list" data-bind="foreach: spotList">
@@ -42,11 +47,7 @@ Start Date: Dec. 13, 2016 -->
                         </li>
                     </ul>
                 </div>
-                <hr>
-                <h3>All Cool Spots</h3>
-                <button type="button" id="show-button" data-bind="click: showSpots">Show</button>
-                <button type="button" name="hide-button" data-bind="click: hideSpots">Hide</button>
-                <hr>
+
                 <h3 id="options-h3" class="row-h2" data-bind="click: toggleSubMenu">Search or Filter Options</h3>
                 <section id="sub-search">
                 <h4>Sketch a Filter Area</h4>
