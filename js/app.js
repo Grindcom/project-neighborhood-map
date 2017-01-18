@@ -207,6 +207,11 @@ var ViewModel = function(){
   // Local variables to collect drawing data
   this.polygon = ko.observable(null);
   this.drawingManager = ko.observable(null);
+  // sketch Toggle Value options
+  this.DRAWPOLY = 'Draw Polygon';
+  this.CLEARPOLY = 'Clear Polygon';
+  // Current name to show on the sketch filter toggle button
+  this.sketchToggleValue = ko.observable(this.DRAWPOLY);
   //**************************
   // TEXT BOXES
   //  Favourite Area search input
@@ -773,15 +778,21 @@ ViewModel.prototype.hideMarkers = function(markers){
 *  interst OR clears the box from the map.
 * Uses the viewModel drawingManager.
 */
-ViewModel.prototype.toggleDrawing = function(){
-  if(this.drawingManager().map){
+ViewModel.prototype.toggleDrawing = function () {
+  //  if there is a polygon
+  if (this.drawingManager().map) {
     this.drawingManager().setMap(null);
     // Remove any polygon
-    if(this.polygon()){
+    if (this.polygon()) {
       this.polygon().setMap(null);
     }
-  }else{
+    // Set the button text
+    this.sketchToggleValue(this.DRAWPOLY);
+  } else {
+    // Place drawing manager on the map
     this.drawingManager().setMap(map_global);
+    // Set the button text 
+    this.sketchToggleValue(this.CLEARPOLY);
   }
 };
 /**
