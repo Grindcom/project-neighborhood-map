@@ -53,6 +53,7 @@ hr{
   padding: 0;
   margin: 1em;
 }
+
 /*Must have for map to work*/
 #map{
   height: 100%;
@@ -238,6 +239,29 @@ hr{
   position: relative;
   z-index: 0;
   border: 5px;
+}
+
+.row, .row-h2, .row-h3{
+  position: relative;
+  width: 100%;
+  display: flex;
+  /*Let elements flow to next line*/
+  flex-wrap: wrap;
+  /**/
+}
+/**
+* Styles for sub menu
+*/
+.row-h2, .row-h3{
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  border-bottom: 1px 1px solid #7d97ad;
+}
+
+.row-h2{
+  box-shadow: 5px -2px 4px 2px #7d97ad;
+  /*box-shadow: 1px 1px 5px #7d97ad;*/
+  justify-content: center;
 }
 
 /*The following was found here: http://stackoverflow.com/questions/22996429/override-bootstrap-container-width*/

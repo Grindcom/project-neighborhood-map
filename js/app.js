@@ -560,9 +560,23 @@ var ViewModel = function(){
 
   };
 
-}
+}// END VIEW MODEL
 //
-
+/**
+ * @description Toggle a sub menu section visible or hidden.
+ * The menu section is considered to be the next element after the
+ * one that is clicked.
+ * @param {type} data
+ * @param {type} event - element generating click event
+ * @returns {undefined}
+ */
+ViewModel.prototype.toggleSubMenu = function(data,event){
+  console.log("Toggle Sub-Menu: id = "+ event.target.id);
+  // Get the element following
+  var sub = $(event.target).next();
+  // Toggle its visibility
+  $(sub).slideToggle();
+};
 /**
 * @description This function will make a custom marker, Using the supplied color as
 *  its base.
