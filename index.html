@@ -37,7 +37,7 @@ Start Date: Dec. 13, 2016 -->
                 <button type="button" id="show-button" data-bind="click: showSpots">Show</button>
                 <button type="button" name="hide-button" data-bind="click: hideSpots">Hide</button>
                 <hr>
-                <h3 id="fav-h3" class="row-h2" style="cursor: pointer" data-bind="click: toggleSubMenu">My Favourites<span class="arrow" data-bind="text: favArrow"></span></h3>
+                <h3 id="fav-h3" class="row-h2" style="cursor: pointer" data-bind="click: toggleSubMenu">My Favourites<span class="arrow" data-bind="text: DOWNARROW"></span></h3>
                 <div id="sub-fav" class="location-list" style="display:none">
                     <ul class="sidebar-menu__list" data-bind="foreach: spotList">
                         <li class="sidebar-menu__item" style="cursor: pointer" 
@@ -49,7 +49,7 @@ Start Date: Dec. 13, 2016 -->
                     </ul>
                 </div>
 
-                <h3 id="options-h3" class="row-h2" style="cursor: pointer" data-bind="click: toggleSubMenu">Search and Filter<span class="arrow" data-bind="text: filterArrow"></span></h3>
+                <h3 id="options-h3" class="row-h2" style="cursor: pointer" data-bind="click: toggleSubMenu">Search and Filter<span class="arrow" data-bind="text: DOWNARROW"></span></h3>
                 <section id="sub-search" style="display:none">
                     <h4>Sketch a Filter Area</h4>
                     <button type="button" id="toggle-button" data-bind="click: toggleDrawing, text: sketchToggleValue"></button>
@@ -71,7 +71,7 @@ Start Date: Dec. 13, 2016 -->
         <!--Top Banner Element-->
         <header class="topheader fixed dark-primary-color">
             <h1 class="title">Cool Spots</h1>
-            <button class="toggle-button button button--right button-sidebar" data-bind="click: menuToggle">☰ </button>
+            <button class="toggle-button button button--right button-sidebar" data-bind="click: menuToggle, text: menuToggleArrow">☰ </button>
         </header>
         <!--Map Element, Full page on start up-->
         <main class="main" id="main">
