@@ -164,6 +164,8 @@
     //
     this.name = ko.observable(data.name);
     //
+    this.selected = ko.observable(false);
+    //
     this.address = ko.observable(data.address);
     //
     this.type = ko.observable(data.type);
@@ -186,10 +188,18 @@
     // TODO: Add computed observables; get more information about this spot, map marker, etc.
     // Map marker for this object
     //
-    // Return the name and clickCount together
+    /**
+     * @description Return the name and clickCount together
+     */
     this.nameAndCount = ko.computed(function () {
       return this.name() + " | " + this.clickCount() + " Likes";
     }, this);
+    /**
+     * @description Return Likes in a condensed variable
+     */
+    this.likes = ko.computed(function(){
+      return " | " + this.clickCount() + " Likes";
+    },this);
   }
   /**
    * ViewModel
