@@ -37,23 +37,23 @@ Start Date: Dec. 13, 2016 -->
                 <button type="button" id="show-button" data-bind="click: showSpots">Show</button>
                 <button type="button" name="hide-button" data-bind="click: hideSpots">Hide</button>
                 <hr>
-                <h3 id="fav-h3" class="row-h2 tooltip" style="cursor: pointer" data-bind="click: toggleSubMenu">My Favourites<span class="arrow" data-bind="text: DOWNARROW"></span></h3>
-                <div id="sub-fav" class="location-list" style="display:none">
-                    <ul class="sidebar-menu__list" data-bind="foreach: spotList">
-                        <li class="sidebar-menu__item" >
-                            <input class="list-checkbox" type="checkbox" data-bind="checked: selected">
-                            <span style="cursor: pointer" 
-                                  data-bind="attr: {'id': 'menu-list-'+id}, text: name, click: function(spot){$parent.listClickHandler(spot);}, event: {
-            mouseover: function(spot){ $parent.menuListHover(spot);},
+                <section>
+                    <h3 data-toggle="tooltip" title="Show Favorites" id="fav-h3" class="row-h2" style="cursor: pointer" data-bind="click: toggleSubMenu">My Favorites<span class="arrow" data-bind="text: DOWNARROW"></span></h3>
+                    <div id="sub-fav" class="location-list" style="display:none">
+                        <ul class="sidebar-menu__list" data-bind="foreach: spotList">
+                            <li class="sidebar-menu__item" >
+                                <input class="list-checkbox" type="checkbox" data-bind="checked: selected">
+                                <span style="cursor: pointer" 
+                                      data-bind="attr: {'id': 'menu-list-'+id}, text: name, click: function(spot){$parent.listClickHandler(spot);}, event: {mouseover: function(spot){ $parent.menuListHover(spot);},
             mouseout: function(spot){ $parent.menuListMouseout(spot);}
           }">
-                            </span>
-                            <p data-bind="text: likes"></p>
-                        </li>
-                    </ul>
-                </div>
-
-                <h3 id="options-h3" class="row-h2" style="cursor: pointer" data-bind="click: toggleSubMenu">Search and Filter<span class="arrow" data-bind="text: DOWNARROW"></span></h3>
+                                </span>
+                                <p data-bind="text: likes"></p>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                <h3 data-toggle="tooltip" title="Show Search Options" id="options-h3" class="row-h2" style="cursor: pointer" data-bind="click: toggleSubMenu">Search and Filter<span class="arrow" data-bind="text: DOWNARROW"></span></h3>
                 <section id="sub-search" style="display:none">
                     <h4>Sketch a Filter Area</h4>
                     <button type="button" id="toggle-button" data-bind="click: toggleDrawing, text: sketchToggleValue"></button>
