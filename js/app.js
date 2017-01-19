@@ -204,6 +204,7 @@ var ViewModel = function(){
   // InfoWindow for markers
   this.largeInfowindow = ko.observable(null);
   //**********************************
+  // POLYGON VARIABLES
   // Local variables to collect drawing data
   this.polygon = ko.observable(null);
   this.drawingManager = ko.observable(null);
@@ -251,6 +252,7 @@ var ViewModel = function(){
   // Current Spot selected
   this.currentSpot = ko.observable(self.spotList()[0]);
   // *********************
+  // MENU AND SUB MENU SECTION
   // Set up slideout menu
   // Referenced http://codepen.io/gearmobile/pen/ZbbQBw
   var slideout = new Slideout({
@@ -281,6 +283,13 @@ var ViewModel = function(){
   this.menuToggle = function(){
     slideout.toggle();
   };
+  // SUB MENU
+  // Up arrow (unicode)
+  this.UPARROW = '\u27F0';
+  // Down arrow (unicode)
+  this.DOWNARROW = '\u27F1';
+  this.favArrow = ko.observable(this.DOWNARROW);
+  this.filterArrow = ko.observable(this.DOWNARROW);
   /**
   * @description Direction Service object for finding routes
   */
@@ -571,11 +580,24 @@ var ViewModel = function(){
  * @returns {undefined}
  */
 ViewModel.prototype.toggleSubMenu = function(data,event){
+  var self = this;
   console.log("Toggle Sub-Menu: id = "+ event.target.id);
   // Get the element following
   var sub = $(event.target).next();
   // Toggle its visibility
-  $(sub).slideToggle();
+  $(sub).slideToggle(function(){
+    // Get the value of the elements :visible object
+    var isVis = $(sub).is(':visible');
+    //
+    var arrow = $(event.target).children('span');
+    // If 
+    if(isVis){
+      console.log("----Visible");
+      arrow.text(self.UPARROW);
+    }else{
+      arrow.text(self.DOWNARROW);
+    }
+  });
 };
 /**
 * @description This function will make a custom marker, Using the supplied color as

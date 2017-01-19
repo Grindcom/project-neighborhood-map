@@ -37,10 +37,11 @@ Start Date: Dec. 13, 2016 -->
                 <button type="button" id="show-button" data-bind="click: showSpots">Show</button>
                 <button type="button" name="hide-button" data-bind="click: hideSpots">Hide</button>
                 <hr>
-                <h3 id="fav-h3" class="row-h2" data-bind="click: toggleSubMenu">My Favourites</h3>
+                <h3 id="fav-h3" class="row-h2" style="cursor: pointer" data-bind="click: toggleSubMenu">My Favourites<span class="arrow" data-bind="text: favArrow"></span></h3>
                 <div id="sub-fav" class="location-list" style="display:none">
                     <ul class="sidebar-menu__list" data-bind="foreach: spotList">
-                        <li class="sidebar-menu__item" style="cursor: pointer" data-bind="attr: {'id': 'menu-list-'+id}, text: nameAndCount, click: function(spot){$parent.listClickHandler(spot)}, event: {
+                        <li class="sidebar-menu__item" style="cursor: pointer" 
+                            data-bind="attr: {'id': 'menu-list-'+id}, text: nameAndCount, click: function(spot){$parent.listClickHandler(spot)}, event: {
             mouseover: function(spot){ $parent.menuListHover(spot);},
             mouseout: function(spot){ $parent.menuListMouseout(spot);}
           }">
@@ -48,7 +49,7 @@ Start Date: Dec. 13, 2016 -->
                     </ul>
                 </div>
 
-                <h3 id="options-h3" class="row-h2" data-bind="click: toggleSubMenu">Search and Filter</h3>
+                <h3 id="options-h3" class="row-h2" style="cursor: pointer" data-bind="click: toggleSubMenu">Search and Filter<span class="arrow" data-bind="text: filterArrow"></span></h3>
                 <section id="sub-search" style="display:none">
                     <h4>Sketch a Filter Area</h4>
                     <button type="button" id="toggle-button" data-bind="click: toggleDrawing, text: sketchToggleValue"></button>
