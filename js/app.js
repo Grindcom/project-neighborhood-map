@@ -307,7 +307,6 @@
      */
     this.menuToggle = function (data,event) {
       slideout.toggle();
-      console.log("Menu Toggle");
       // Set the proper arrow direction
       if(this.menuToggleArrow() === this.LEFTARROW){
         this.menuToggleArrow(this.RIGHTARROW);
