@@ -172,9 +172,9 @@
     //
     this.geoLocation = ko.observable(data.geoLocation);
     //
-    this.markerColor = ko.observable('070B57');
+    this.markerColor = '070B57';//ko.observable('070B57');
     //
-    this.markerHighlightColor = ko.observable('FFFF24')
+    this.markerHighlightColor = 'FFFF24';//ko.observable('FFFF24')
     //
     this.imgSrc = ko.observable(data.imgSrc);
     //
@@ -670,7 +670,7 @@
           targetSpot.geoLocation(results[0].geometry.location);
           //**
           // Make an icon with the spots selected color
-          var icon = self.makeMarkerIcon(targetSpot.markerColor());
+          var icon = self.makeMarkerIcon(targetSpot.markerColor);
           //**
           // Create marker
           var marker = new google.maps.Marker({
@@ -681,7 +681,7 @@
             animation: google.maps.Animation.DROP, // Shake the marker as it appears
           });
           // Make a contrasting icon for mouse hover over
-          var hoverOverIcon = self.makeMarkerIcon(targetSpot.markerHighlightColor());
+          var hoverOverIcon = self.makeMarkerIcon(targetSpot.markerHighlightColor);
           // Add a mousover listener to change color on hover
           marker.addListener('mouseover', function () {
             // Change icon color
@@ -738,7 +738,7 @@
     // change the color of the marker
     if (spot.markerVisible()) {
       // Make an icon with the spots selected color
-      var icon = this.makeMarkerIcon(spot.markerColor());
+      var icon = this.makeMarkerIcon(spot.markerColor);
       // Set the icon to default color
       spot.marker().setIcon(icon);
     }
@@ -753,7 +753,7 @@
   ViewModel.prototype.menuListHover = function (spot) {
     // change the color of the marker
     if (spot.markerVisible()) {
-      var icon = this.makeMarkerIcon(spot.markerHighlightColor());
+      var icon = this.makeMarkerIcon(spot.markerHighlightColor);
       spot.marker().setIcon(icon);
     }
     //
