@@ -265,15 +265,15 @@
     // MENU AND SUB MENU SECTION
     // Arrow constants 
     // Up arrow (unicode)
-    this.UPARROW = ko.observable('\u27F0');
+    this.UPARROW = '\u27F0';
     // Down arrow (unicode)
-    this.DOWNARROW = ko.observable('\u27F1');
+    this.DOWNARROW = '\u27F1';
     // Left arrow (unicode)
-    this.LEFTARROW = ko.observable('\u21DA');
+    this.LEFTARROW = '\u21DA';
     //
-    this.RIGHTARROW = ko.observable('\u21DB');
+    this.RIGHTARROW = '\u21DB';
     //
-    this.menuToggleArrow = ko.observable(this.LEFTARROW());
+    this.menuToggleArrow = ko.observable(this.LEFTARROW);
     // Set up slideout menu
     // Referenced http://codepen.io/gearmobile/pen/ZbbQBw
     var slideout = new Slideout({
@@ -306,11 +306,12 @@
      */
     this.menuToggle = function (data,event) {
       slideout.toggle();
+      console.log("Menu Toggle");
       // Set the proper arrow direction
-      if(this.menuToggleArrow() === this.LEFTARROW()){
-        this.menuToggleArrow(this.RIGHTARROW());
+      if(this.menuToggleArrow() === this.LEFTARROW){
+        this.menuToggleArrow(this.RIGHTARROW);
       }else{
-        this.menuToggleArrow(this.LEFTARROW());
+        this.menuToggleArrow(this.LEFTARROW);
       }
     };
     // SUB MENU
@@ -622,9 +623,9 @@
       // If 
       if (isVis) {
         console.log("----Visible");
-        arrow.text(self.UPARROW());
+        arrow.text(self.UPARROW);
       } else {
-        arrow.text(self.DOWNARROW());
+        arrow.text(self.DOWNARROW);
       }
     });
   };
