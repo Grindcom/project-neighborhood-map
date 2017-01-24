@@ -217,7 +217,7 @@
     // POLYGON VARIABLES
     // Local variables to collect drawing data
     this.polygon = null;//ko.observable(null);
-    this.drawingManager = ko.observable(null);
+    this.drawingManager = null;//ko.observable(null);
     // sketch Toggle Value options
     this.DRAWPOLY = 'Draw Polygon';
     this.CLEARPOLY = 'Clear Polygon';
@@ -382,7 +382,7 @@
       self.largeInfowindow = new google.maps.InfoWindow();
       //***
       // Add Drawing manager for polygon shapes
-      self.drawingManager(new google.maps.drawing.DrawingManager({
+      self.drawingManager = new google.maps.drawing.DrawingManager({
         drawingMode: google.maps.drawing.OverlayType.POLYGON,
         drawingControl: true,
         drawingControlOptions: {
@@ -391,13 +391,13 @@
             google.maps.drawing.OverlayType.POLYGON
           ]
         }
-      }));
+      });
 
       // Add event listener for drawing manager
       //  that checks for the captured polygon
       //  Once there is a polygon this function will call for a search within
       //  the polygon area and eliminate any markers that are not in that area.
-      self.drawingManager().addListener('overlaycomplete', function (event) {
+      self.drawingManager.addListener('overlaycomplete', function (event) {
         //Check for an existing polygon
         if (self.polygon) {
           // if there is get rid of it
@@ -407,7 +407,7 @@
         }
         // Switching the drawing mode to the HAND (no longer drawing)
         //  So the user can click the markers
-        self.drawingManager().setDrawingMode(null);
+        self.drawingManager.setDrawingMode(null);
         // Create a new editable polygon from the overlay
         self.polygon = event.overlay;
         console.log("polygon " + self.polygon.getPath());
@@ -846,8 +846,8 @@
    */
   ViewModel.prototype.toggleDrawing = function () {
     //  if there is a polygon
-    if (this.drawingManager().map) {
-      this.drawingManager().setMap(null);
+    if (this.drawingManager.map) {
+      this.drawingManager.setMap(null);
       // Remove any polygon
       if (this.polygon) {
         this.polygon.setMap(null);
@@ -856,7 +856,7 @@
       this.sketchToggleValue(this.DRAWPOLY);
     } else {
       // Place drawing manager on the map
-      this.drawingManager().setMap(map_global);
+      this.drawingManager.setMap(map_global);
       // Set the button text 
       this.sketchToggleValue(this.CLEARPOLY);
     }
