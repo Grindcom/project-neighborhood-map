@@ -212,7 +212,7 @@
     view_model = this;
     //****************************
     // InfoWindow for markers
-    this.largeInfowindow = ko.observable(null);
+    this.largeInfowindow = null;//ko.observable(null);
     //**********************************
     // POLYGON VARIABLES
     // Local variables to collect drawing data
@@ -379,7 +379,7 @@
       });
       //***
       // Create a new InfoWindow
-      self.largeInfowindow(new google.maps.InfoWindow());
+      self.largeInfowindow = new google.maps.InfoWindow();
       //***
       // Add Drawing manager for polygon shapes
       self.drawingManager(new google.maps.drawing.DrawingManager({
@@ -502,13 +502,13 @@
     //  populated with the related information
     this.populateInfoWindow = function (marker) {
       // Make sure the infowindow is not already opened on this marker
-      if (self.largeInfowindow().marker != marker) {
+      if (self.largeInfowindow.marker !== marker) {
         console.log("infowindow.marker != marker");
-        self.largeInfowindow().marker = marker;
+        self.largeInfowindow.marker = marker;
         // Add the marker title to an element in the infowindow
-        self.largeInfowindow().setContent('<div>' + marker.title + '</div>');
+        self.largeInfowindow.setContent('<div>' + marker.title + '</div>');
         // Open the content on the map
-        self.largeInfowindow().open(map_global, marker);
+        self.largeInfowindow.open(map_global, marker);
         // Set up street view stuff
         var streetViewService = new google.maps.StreetViewService();
         var radius = 50;// 50 meters
@@ -526,7 +526,7 @@
                     nearStreetViewLocation, marker.position
                     );
             // Create a div for the street view image
-            self.largeInfowindow().setContent('<div>' + marker.title + '</div><div id="pano"></div>');
+            self.largeInfowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
             // Options for the street view service
             // request
             var panoramaOptions = {
@@ -542,14 +542,14 @@
                     document.getElementById('pano'), panoramaOptions
                     );
           } else {
-            self.largeInfowindow().setContent('<div>' + marker.title + '</div>' + '<div>No Street View Found</div>');
+            self.largeInfowindow.setContent('<div>' + marker.title + '</div>' + '<div>No Street View Found</div>');
           }
         }
         // Use the streetview service to get the closest streetview image
         //  within 50 meters of the markers position
         streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
         // Open the infowindow on the correct marker.
-        self.largeInfowindow().open(map_global, marker);
+        self.largeInfowindow.open(map_global, marker);
       }
     };
 
