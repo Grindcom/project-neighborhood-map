@@ -216,7 +216,7 @@
     //**********************************
     // POLYGON VARIABLES
     // Local variables to collect drawing data
-    this.polygon = ko.observable(null);
+    this.polygon = null;//ko.observable(null);
     this.drawingManager = ko.observable(null);
     // sketch Toggle Value options
     this.DRAWPOLY = 'Draw Polygon';
@@ -399,9 +399,9 @@
       //  the polygon area and eliminate any markers that are not in that area.
       self.drawingManager().addListener('overlaycomplete', function (event) {
         //Check for an existing polygon
-        if (self.polygon()) {
+        if (self.polygon) {
           // if there is get rid of it
-          self.polygon().setMap(null);
+          self.polygon.setMap(null);
           // Hide any listings
           self.hideMarkers(self.placeMarkers());
         }
@@ -409,27 +409,27 @@
         //  So the user can click the markers
         self.drawingManager().setDrawingMode(null);
         // Create a new editable polygon from the overlay
-        self.polygon(event.overlay);
-        console.log("polygon " + self.polygon().getPath());
+        self.polygon = event.overlay;
+        console.log("polygon " + self.polygon.getPath());
         // Make it so the user can change the shape without re-drawing
-        self.polygon().setEditable(true);
+        self.polygon.setEditable(true);
         // Make it so the user can move the shape around the map
-        self.polygon().setDraggable(true);
+        self.polygon.setDraggable(true);
         // Search inside the polygon
         self.searchWithinPolygon();
         // Ensure the search is re-done if the polygon is changed
-        self.polygon().getPath().addListener('set_at', function () {
+        self.polygon.getPath().addListener('set_at', function () {
           self.searchWithinPolygon();
         });
-        self.polygon().getPath().addListener('insert_at', function () {
+        self.polygon.getPath().addListener('insert_at', function () {
           self.searchWithinPolygon();
         });
         // Get the area of the polygon, result is in meters
-        var area = google.maps.geometry.spherical.computeArea(self.polygon().getPath());
+        var area = google.maps.geometry.spherical.computeArea(self.polygon.getPath());
         area = area.toFixed(2);
         console.log("  Area is " + area + "m");
         // Get the length of the ploygon lines, result is in meters
-        var length = google.maps.geometry.spherical.computeLength(self.polygon().getPath());
+        var length = google.maps.geometry.spherical.computeLength(self.polygon.getPath());
         length = length.toFixed(2);
         console.log("  Length is " + length + "m");
         // Show length and area
@@ -849,8 +849,8 @@
     if (this.drawingManager().map) {
       this.drawingManager().setMap(null);
       // Remove any polygon
-      if (this.polygon()) {
-        this.polygon().setMap(null);
+      if (this.polygon) {
+        this.polygon.setMap(null);
       }
       // Set the button text
       this.sketchToggleValue(this.DRAWPOLY);
@@ -994,7 +994,7 @@
     self.spotList().forEach(function (spot) {
       console.log(" Search Within Poly: target " + spot.name());
       // Check if the markers position is inside the global polygon area
-      if (google.maps.geometry.poly.containsLocation(spot.marker().position, self.polygon())) {
+      if (google.maps.geometry.poly.containsLocation(spot.marker().position, self.polygon)) {
         spot.marker().setMap(map_global);// its inside so add it to the map
       } else {
         spot.marker().setMap(null);// its not inside so remove it
