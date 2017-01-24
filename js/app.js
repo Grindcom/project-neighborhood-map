@@ -182,7 +182,7 @@
     //
     this.reviews = ko.observableArray(data.reviews);
     //
-    this.marker = ko.observable(null);
+    this.marker = null;//ko.observable(null);
     //
     this.markerVisible = ko.observable(false);
     // TODO: Add computed observables; get more information about this spot, map marker, etc.
@@ -699,7 +699,7 @@
             self.populateInfoWindow(this);
           });
           // Add the marker to the spot
-          targetSpot.marker(marker);
+          targetSpot.marker = marker;
         } else {
           window.alert('Could not find that location - try entering a more specific place');
         }
@@ -722,7 +722,7 @@
       var clicks = spot.clickCount();
       spot.clickCount(++clicks);
       //
-      this.populateInfoWindow(spot.marker());
+      this.populateInfoWindow(spot.marker);
     } else { // Otherwise set its visibility to true
       //
       spot.markerVisible(true);
@@ -739,7 +739,7 @@
       // Make an icon with the spots selected color
       var icon = this.makeMarkerIcon(spot.markerColor);
       // Set the icon to default color
-      spot.marker().setIcon(icon);
+      spot.marker.setIcon(icon);
     }
   };
   /**
@@ -753,7 +753,7 @@
     // change the color of the marker
     if (spot.markerVisible()) {
       var icon = this.makeMarkerIcon(spot.markerHighlightColor);
-      spot.marker().setIcon(icon);
+      spot.marker.setIcon(icon);
     }
     //
     console.log('hover over ' + spot.name());
@@ -780,15 +780,15 @@
   ViewModel.prototype.shakeNameMarker = function (spot) {
     var self = this;
     // If the marker isn't presant on the map place it.
-    if (!spot.marker().getMap()) {
-      spot.marker().setMap(map_global);
+    if (!spot.marker.getMap()) {
+      spot.marker.setMap(map_global);
     }
     // If there is an animation clear it
-    if (spot.marker().getAnimation() === google.maps.Animation.BOUNCE) {
-      spot.marker().setAnimation(google.maps.Animation.DROP);
+    if (spot.marker.getAnimation() === google.maps.Animation.BOUNCE) {
+      spot.marker.setAnimation(google.maps.Animation.DROP);
     } else {
       // If not, add a bounce to the marker
-      spot.marker().setAnimation(google.maps.Animation.BOUNCE);
+      spot.marker.setAnimation(google.maps.Animation.BOUNCE);
       // Set the current spot
       self.currentSpot(self.spotList()[spot.id]);
     }
@@ -803,9 +803,9 @@
     // Go through the cool spot list and set the map for
     //  each marker
     this.spotList().forEach(function (spot) {
-      spot.marker().setMap(map_global);
+      spot.marker.setMap(map_global);
       // Extend the boundry for the marker if necessary
-      mapBounds.extend(spot.marker().position);
+      mapBounds.extend(spot.marker.position);
     });
     // Set the center of the map by getting the center of
     //  all of the cool spot list markers
@@ -818,10 +818,10 @@
    */
   ViewModel.prototype.hideSpots = function () {
     this.spotList().forEach(function (spot) {
-      spot.marker().setMap(null);
+      spot.marker.setMap(null);
       // Re-set animation to drop in, when marker
       // is shown again.
-      spot.marker().setAnimation(google.maps.Animation.DROP);
+      spot.marker.setAnimation(google.maps.Animation.DROP);
     });
   };
   /**
@@ -941,7 +941,7 @@
           // indavidual marker, to be used later in this function as well.
           var marker = null;
           if (i < self.spotList().length) {
-            marker = self.spotList()[i].marker();
+            marker = self.spotList()[i].marker;
             marker.setMap(map_global);
           }
           //
@@ -962,7 +962,7 @@
           if (marker) {
             // Assign the infowindow to the indicated
             // spotList element
-            self.spotList()[i].marker().infowindow = infowindow;
+            self.spotList()[i].marker.infowindow = infowindow;
             // event listener for infowindow click, to close this local infowindow.
             google.maps.event.addListener(marker, 'click', function () {
               marker.infowindow.close();
@@ -994,10 +994,10 @@
     self.spotList().forEach(function (spot) {
       console.log(" Search Within Poly: target " + spot.name());
       // Check if the markers position is inside the global polygon area
-      if (google.maps.geometry.poly.containsLocation(spot.marker().position, self.polygon)) {
-        spot.marker().setMap(map_global);// its inside so add it to the map
+      if (google.maps.geometry.poly.containsLocation(spot.marker.position, self.polygon)) {
+        spot.marker.setMap(map_global);// its inside so add it to the map
       } else {
-        spot.marker().setMap(null);// its not inside so remove it
+        spot.marker.setMap(null);// its not inside so remove it
       }
     });
   };
@@ -1028,7 +1028,7 @@
       var origins = [];
       this.spotList().forEach(function (spot) {
         // Put all the origins into an origin matrix
-        origins.push(spot.marker().position);
+        origins.push(spot.marker.position);
       });
       // address given by user is now the destination
       var destination = this.timeSearchText();
