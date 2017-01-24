@@ -51,13 +51,14 @@ Once the menu is toggled open, the user will see a list of cool spots as well as
   1. [x] Uses an input field to filter the list view and the map markers that are displayed
   2. [x] The list view and the markers should update accordingly in real time.
   3. [x] May be a text input or a dropdown menu
-9. [ ] Add functionality with third-party API's
+9. [ ] Add functionality with third-party API's (at least one)
   1. [ ] Provide information when a map marker or list view entry is clicked
     1. [ ] Yelp reviews
     2. [ ] Wikipedia
     3. [ ] Flickr images
     4. [ ] Foursquare
-    5. [ ] etc.
+    5. [ ] [Instagram] (https://www.instagram.com/developer/authentication/)
+    6. [ ] etc.
   2. [ ] Google maps libraries like StreetView and Places do not count
 10. [x] Add functionality to animate a map marker when either the list item associated with it or the map marker itself is selected.
 11. [x] Add functionality to open an info window with the information described in step 9.1
