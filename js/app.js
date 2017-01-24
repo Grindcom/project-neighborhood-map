@@ -212,16 +212,17 @@
     view_model = this;
     //****************************
     // InfoWindow for markers
-    this.largeInfowindow = null;//ko.observable(null);
+    this.largeInfowindow = null;
     //**********************************
     // POLYGON VARIABLES
     // Local variables to collect drawing data
-    this.polygon = null;//ko.observable(null);
-    this.drawingManager = null;//ko.observable(null);
+    this.polygon = null;
+    this.drawingManager = null;
     // sketch Toggle Value options
     this.DRAWPOLY = 'Draw Polygon';
     this.CLEARPOLY = 'Clear Polygon';
     // Current name to show on the sketch filter toggle button
+    // (Has to be observable)
     this.sketchToggleValue = ko.observable(this.DRAWPOLY);
     //**************************
     // TEXT BOXES
@@ -272,7 +273,7 @@
     this.LEFTARROW = '\u21DA';
     //
     this.RIGHTARROW = '\u21DB';
-    //
+    // Left/Right arrow for slideout menu (has to be observable to work)
     this.menuToggleArrow = ko.observable(this.LEFTARROW);
     // Set up slideout menu
     // Referenced http://codepen.io/gearmobile/pen/ZbbQBw
