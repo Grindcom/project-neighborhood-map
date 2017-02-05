@@ -185,7 +185,8 @@
     this.marker = null;//ko.observable(null);
     //
     this.markerVisible = ko.observable(false);
-    // TODO: Add computed observables; get more information about this spot, map marker, etc.
+    // TODO: Add computed observables; get more information about this spot, 
+    // map marker, etc.
     // Map marker for this object
     //
     /**
@@ -442,11 +443,15 @@
     };// END OF initMap
     //*****************************
     // TODO: Search by nearby places
-    //******************************
-    // TODO: get place details
-    //  The PLACE DETAILS search; most detailed so it is only executed
-    //      when a marker is selected, indicating the user wants more
-    //      details about the place
+
+    /**
+     * @description The PLACE DETAILS search; most detailed so it is only executed
+     * when a marker is selected, indicating the user wants more
+     * details about the place
+     * @param {type} marker - googlemaps marker object
+     * @param {type} detailInfoWindow - googlemaps information window object
+     * @returns {undefined}
+     */
     this.getPlacesDetails = function (marker, detailInfoWindow) {
       var service = new google.maps.places.PlacesService(map_global);
       service.getDetails({
@@ -495,11 +500,14 @@
       });
     };
 
-    //******************************
-    // TODO: populateInfoWindow
-    // This function will populate the infowindow when the marker is clicked.
-    //  We'll only allow one infowindow at a time.  When clicked it will be
-    //  populated with the related information
+    /**
+     * 
+     * @description This function will populate the infowindow when the marker is clicked.
+     * We'll only allow one infowindow at a time.  When clicked it will be
+     * populated with the related information
+     * @param {type} marker - googlemaps marker object
+     * @returns {undefined}
+     */
     this.populateInfoWindow = function (marker) {
       // Make sure the infowindow is not already opened on this marker
       if (self.largeInfowindow.marker !== marker) {
@@ -554,10 +562,12 @@
     };
 
     /**
-     * TODO: Display Directions
-     * Information for browser based call can be found https://developers.google.com/maps/documentation/directions/
+     * Display Directions
+     * @description Information for browser based call can be found https://developers.google.com/maps/documentation/directions/
      * And for using the API from JavaScript, here:
      * https://developers.google.com/maps/documentation/javascript/directions
+     * @param {type} position
+     * @returns {undefined}
      */
     this.displayDirections = function (position) {
       self.hideSpots();
@@ -984,10 +994,11 @@
     }
 
   };
-//*****************************
-// TODO: Set the callback function for when the polygon is moved
+
   /**
-   * @description Search inside the polygon
+   * @description Search inside the polygon, set the callback function for 
+   * when the polygon is moved
+   * @returns {undefined}
    */
   ViewModel.prototype.searchWithinPolygon = function () {
     var self = this;
@@ -1002,10 +1013,14 @@
     });
   };
   /**
-   * @description Search for cool spots within a given time
-   * from a location given by user.
-   *  User can also supply mode of travel.
+   *
    * TODO: Add distance functionality
+   */
+  
+  /**
+   * @description Search for cool spots within a given time
+   * from a location given by user. User can also supply mode of travel.
+   * @returns {undefined}
    */
   ViewModel.prototype.searchWithinTime = function () {
     //
@@ -1066,11 +1081,12 @@
     // Clean all routes from array.
     this.routes.removeAll();
   };
+
   /**
    * @description Search by text places
    * Called when 'go' button for search places is clicked
-   *  It will go a nearby search using the entered query string or place.
-   TODO Add this functionality
+   *  It will do a nearby search using the entered query string or place.
+   * @returns {undefined}
    */
   ViewModel.prototype.textSearchPlaces = function () {
     var bounds = map_global.getBounds();
@@ -1087,11 +1103,12 @@
       }
     });
   };
+
   /**
-   * @description
-   * TODO: Create markers for places
-   * Create markers for all places that are searched for
-   * @param {object[]} places - An array of objects containing place marker information; icon, name, geometry, place_id,
+   * @description Create markers for all places that are searched for
+   * @param {type} places - An array of objects containing place marker 
+   * information; icon, name, geometry, place_id,
+   * @returns {undefined}
    */
   ViewModel.prototype.createMarkersForPlaces = function (places) {
     console.log("Create Markers for Places");
@@ -1120,7 +1137,7 @@
         if (placeInfoWindow.marker == this) {
           console.log("This infowindow already is on this marker");
         } else {
-          // TODO: Make this function
+          // Get the details for the place that this marker is related to
           getPlacesDetails(this, placeInfoWindow);
         }
       });
