@@ -176,9 +176,9 @@
     //
     this.markerHighlightColor = 'FFFF24';//ko.observable('FFFF24')
     //
-    this.imgSrc = ko.observable(data.imgSrc);
+    this.imgSrc = data.imgSrc;
     //
-    this.imgAttribution = ko.observable(data.imgAttribution);
+    this.imgAttribution = data.imgAttribution;
     //
     this.reviews = ko.observableArray(data.reviews);
     //
