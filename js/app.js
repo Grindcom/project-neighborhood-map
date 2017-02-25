@@ -740,8 +740,8 @@
     }
   };
   /**
-   * @description
-   * @param
+   * @description Called when the mouse leaves a menu list item, 
+   * @param spot - the spot whose marker should be drawn attention to
    */
   ViewModel.prototype.menuListMouseout = function (spot) {
     // change the color of the marker
@@ -880,10 +880,11 @@
    */
   ViewModel.prototype.zoomToArea = function () {
     // Initialize a geocoder
+    console.log("zoom To Area");
     var geocoder = new google.maps.Geocoder();
     // Get the address to zoom to
     // Make sure the address isn't blank
-    if (this.favoriteAreaText() == '') {
+    if (this.favoriteAreaText() === '') {
       // Alert user if there is nothing in
       // the favoriteAreaText text box
       window.alert('Please ad an area or address');
@@ -1165,3 +1166,4 @@
 
 // ***********************************
 //  HELPER FUNCTIONS
+//TODO: Add Foursquare API
