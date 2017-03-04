@@ -1157,66 +1157,7 @@
       map_global.fitBounds(mapBounds);
     });
   };
- /**
- * Yelp API functions
- * @returns {undefined}
- */
-ViewModel.prototype.getYelp = function (){
-//  TODO:   
-  // At this point this function causes an error, but it does call
-  console.log("getYelp");
-  //oauth_signature
-//
-//  var params = {
-//    location: '37.788022,-122.399797',
-//    oauth_consumer_keY: '6xw3kNyyFJqK3AUX5P4H0g',
-//    oauth_token: '4f74OmVVju0XxS5YpmJrg_gHBSPS8byl',
-//    oauth_signature_method: '',
-//    oauth_signature: 'HMAC-SHA1',
-//    oauth_timestamp: '',
-//    oauth_nonce: randomString(32, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'),
-//    term: 'food'
-//  };
-  var consumer_key = "6xw3kNyyFJqK3AUX5P4H0g";
-  var consumer_secret = 'hDrnW5KwfQRwMEl9n27-Ax8jmP0';
-  var token = "4f74OmVVju0XxS5YpmJrg_gHBSPS8byl";
-  var token_secret = 'BK_90AWR8KEAC3qomSPgEBTGPoQ';
-  var app_id = "eGjjz7E24Q57VsXFZM3b0w";
-  var app_secret = "x0S4wpFPLQyrmP3SUVmwQOYGtYasHxIwP8X03oWnNFGV9KJY3fqQUYxcbcZ6DjzV";
-  var method = 'GET';
-  var url = 'https://api.yelp.com/v2/search';
-  var tokenURL = 'https://api.yelp.com/oauth2/token';
-//  $.ajax({
-//    url: tokenURL,
-//    dataType: 'json',
-//    data: {
-//      "term": "food",
-//      "ll": "37.788022,-122.399797"
-//    },
-//    success: function(data, status){
-//      console.log("Success...");
-//    },
-//    beforeSend: function(xhr, settings){
-//      xhr.setRequestedHeader('Authorization','Bearer '+ token);
-//    }
-//  })
-    $.getJSON(tokenURL, {
-      "grant_type": "client_credentials",
-      "client_id": app_id,
-      "client_secret": app_secret
-    }, function (data) {
-      console.log(data);
-    });
-//  var signature = oauthSignature.generate(method, url, params, consumer_secret, token_secret,
-//        { encodeSignature: false});
-//  params.oauth_signature = signature;
-  // https://api.yelp.com/v2/search?term=food&ll=37.788022,-122.399797 http://api.yelp.com/v2/search/?term=skating&location=Williams Lake,British Columbia&cc=CA&category_filter=active
-//  var query = "https://api.yelp.com/v2/search?term=food&ll=37.788022,-122.399797";
-//  $.getJSONP(url,{params: params}).success(function(data){
-//    console.log(data);
-//  });
-
-};
+ 
 
    /**
    * @description Entry point for Neighborhood Map
