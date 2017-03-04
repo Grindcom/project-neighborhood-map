@@ -1157,13 +1157,78 @@
       map_global.fitBounds(mapBounds);
     });
   };
-  /**
+ /**
+ * Yelp API functions
+ * @returns {undefined}
+ */
+ViewModel.prototype.getYelp = function (){
+//  TODO:   
+  // At this point this function causes an error, but it does call
+  console.log("getYelp");
+  //oauth_signature
+
+  var params = {
+    location: '37.788022,-122.399797',
+    oauth_consumer_keY: '6xw3kNyyFJqK3AUX5P4H0g',
+    oauth_token: '4f74OmVVju0XxS5YpmJrg_gHBSPS8byl',
+    oauth_signature_method: '',
+    oauth_signature: 'HMAC-SHA1',
+    oauth_timestamp: '',
+    oauth_nonce: randomString(32, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'),
+    term: 'food'
+  };
+  var consumer_secret = 'hDrnW5KwfQRwMEl9n27-Ax8jmP0';
+  var token_secret = 'BK_90AWR8KEAC3qomSPgEBTGPoQ';
+  var method = 'GET';
+  var url = 'https://api.yelp.com/v2/search';
+  var signature = oauthSignature.generate(method, url, params, consumer_secret, token_secret,
+        { encodeSignature: false});
+  params.oauth_signature = signature;
+  // https://api.yelp.com/v2/search?term=food&ll=37.788022,-122.399797 http://api.yelp.com/v2/search/?term=skating&location=Williams Lake,British Columbia&cc=CA&category_filter=active
+//  var query = "https://api.yelp.com/v2/search?term=food&ll=37.788022,-122.399797";
+  $.getJSONP(url,{params: params}).success(function(data){
+    console.log(data);
+  });
+
+};
+
+   /**
    * @description Entry point for Neighborhood Map
    */
   ko.applyBindings(new ViewModel());
 
 
 
+
 // ***********************************
 //  HELPER FUNCTIONS
 //TODO: Add Foursquare API
+
+/**
+ * Using tutorial from Foursquare as inspiration;
+ * See https://developer.foursquare.com/overview/tutorial
+ */
+/*
+ var config = {
+    apiKey: 'XXXXXXXXXXXXXX',
+    authUrl: 'https://foursquare.com/',
+    apiUrl: 'https://api.foursquare.com/'
+  };
+  
+    /* Attempt to retrieve access token from URL. */
+//  function doAuthRedirect() {
+//    var redirect = window.location.href.replace(window.location.hash, '');
+//    var url = config.authUrl + 'oauth2/authenticate?response_type=token&client_id=' + config.apiKey +
+//        '&redirect_uri=' + encodeURIComponent(redirect) +
+//        '&state=' + encodeURIComponent($.bbq.getState('req') || 'users/self');
+//    window.location.href = url;
+//  };
+//  if ($.bbq.getState('access_token')) {
+//    // If there is a token in the state, consume it
+//    var token = $.bbq.getState('access_token');
+//    $.bbq.pushState({}, 2)
+//  } else if ($.bbq.getState('error')) {
+//  } else {
+//    doAuthRedirect();
+//  }
+//  

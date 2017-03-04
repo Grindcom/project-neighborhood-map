@@ -74,6 +74,7 @@ Start Date: Dec. 13, 2016 -->
         </aside>
         <!--Top Banner Element-->
         <header class="topheader fixed dark-primary-color">
+            <button data-bind="click: getYelp">Yelp</button>
             <h1 class="title">Cool Spots</h1>
             <button class="toggle-button button button--right button-sidebar" data-bind="click: menuToggle, text: menuToggleArrow">☰ </button>
         </header>
@@ -92,6 +93,8 @@ Start Date: Dec. 13, 2016 -->
         <script defer src="./js/lib/knockout-3.4.1.js"></script>
         <!-- Bootstrap -->
         <script defer src="./js/lib/bootstrap.min.js"></script>
+        <!--oAuth signature-->
+        <script src="/bower_components/oauth-signature/dist/oauth-signature.js"></script>
         <!-- Application code base -->
         <script defer src="./js/app.js"></script>
     </body>
