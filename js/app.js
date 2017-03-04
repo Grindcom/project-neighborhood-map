@@ -1157,7 +1157,30 @@
       map_global.fitBounds(mapBounds);
     });
   };
- 
+  /**
+   * @description Call the FourSquare API for more information
+   * @param {type} places
+   * @returns {undefined}
+   */
+  ViewModel.prototype.queryFourSquare = function (places) {
+    var client_id = "INWUJQCSABPNKFZPFSG1L1023VTHBFWBP4YZCUXUFQEO01MW";
+    var client_secret = "T5RHEMNEQBGGQ4ZYF5ESD4NA1J20OWGD5IWTFYT5R4N21JZX";
+    var ver = "20161016";
+    var query = "coffee";
+    var location = "41.878114,87.629798";
+    var url = "https://api.foursquare.com/v2/venues/search";
+    //https://api.foursquare.com/v2/venues/search?v=20161016&ll=41.878114%2C%20-87.629798&query=coffee&intent=checkin&client_id=INWUJQCSABPNKFZPFSG1L1023VTHBFWBP4YZCUXUFQEO01MW&client_secret=T5RHEMNEQBGGQ4ZYF5ESD4NA1J20OWGD5IWTFYT5R4N21JZX
+    $.getJSON(url,{
+      "v": ver,
+      "ll": location,
+      "query": query,
+      "intent": "checkin",
+      "client_id": client_id,
+      "client_secret": client_secret 
+    }).done(function(data){
+      console.log("hello"+data.meta.code);
+    });
+  };
 
    /**
    * @description Entry point for Neighborhood Map
