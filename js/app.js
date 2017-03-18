@@ -198,9 +198,10 @@
     /**
      * @description Return Likes in a condensed variable
      */
-    this.likes = ko.computed(function(){
+    this.likes = ko.computed(function () {
       return " | " + this.clickCount() + " Likes";
-    },this);
+    }, this);
+
   }
   /**
    * ViewModel
@@ -264,6 +265,43 @@
     // Current Spot selected
     this.currentSpot = ko.observable(self.spotList()[0]);
     // *********************
+    // List for nearby locations
+    this.nearbyList = ko.observableArray([]);
+    this.nearbyCount = 0;
+//    this.nearbyList().push(new CoolSpot(favSpots[0],1));
+    this.addNearbySpots = function (spot) {
+      console.log("Add nearby spots..." + spot.name);//new CoolSpot(spot,this.nearbyCount++)
+      self.nearbyList.push(spot);
+      console.log("----List size " + this.nearbyList().length);
+      //
+    };
+//    this.addNearbySpots(favSpots[0]);
+    this.getNearbyList = function () {
+      return this.nearbyList();
+    }
+    this.clearNearbyList = function () {
+      console.log("----pop count: " + this.nearbyCount);
+      while (this.nearbyList().length > 0) {
+        this.nearbyList().pop();
+        this.nearbyCount--;
+
+      }
+    }
+    //
+    this.compileNearbyList = function () {
+      log.console("Compiling List of selected favorite places...")
+      // Clear list
+      self.clearNearbyList();
+      // Add selected items to list
+      self.spotList().forEach(function (spot) {
+        if (spot.selected) {
+          self.nearbyList.push(spot);
+        }
+      });
+      return self.clearNearbyList().length > 0 ?
+              "Your Selected List: " : "Nothing Selected"
+    };
+    // *********************
     // MENU AND SUB MENU SECTION
     // Arrow constants 
     // Up arrow (unicode)
@@ -306,12 +344,12 @@
      * @param {type} event - Calling element
      * @returns {undefined}
      */
-    this.menuToggle = function (data,event) {
+    this.menuToggle = function (data, event) {
       slideout.toggle();
       // Set the proper arrow direction
-      if(this.menuToggleArrow() === this.LEFTARROW){
+      if (this.menuToggleArrow() === this.LEFTARROW) {
         this.menuToggleArrow(this.RIGHTARROW);
-      }else{
+      } else {
         this.menuToggleArrow(this.LEFTARROW);
       }
     };
@@ -363,8 +401,6 @@
       });
       // Set the new map to the Global map variable
       map_global = map;
-      // Set up the lat/long literal for a map marker.
-      var williams_lake = {lat: 52.1417, lng: -122.1417};
       // Set the marker with the position and the map object created above.
       var marker = new google.maps.Marker({
         position: williams_lake,
@@ -509,6 +545,7 @@
      * @returns {undefined}
      */
     this.populateInfoWindow = function (marker) {
+//      console.log("populateInfoWindow ");
       // Make sure the infowindow is not already opened on this marker
       if (self.largeInfowindow.marker !== marker) {
         console.log("infowindow.marker != marker");
@@ -638,7 +675,24 @@
         arrow.text(self.DOWNARROW);
       }
     });
+    //
+    if (event.target.id === "nearby-h3")
+    {
+      console.log("---Look for nearby spots.")
+      // If there are any favorites selected, check FourSquare
+      self.spotList().forEach(function (spot) {
+        if (spot.selected()) {
+          console.log("--Nearby " + spot.name());
+          // Clear nearbySpot list
+          self.clearNearbyList();
+          // Call FourSquare to get nearby locations
+          self.queryFourSquare(spot);
+        }
+      });
+
+    }
   };
+
   /**
    * @description This function will make a custom marker, Using the supplied color as
    *  its base.
@@ -1017,7 +1071,7 @@
    *
    * TODO: Add distance functionality
    */
-  
+
   /**
    * @description Search for cool spots within a given time
    * from a location given by user. User can also supply mode of travel.
@@ -1159,30 +1213,63 @@
   };
   /**
    * @description Call the FourSquare API for more information
-   * @param {type} places
+   * @param {type} spot
    * @returns {undefined}
    */
-  ViewModel.prototype.queryFourSquare = function (places) {
+  ViewModel.prototype.queryFourSquare = function (spot) {
+    var self = this;
+    // FourSquare access credentials
     var client_id = "INWUJQCSABPNKFZPFSG1L1023VTHBFWBP4YZCUXUFQEO01MW";
     var client_secret = "T5RHEMNEQBGGQ4ZYF5ESD4NA1J20OWGD5IWTFYT5R4N21JZX";
+    // Version date of access credentials
     var ver = "20161016";
-    var query = "coffee";
-    var location = "41.878114,87.629798";
+    // Query type
+    var query = "";
+    // Location
+    var location = spot.marker.position.lat() + "," + spot.marker.position.lng();//"41.878114,87.629798";
+    console.log("Location: " + location);
     var url = "https://api.foursquare.com/v2/venues/search";
     //https://api.foursquare.com/v2/venues/search?v=20161016&ll=41.878114%2C%20-87.629798&query=coffee&intent=checkin&client_id=INWUJQCSABPNKFZPFSG1L1023VTHBFWBP4YZCUXUFQEO01MW&client_secret=T5RHEMNEQBGGQ4ZYF5ESD4NA1J20OWGD5IWTFYT5R4N21JZX
-    $.getJSON(url,{
+    // Possible intents: checkin, match
+    $.getJSON(url, {
       "v": ver,
       "ll": location,
       "query": query,
+      "limit": 5,
       "intent": "checkin",
       "client_id": client_id,
-      "client_secret": client_secret 
-    }).done(function(data){
-      console.log("hello"+data.meta.code);
+      "client_secret": client_secret
+    }).done(function (data) {
+      console.log("hello: " + data.meta.code);
+      //
+      data.response.venues.forEach(function (venue) {
+        console.log("Name: " + venue.name);
+        console.log(venue.location.distance + " from ");
+        if (venue.categories.length > 0)
+        {
+          console.log("Known as ");
+          venue.categories.forEach(function (category) {
+            console.log("- " + category.name);
+          })
+        }
+        //
+        var nearbySpot = {
+          name: venue.name,
+          type: venue.categories[0].name,
+          address: venue.location.address,
+          geoLocation: venue.location.lat + "," + venue.location.lng,
+          reviews: [],
+          imgSrc: '',
+          imgAttribution: ''
+        };
+        // nearbySpot
+        self.addNearbySpots(nearbySpot);
+        console.log("-----Length of nearbySpots: " + self.getNearbyList().length);
+      });
     });
   };
 
-   /**
+  /**
    * @description Entry point for Neighborhood Map
    */
   ko.applyBindings(new ViewModel());
@@ -1194,18 +1281,18 @@
 //  HELPER FUNCTIONS
 //TODO: Add Foursquare API
 
-/**
- * Using tutorial from Foursquare as inspiration;
- * See https://developer.foursquare.com/overview/tutorial
- */
-/*
- var config = {
-    apiKey: 'XXXXXXXXXXXXXX',
-    authUrl: 'https://foursquare.com/',
-    apiUrl: 'https://api.foursquare.com/'
-  };
-  
-    /* Attempt to retrieve access token from URL. */
+  /**
+   * Using tutorial from Foursquare as inspiration;
+   * See https://developer.foursquare.com/overview/tutorial
+   */
+  /*
+   var config = {
+   apiKey: 'XXXXXXXXXXXXXX',
+   authUrl: 'https://foursquare.com/',
+   apiUrl: 'https://api.foursquare.com/'
+   };
+   
+   /* Attempt to retrieve access token from URL. */
 //  function doAuthRedirect() {
 //    var redirect = window.location.href.replace(window.location.hash, '');
 //    var url = config.authUrl + 'oauth2/authenticate?response_type=token&client_id=' + config.apiKey +
