@@ -613,19 +613,20 @@
      * @param {type} position
      * @returns {undefined}
      */
-    this.displayDirections = function (position) {
+    this.displayDirections = function (toPosition) {
       self.hideSpots();
       //Get the destination address from the user entered value.
       // TODO: Change to knockoutjs data-bind(ing)
-      var destinationAddress = self.timeSearchText();
+//      var destinationAddress = self.timeSearchText();
+      var originAddress = self.timeSearchText();
       // Get the mode again from the user entered value
       // TODO: Change to knockoutjs data-bind(ing)
       var mode = self.selectedMode();
       directionsService.route({
         // The origin is the passed in marker's position
-        origin: position,
-        // The destination is user entered address.
-        destination: destinationAddress,
+        origin: originAddress,
+        // The destination is user entered address.destinationAddress
+        destination: toPosition,
         travelMode: google.maps.TravelMode[mode]
       }, function (response, status) {
         // If the route is valid and call is successful...
@@ -996,11 +997,16 @@
    * Sent to a callback function which calls this one.
    */
   ViewModel.prototype.displayMarkersWithinTime = function (response) {
-    // As this is in a prototype for ViewModel, 'this' is
-    // ViewModel, so create 'self' for clarity.
+    /**
+     * As this is in a prototype for ViewModel, 'this' is
+     * ViewModel, so create 'self' for clarity.
+     * @type ViewModel
+     */
     var self = this;
     var origins = response.originAddresses;
-    var destivations = response.destinationAddress;
+    console.log("----display markers>>Origin "+origins[0]);
+    var destinations = response.destinationAddresses;
+    console.log("----display markers>>Destination 1: "+destinations[0]);
     //
     var atLeastOne = false;
     // Incrementing reference to identify marker
@@ -1044,7 +1050,7 @@
           var infowindow = new google.maps.InfoWindow({
             content: durationText + ' away, about ' + distanceText +
                     '<div><button type=\"button\" id=\"display-directions\" onClick=' +
-                    '\"view_model.displayDirections(&quot;' + origins[i] + '&quot;);\">View Route</button></div>'
+                    '\"view_model.displayDirections(&quot;' + destinations[i] + '&quot;);\">View Route</button></div>'
           });
 
           // Assign this local infowindow to the marker so the marker will be re-shown on the larger infowindow
@@ -1110,7 +1116,7 @@
     var distanceMatrixService = new google.maps.DistanceMatrixService;
     // Get the address entered by user
     // Check to make sure the address isn't blank
-    if (this.timeSearchText() == '') {
+    if (this.timeSearchText() === '') {
       // Alert the user that there is nothing
       // in the search by time text box.
       window.alert('You need to enter an address');
@@ -1119,22 +1125,24 @@
       // Hide all cool spot markers first.
       this.hideSpots();
       // Use the distance matrix service to calculate the duration of the
-      //  routes between all the markers (origin), and the destination address
+      //  routes between all the markers (destination), and the origin address
       //  entered by the user.
-      var origins = [];
+
+      var destinations = [];
       this.spotList().forEach(function (spot) {
         // Put all the origins into an origin matrix
-        origins.push(spot.marker.position);
+        destinations.push(spot.marker.position);
       });
-      // address given by user is now the destination
-      var destination = this.timeSearchText();
+      // address/area given by user is where to start the route from
+      var origin = this.timeSearchText();
+      // Mode of travel
       var mode = this.selectedMode();
       //
       // Call the google distance matrix service;
       //  Find the how to here: https://developers.google.com/maps/documentation/javascript/distancematrix
       distanceMatrixService.getDistanceMatrix({
-        origins: origins,
-        destinations: [destination],
+        origins: [origin],
+        destinations: destinations,
         travelMode: google.maps.TravelMode[mode],
         unitSystem: google.maps.UnitSystem.IMPERIAL,
       }, function (response, status) {
@@ -1144,6 +1152,10 @@
           // Alert user there was an error and what it was
           window.alert("Error was: " + status);
         } else {
+          var originList = response.originAddresses;
+          var destinationList = response.destinationAddresses;
+          console.log("Origin test: "+originList[0]);
+          console.log("Destination test: "+destinationList[0]);
           // Display all markers that are within the
           // given time period
           self.displayMarkersWithinTime(response);
