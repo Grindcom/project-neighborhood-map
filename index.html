@@ -62,13 +62,13 @@ Start Date: Dec. 13, 2016 -->
                 </section>
                 <h3 data-toggle="tooltip" title="Show Search Options" id="options-h3" class="row-h2" style="cursor: pointer" data-bind="click: toggleSubMenu">Search and Filter<span class="arrow" data-bind="text: DOWNARROW"></span></h3>
                 <section id="sub-search" style="display:none">
-                    <button type="button" id="toggle-button" data-bind="click: toggleDrawing, text: sketchToggleValue"></button>
+                    <button type="toggle-button" id="polygon-button" data-bind="click: toggleDrawing, text: sketchToggleValue"></button>
                     <h4 data-toggle="tooltip" title="Try Scout Island or Fox Mountain">Enter the area you are in or want to be</h4>
                     <input type="text" id="search-within-time-text" placeholder="Ex. Glendale or 365 Mackenzie Ave. N." data-bind="textInput: timeSearchText">
                     
                     <h4>Zoom to Favorite Area</h4>
                     <!--<input type="text" name="" placeholder="Try Scout Island or Fox Mountain" data-bind="textInput: favoriteAreaText">-->
-                    <button type="button" id="zoom-to-area-button" data-bind="click: zoomToArea, text: zoomText">Zoom</button>
+                    <button type="toggle-button" id="zoom-to-area-button" data-bind="click: zoomToArea, text: zoomText">Zoom</button>
                     <h4>Find the Shortest Route</h4>
                     <select id="max-duration" class="search-by-time-section" data-bind="options: timeOptions, optionsText: 'text', optionsValue: 'value', value: selectedTime, optionsCaption: 'Choose a time...'">
                     </select>
@@ -84,7 +84,7 @@ Start Date: Dec. 13, 2016 -->
     <!--Top Banner Element-->
     <header class="topheader fixed dark-primary-color">
         <h1 class="title">Cool Spots</h1>
-        <button class="toggle-button button button--right button-sidebar" data-bind="click: menuToggle, text: menuToggleArrow">☰ </button>
+        <button class="button button--right button-sidebar" data-bind="click: menuToggle, text: menuToggleArrow">☰ </button>
     </header>
     <!--Map Element, Full page on start up-->
     <main class="main" id="main">

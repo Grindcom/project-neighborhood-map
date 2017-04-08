@@ -74,6 +74,7 @@ hr{
 .toggle-button{
   z-index: 50;
   top: 0;
+  margin: 250px;
 }
 /*Must have pano for street View to work*/
 #pano {
@@ -86,11 +87,15 @@ hr{
   margin: 4px;
   padding: 2px;
 }
+#polygon-button,
+#zoom-to-area-text{
+    margin-top: 6px;
+}
 #zoom-to-area-text{
   width: 75%;
 }
 #zoom-to-area-button{
-  width: 20%;
+  width: 40%;
   float: center;
 }
 /*Slidout styles Inspired or borrowed from http://codepen.io/gearmobile/pen/ZbbQBw */
