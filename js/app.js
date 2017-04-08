@@ -272,7 +272,7 @@
     // Current Spot selected
     this.currentSpot = ko.observable(self.spotList()[0]);
     // *********************
-    // List for nearby locations
+    // List for nearby locations (use with foursquare api)
     this.nearbyList = ko.observableArray([]);
     this.nearbyCount = 0;
 //    this.nearbyList().push(new CoolSpot(favSpots[0],1));
@@ -366,7 +366,7 @@
      * @description Direction Service object for finding routes
      */
     var directionsService = null;
-    this.routes = ko.observableArray([]);
+    this.routes = [];//ko.observableArray([]);
     /**
      * @description GOOGLE MAP STUFF,
      * Initialize google map.  This function is
