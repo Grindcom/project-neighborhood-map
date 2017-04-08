@@ -229,7 +229,7 @@
     //**********************************
     // ZOOM Variables
     this.zoomed = false;
-    this.ZOOMIN = 'Zoom to Area';
+    this.ZOOMIN = 'Zoom to Your Area';
     this.ZOOMOUT = 'Zoom Back';
     this.zoomText = ko.observable(this.ZOOMIN);
     //**************************
@@ -468,16 +468,6 @@
         self.polygon.getPath().addListener('insert_at', function () {
           self.searchWithinPolygon();
         });
-        // Get the area of the polygon, result is in meters
-        var area = google.maps.geometry.spherical.computeArea(self.polygon.getPath());
-        area = area.toFixed(2);
-        console.log("  Area is " + area + "m");
-        // Get the length of the ploygon lines, result is in meters
-        var length = google.maps.geometry.spherical.computeLength(self.polygon.getPath());
-        length = length.toFixed(2);
-        console.log("  Length is " + length + "m");
-        // Show length and area
-        window.alert("The Area is " + area + " square meters and the Length is " + length + "m");
       });
       /*
        * Initialize the direction service

@@ -65,11 +65,8 @@ Start Date: Dec. 13, 2016 -->
                     <button type="toggle-button" id="polygon-button" data-bind="click: toggleDrawing, text: sketchToggleValue"></button>
                     <h4 data-toggle="tooltip" title="Try Scout Island or Fox Mountain">Enter the area you are in or want to be</h4>
                     <input type="text" id="search-within-time-text" placeholder="Ex. Glendale or 365 Mackenzie Ave. N." data-bind="textInput: timeSearchText">
-                    
-                    <h4>Zoom to Favorite Area</h4>
-                    <!--<input type="text" name="" placeholder="Try Scout Island or Fox Mountain" data-bind="textInput: favoriteAreaText">-->
                     <button type="toggle-button" id="zoom-to-area-button" data-bind="click: zoomToArea, text: zoomText">Zoom</button>
-                    <h4>Find the Shortest Route</h4>
+                    <h4>Find the Route From Your Area to Your Selected Spots</h4>
                     <select id="max-duration" class="search-by-time-section" data-bind="options: timeOptions, optionsText: 'text', optionsValue: 'value', value: selectedTime, optionsCaption: 'Choose a time...'">
                     </select>
                     <select class="search-by-time-section" id="travel-mode" data-bind="options: travelModes, optionsText: 'text', optionsValue: 'value', value: selectedMode, optionsCaption: 'Choose a mode of travel'">
