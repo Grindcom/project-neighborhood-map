@@ -1169,10 +1169,15 @@
    */
   ViewModel.prototype.clearRoutes = function () {
     this.routes().forEach(function (route) {
+      // Remove route markers
+      route.setOptions( { suppressMarkers: true } );// without this, the markers remain after route is deleted.
+      // Remove route from map
       route.setMap(null);
     });
     // Clean all routes from array.
     this.routes.removeAll();
+    //
+    
   };
 
   /**
