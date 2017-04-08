@@ -262,15 +262,18 @@
     this.selectedMode = ko.observable('');
     // ***************************
     // List of favorites locations
-    this.spotList = ko.observableArray([]);
+    this.spotList = [];//
+    this.filteredSpotList = ko.observableArray([]);
     // Load the favorite location list with static data
     var i = 0;
     favSpots.forEach(function (location) {
-      self.spotList().push(new CoolSpot(location, i++));
+      var spot = new CoolSpot(location, i++);
+      self.spotList.push(spot);
+      self.filteredSpotList().push(spot);
     });
     // ***************************
     // Current Spot selected
-    this.currentSpot = ko.observable(self.spotList()[0]);
+    this.currentSpot = ko.observable(self.spotList[0]);
     // *********************
     // List for nearby locations (use with foursquare api)
     this.nearbyList = ko.observableArray([]);
@@ -300,7 +303,7 @@
       // Clear list
       self.clearNearbyList();
       // Add selected items to list
-      self.spotList().forEach(function (spot) {
+      self.spotList.forEach(function (spot) {
         if (spot.selected) {
           self.nearbyList.push(spot);
         }
@@ -366,7 +369,7 @@
      * @description Direction Service object for finding routes
      */
     var directionsService = null;
-    this.routes = [];//ko.observableArray([]);
+    this.routes = [];
     /**
      * @description GOOGLE MAP STUFF,
      * Initialize google map.  This function is
@@ -415,7 +418,7 @@
         title: 'Center of Williams Lake'
       });
       // set up markers for the cool spots
-      self.spotList().forEach(function (spot) {
+      self.spotList.forEach(function (spot) {
         //**
         // Build the marker for this spot
         self.buildMarker(spot);
@@ -678,7 +681,7 @@
     {
       console.log("---Look for nearby spots.")
       // If there are any favorites selected, check FourSquare
-      self.spotList().forEach(function (spot) {
+      self.spotList.forEach(function (spot) {
         if (spot.selected()) {
           console.log("--Nearby " + spot.name());
           // Clear nearbySpot list
@@ -852,7 +855,7 @@
       // If not, add a bounce to the marker
       spot.marker.setAnimation(google.maps.Animation.BOUNCE);
       // Set the current spot
-      self.currentSpot(self.spotList()[spot.id]);
+      self.currentSpot(self.spotList[spot.id]);
     }
   };
   /**
@@ -864,7 +867,7 @@
     var mapBounds = new google.maps.LatLngBounds();
     // Go through the cool spot list and set the map for
     //  each marker
-    this.spotList().forEach(function (spot) {
+    this.spotList.forEach(function (spot) {
       spot.marker.setMap(map_global);
       // Extend the boundry for the marker if necessary
       mapBounds.extend(spot.marker.position);
@@ -879,7 +882,7 @@
    * @description Called to hide cool spots
    */
   ViewModel.prototype.hideSpots = function () {
-    this.spotList().forEach(function (spot) {
+    this.spotList.forEach(function (spot) {
       spot.marker.setMap(null);
       // Re-set animation to drop in, when marker
       // is shown again.
@@ -1027,8 +1030,8 @@
           // set the marker for this result.
           // indavidual marker, to be used later in this function as well.
           var marker = null;
-          if (i < self.spotList().length) {
-            marker = self.spotList()[i].marker;
+          if (i < self.spotList.length) {
+            marker = self.spotList[i].marker;
             marker.setMap(map_global);
           }
           //
@@ -1049,7 +1052,7 @@
           if (marker) {
             // Assign the infowindow to the indicated
             // spotList element
-            self.spotList()[i].marker.infowindow = infowindow;
+            self.spotList[i].marker.infowindow = infowindow;
             // event listener for infowindow click, to close this local infowindow.
             google.maps.event.addListener(marker, 'click', function () {
               marker.infowindow.close();
@@ -1079,7 +1082,7 @@
    */
   ViewModel.prototype.searchWithinPolygon = function () {
     var self = this;
-    self.spotList().forEach(function (spot) {
+    self.spotList.forEach(function (spot) {
       console.log(" Search Within Poly: target " + spot.name());
       // Check if the markers position is inside the global polygon area
       if (google.maps.geometry.poly.containsLocation(spot.marker.position, self.polygon)) {
@@ -1119,7 +1122,7 @@
       //  entered by the user.
 
       var destinations = [];
-      this.spotList().forEach(function (spot) {
+      this.spotList.forEach(function (spot) {
         // Put all the origins into an origin matrix
         destinations.push(spot.marker.position);
       });

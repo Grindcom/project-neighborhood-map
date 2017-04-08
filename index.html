@@ -40,7 +40,7 @@ Start Date: Dec. 13, 2016 -->
                 <section>
                     <h3 data-toggle="tooltip" title="Show Favorites" id="fav-h3" class="row-h2" style="cursor: pointer" data-bind="click: toggleSubMenu">My Favorites<span class="arrow" data-bind="text: DOWNARROW"></span></h3>
                     <div id="sub-fav" class="location-list" style="display:none">
-                        <ul class="sidebar-menu__list" data-bind="foreach: spotList">
+                        <ul class="sidebar-menu__list" data-bind="foreach: filteredSpotList">
                             <li class="sidebar-menu__item" >
                                 <input class="list-checkbox" type="checkbox" data-bind="checked: selected">
                                 <span style="cursor: pointer" 
