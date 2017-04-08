@@ -221,15 +221,22 @@
     this.polygon = null;
     this.drawingManager = null;
     // sketch Toggle Value options
-    this.DRAWPOLY = 'Draw Polygon';
+    this.DRAWPOLY = 'Draw a Search Area Polygon';
     this.CLEARPOLY = 'Clear Polygon';
     // Current name to show on the sketch filter toggle button
     // (Has to be observable)
     this.sketchToggleValue = ko.observable(this.DRAWPOLY);
+    //**********************************
+    // ZOOM Variables
+    this.zoomed = false;
+    this.ZOOMIN = 'Zoom to Area';
+    this.ZOOMOUT = 'Zoom Back';
+    this.zoomText = ko.observable(this.ZOOMIN);
     //**************************
     // TEXT BOXES
     //  Favourite Area search input
-    this.favoriteAreaText = ko.observable('');
+    //  TODO: Remove this
+    //this.favoriteAreaText = ko.observable('');
     //  Zoom to Area search input
     this.timeSearchText = ko.observable('');
     // *************************
@@ -933,32 +940,51 @@
    * lat/long information
    */
   ViewModel.prototype.zoomToArea = function () {
+    var self = this;
     // Initialize a geocoder
     console.log("zoom To Area");
     var geocoder = new google.maps.Geocoder();
     // Get the address to zoom to
     // Make sure the address isn't blank
-    if (this.favoriteAreaText() === '') {
+    if (this.timeSearchText() === '') {
       // Alert user if there is nothing in
-      // the favoriteAreaText text box
+      // the timeSearchText text box
       window.alert('Please ad an area or address');
     } else {
+      console.log('Zoom Caption:' + self.zoomText() + ' w ' + this.ZOOMOUT);
+      // If zoom button doesn't say zoom out
+
       // Geocode the address/area entered; want the center.
       geocoder.geocode(
-              {address: this.favoriteAreaText()
+              {address: this.timeSearchText()
               }, function (results, status) {
         // Center the map on location if an address or area is found
         if (status == google.maps.GeocoderStatus.OK) {
           console.log("    location " + results[0].geometry.location);
+          //
           map_global.setCenter(results[0].geometry.location);
-          map_global.setZoom(15);
+          if (!self.zoomed) {
+            self.zoomed = true;
+            // then Zoom In
+            self.zoomText(self.ZOOMOUT);
+            // If zooming in
+            map_global.setZoom(16);//zoom to street level
+            // otherwise zoom back
+          } else {// Zoom out
+            self.zoomed = false;
+            //
+            self.zoomText(self.ZOOMIN);
+            //
+            map_global.setZoom(13);// zoom to city level
+          }
         } else {
           // Alert the user if the status is anything but OK
           window.alert('Could not find that location - try entering a more specific place');
         }
       }
-      )
+      );
 
+      //
     }
   };
   /**
