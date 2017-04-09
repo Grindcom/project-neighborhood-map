@@ -212,6 +212,10 @@
     // **************************
     // Provide global access to this as an object literal
     view_model = this;
+    //***************************
+    // Favourites Title variable
+    this.defaultSpotTitle = 'Cool Spots';
+    this.spotTitle = ko.observable(this.defaultSpotTitle);
     //****************************
     // InfoWindow for markers
     this.largeInfowindow = null;
@@ -221,7 +225,7 @@
     this.polygon = null;
     this.drawingManager = null;
     // sketch Toggle Value options
-    this.DRAWPOLY = 'Draw a Search Area Polygon';
+    this.DRAWPOLY = 'Draw a Filter Area Polygon';
     this.CLEARPOLY = 'Clear Polygon';
     // Current name to show on the sketch filter toggle button
     // (Has to be observable)
@@ -269,7 +273,7 @@
     favSpots.forEach(function (location) {
       var spot = new CoolSpot(location, i++);
       self.spotList.push(spot);
-      self.filteredSpotList().push(spot);
+      self.filteredSpotList.push(spot);
     });
     // ***************************
     // Current Spot selected
@@ -466,10 +470,13 @@
         self.searchWithinPolygon();
         // Ensure the search is re-done if the polygon is changed
         self.polygon.getPath().addListener('set_at', function () {
+
           self.searchWithinPolygon();
         });
         self.polygon.getPath().addListener('insert_at', function () {
+
           self.searchWithinPolygon();
+
         });
       });
       /*
@@ -910,12 +917,19 @@
    * Uses the viewModel drawingManager.
    */
   ViewModel.prototype.toggleDrawing = function () {
+    var self = this;
     //  if there is a polygon
     if (this.drawingManager.map) {
       this.drawingManager.setMap(null);
       // Remove any polygon
       if (this.polygon) {
         this.polygon.setMap(null);
+        // remove filter on spot list
+        self.filteredSpotList.removeAll();
+        // Add all spots to filtered spot List
+        self.spotList.forEach(function(spot){
+          self.filteredSpotList.push(spot);
+        });
       }
       // Set the button text
       this.sketchToggleValue(this.DRAWPOLY);
@@ -997,9 +1011,9 @@
      */
     var self = this;
     var origins = response.originAddresses;
-    console.log("----display markers>>Origin "+origins[0]);
+    console.log("----display markers>>Origin " + origins[0]);
     var destinations = response.destinationAddresses;
-    console.log("----display markers>>Destination 1: "+destinations[0]);
+    console.log("----display markers>>Destination 1: " + destinations[0]);
     //
     var atLeastOne = false;
     // Incrementing reference to identify marker
@@ -1077,20 +1091,40 @@
 
   /**
    * @description Search inside the polygon, set the callback function for 
-   * when the polygon is moved
+   * when the polygon is moved, and sets the filtered list to those within
+   * the polygon.
    * @returns {undefined}
    */
   ViewModel.prototype.searchWithinPolygon = function () {
     var self = this;
+    //
+    var tempFilteredList = [];
+    // Check list to see if any spots are within polygon
     self.spotList.forEach(function (spot) {
       console.log(" Search Within Poly: target " + spot.name());
       // Check if the markers position is inside the global polygon area
       if (google.maps.geometry.poly.containsLocation(spot.marker.position, self.polygon)) {
         spot.marker.setMap(map_global);// its inside so add it to the map
+        //
+        self.spotTitle(self.defaultSpotTitle + ' (filtered)');
+        //
+        tempFilteredList.push(spot);
       } else {
         spot.marker.setMap(null);// its not inside so remove it
       }
     });
+    // 
+    if (tempFilteredList.length > 0) {
+      //
+      self.spotTitle(self.defaultSpotTitle + ' (filtered)');
+      // Clear the filtered spot array
+      self.filteredSpotList.removeAll();
+      // Add the list inside the polygon
+      tempFilteredList.forEach(function (fspot) {
+        //
+        self.filteredSpotList.push(fspot);
+      });
+    }
   };
   /**
    *
@@ -1147,8 +1181,8 @@
         } else {
           var originList = response.originAddresses;
           var destinationList = response.destinationAddresses;
-          console.log("Origin test: "+originList[0]);
-          console.log("Destination test: "+destinationList[0]);
+          console.log("Origin test: " + originList[0]);
+          console.log("Destination test: " + destinationList[0]);
           // Display all markers that are within the
           // given time period
           self.displayMarkersWithinTime(response);
@@ -1163,14 +1197,14 @@
   ViewModel.prototype.clearRoutes = function () {
     this.routes().forEach(function (route) {
       // Remove route markers
-      route.setOptions( { suppressMarkers: true } );// without this, the markers remain after route is deleted.
+      route.setOptions({suppressMarkers: true});// without this, the markers remain after route is deleted.
       // Remove route from map
       route.setMap(null);
     });
     // Clean all routes from array.
     this.routes.removeAll();
     //
-    
+
   };
 
   /**

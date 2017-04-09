@@ -32,13 +32,14 @@ Start Date: Dec. 13, 2016 -->
             <header class="sidebar-header  default-primary-color">
                 <h2 class="title">Neighborhood Locations</h2>
             </header>
-            <nav class="sidebar-menu" id="menu">                                <hr>
-                <h3>Cool Spots</h3>
+            <nav class="sidebar-menu" id="menu">                                
+                <hr>
+                <h3 data-bind="text: spotTitle">Cool Spots</h3>
                 <button type="button" id="show-button" data-bind="click: showSpots">Show</button>
                 <button type="button" name="hide-button" data-bind="click: hideSpots">Hide</button>
                 <hr>
                 <section>
-                    <h3 data-toggle="tooltip" title="Show Favorites" id="fav-h3" class="row-h2" style="cursor: pointer" data-bind="click: toggleSubMenu">My Favorites<span class="arrow" data-bind="text: DOWNARROW"></span></h3>
+                    <h3 data-toggle="tooltip" title="Show Favorites" id="fav-h3" class="row-h2" style="cursor: pointer" data-bind="click: toggleSubMenu">My Happy Spots<span class="arrow" data-bind="text: DOWNARROW"></span></h3>
                     <div id="sub-fav" class="location-list" style="display:none">
                         <ul class="sidebar-menu__list" data-bind="foreach: filteredSpotList">
                             <li class="sidebar-menu__item" >
