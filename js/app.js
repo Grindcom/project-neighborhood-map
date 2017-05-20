@@ -2,6 +2,7 @@
 // Main JavaScript
 // Author: Greg Ford, B.Sc.
 // Start Date: Dec. 13, 2016
+// And Still going in 2017
 
 //
 // GLOBALS
