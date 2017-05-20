@@ -1,3 +1,5 @@
+/* global google */
+
 // Neighborhood Map project
 // Main JavaScript
 // Author: Greg Ford, B.Sc.
@@ -413,8 +415,10 @@
         // Set the styles property to use the above array
         styles: mapStyles
       });
-      // Set the new map to the Global map variable
-      map_global = map;
+      /**
+       * Set the new map to the Global map variable
+       */
+      self.map_global = map;
       // Set the marker with the position and the map object created above.
       var marker = new google.maps.Marker({
         position: williams_lake,
@@ -483,6 +487,10 @@
        * Initialize the direction service
        */
       directionsService = new google.maps.DirectionsService();
+      /**
+       * Show all spots by default
+       */
+//      this.showSpots();
     };// END OF initMap
     //*****************************
     // TODO: Search by nearby places
@@ -654,7 +662,7 @@
 
     };
 
-  }// END VIEW MODEL
+  };// END VIEW MODEL
 //
   /**
    * @description Toggle a sub menu section visible or hidden.
