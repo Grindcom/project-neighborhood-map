@@ -746,7 +746,7 @@
           //**
           // Create marker
           var marker = new google.maps.Marker({
-            // map: map_global,
+            map: map_global,
             position: targetSpot.geoLocation(), // Location of marker on map
             title: targetSpot.name(), // What will show when the marker is hovered over
             icon: icon,
