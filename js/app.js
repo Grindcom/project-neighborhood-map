@@ -736,7 +736,7 @@
     // Initialize a geocoder
     var geocoder = new google.maps.Geocoder();
     // Make sure the address isn't blank
-    if (targetSpot.address() == '') {
+    if (targetSpot.address() === '') {
       window.alert('Address: ' + targetSpot.address() + ', is not valid.');
     } else {
       // Geocode the address/area entered; want the center.
@@ -744,7 +744,7 @@
               {address: targetSpot.address()}// keep within city
       , function (results, status) {
         // Center the map on location if an address or area is found
-        if (status == google.maps.GeocoderStatus.OK) {
+        if (status === google.maps.GeocoderStatus.OK) {
           //
           targetSpot.geoLocation(results[0].geometry.location);
           //**
@@ -753,11 +753,11 @@
           //**
           // Create marker
           var marker = new google.maps.Marker({
-            // map: map_global,
+            map: map_global, // Add marker to global map when it's created
             position: targetSpot.geoLocation(), // Location of marker on map
             title: targetSpot.name(), // What will show when the marker is hovered over
             icon: icon,
-            animation: google.maps.Animation.DROP, // Shake the marker as it appears
+            animation: google.maps.Animation.DROP // Shake the marker as it appears
           });
           // Make a contrasting icon for mouse hover over
           var hoverOverIcon = self.makeMarkerIcon(targetSpot.markerHighlightColor);
@@ -1351,6 +1351,7 @@
    * @description Entry point for Neighborhood Map
    */
   ko.applyBindings(new ViewModel());
+
 
 
 
