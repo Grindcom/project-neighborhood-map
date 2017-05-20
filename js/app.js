@@ -1,5 +1,3 @@
-/* global google */
-
 // Neighborhood Map project
 // Main JavaScript
 // Author: Greg Ford, B.Sc.
