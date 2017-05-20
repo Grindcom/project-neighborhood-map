@@ -417,7 +417,7 @@
       /**
        * Set the new map to the Global map variable
        */
-      self.map_global = map;
+      map_global = map;
       // Set the marker with the position and the map object created above.
       var marker = new google.maps.Marker({
         position: williams_lake,
