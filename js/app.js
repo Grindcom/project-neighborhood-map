@@ -281,7 +281,6 @@
     this.addNearbySpots = function (spot) {
       // console.log("Add nearby spots..." + spot.name);//new CoolSpot(spot,this.nearbyCount++)
       self.nearbyList.push(spot);
-      this.nearbyCount++;
       // console.log("----List size " + this.nearbyList().length);
       //
     };
@@ -291,23 +290,19 @@
      */
     this.getNearbyList = function () {
       return this.nearbyList();
-    }
+    };
     /**
      * Clear the whole list of nearby spots
      * @returns {undefined}
      */
     this.clearNearbyList = function () {
-     console.log("----pop count: " + this.nearbyCount);
       while (this.nearbyList().length > 0) {
         this.nearbyList.pop();
-        console.log("pop");
-        this.nearbyCount--;
-
       }
-    }
+    };
     //
     this.compileNearbyList = function () {
-      log.console("Compiling List of selected favorite places...")
+      log.console("Compiling List of selected favorite places...");
       // Clear list
       self.clearNearbyList();
       // Add selected items to list
@@ -1309,17 +1304,19 @@
       data.response.venues.forEach(function (venue) {
         // console.log("Name: " + venue.name);
         // console.log(venue.location.distance + " from ");
+        var category_name = "No Category";
         if (venue.categories.length > 0)
         {
           // console.log("Known as ");
           venue.categories.forEach(function (category) {
-            // console.log("- " + category.name);
-          })
+             console.log("- " + category.name);
+             category_name = category.name;
+          });
         }
         //
         var nearbySpot = {
           name: venue.name,
-          type: venue.categories[0].name,
+          type: category_name,//venue.categories[0].name,
           address: venue.location.address,
           geoLocation: venue.location.lat + "," + venue.location.lng,
           reviews: [],
