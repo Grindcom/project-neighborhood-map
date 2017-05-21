@@ -12,7 +12,8 @@ for places nearby the happy spots and ways to find routes to them.
 
 ### Files Structure
 The master branch has a compressed index.html file for optimization and the expanded original index file can be found in ./src as index_src.html. 
-In order to to use that file for review you must rename and replace the compressed index.html file.
+In order to to use that file for review you must rename and replace the compressed index.html file.  
+The pre-optimized index.html file is called index_opt.html; also found in ./src. This file can also replace the index.html file, but is only meant for reference.
 
 
 
@@ -54,6 +55,7 @@ The search options available include:
 #### Also using:
 1. [jQuery.js](https://jquery.com/)
 2. [slideout.js](https://github.com/Mango/slideout)
+3. [bootstrap.css](http://getbootstrap.com/css/)
 
 #### API's
 1. GoogleMaps API
