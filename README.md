@@ -10,6 +10,11 @@ There is a hidden, slideout menu that can be accessed by a standard 'hamburger' 
 Once the slideout menu is toggled open, the user will see dropdown menu lists of cool spots as well as multiple ways to explore the 'Puddle' 
 for places nearby the happy spots and ways to find routes to them.  
 
+### Files Structure
+The master branch has a compressed index.html file for optimization and the expanded original index file can be found in ./src as index_src.html. 
+In order to to use that file for review you must rename and replace the compressed index.html file.
+
+
 
 ### Cool Features
 * Clear or show all the markers with a click of the appropriate button.
@@ -99,3 +104,4 @@ The search options available include:
 3. Cache-control, suggested by google pagespeed, found at [MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control)
 and explained at [Stack Overflow](http://stackoverflow.com/questions/4480304/how-to-set-http-headers-for-cache-control)
 4. Minify app.js at [JS Compress](https://jscompress.com/) for 67.69% compression
+
