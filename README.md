@@ -93,3 +93,6 @@ The search options available include:
   2. [ ] It should be easy to understand what set of locations is being filtered
   3. [x] Selecting a location via list item or map marker should cause the related map marker to bounce *OR* **animate** in some way to catch the users attention
   4. [x] Associated info window should open above the map marker with additional information
+
+### Credits
+1. Minified CSS using https://cssminifier.com/
