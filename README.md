@@ -4,7 +4,7 @@ The code is informed and inspired by the GoogleMap API project found in lesson 1
 
 ### Files Structure
 The master branch has a compressed index.html file for optimization and the expanded original index file can be found in ./src as index_src.html. 
-In order to to use that file for review you must rename and replace the compressed index.html file.  
+In order to to use that file for review, open index_src.html in your browser, it references relevant non-minified files.  
 The pre-optimized index.html file is called index_opt.html; also found in ./src. This file can also replace the index.html file, but is only meant for reference.  
 
 Download or Clone the repository.  Open index.html in your favorite browser (or index_src.html to review all code).
