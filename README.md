@@ -12,6 +12,7 @@ for fun things to do.
 ### Cool Features
 * Clear or show all the markers with a click of the appropriate button.
 * A click count is maintained for the favorite spot list.  Every time the list item is clicked the counter goes up.
+* If the user selects a cool spots check box they can open the Nearby Locations to see a list of nearby locations provided by Foursquare.
 ### Search
 The search options available include:  
 * Sketch a polygon around an area in the map.
