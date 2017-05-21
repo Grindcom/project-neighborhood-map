@@ -49,7 +49,6 @@ The search options available include:
 #### Also using:
 1. [jQuery.js](https://jquery.com/)
 2. [slideout.js](https://github.com/Mango/slideout)
-3. [Bootstrap.js](http://getbootstrap.com/)
 
 #### API's
 1. GoogleMaps API
