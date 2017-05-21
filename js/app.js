@@ -281,6 +281,7 @@
     this.addNearbySpots = function (spot) {
       // console.log("Add nearby spots..." + spot.name);//new CoolSpot(spot,this.nearbyCount++)
       self.nearbyList.push(spot);
+      this.nearbyCount++;
       // console.log("----List size " + this.nearbyList().length);
       //
     };
@@ -296,9 +297,10 @@
      * @returns {undefined}
      */
     this.clearNearbyList = function () {
-      // console.log("----pop count: " + this.nearbyCount);
+     console.log("----pop count: " + this.nearbyCount);
       while (this.nearbyList().length > 0) {
-        this.nearbyList().pop();
+        this.nearbyList.pop();
+        console.log("pop");
         this.nearbyCount--;
 
       }
