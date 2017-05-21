@@ -68,7 +68,7 @@ Start Date: Dec. 13, 2016 -->
                 </section>
                 <h3 data-toggle="tooltip" title="Find Locations near to selected spots" id="nearby-h3" class="row-h2" style="cursor: pointer" data-bind="click: toggleSubMenu">Nearby Locations<span class="arrow" data-bind="text: DOWNARROW"></span></h3>
                 <section id="nearby-search-section" style="display:none" >
-                    <div data-bind="if: nearbyList().length == 0">You have not checked a spot</div>
+                    <div data-bind="if: nearbyList().length === 0"><br>Check a spot to find nearby locations with Foursquare</div>
                     <ul class="sidebar-menu__list" data-bind="foreach: nearbyList">
                         <li><strong data-bind='text: type + " - "'></strong><i data-bind='text: name'>hello</i></li>
                     </ul>
