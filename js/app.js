@@ -165,7 +165,7 @@
     //
     this.name = ko.observable(data.name);
     //
-    this.selected = false;//ko.observable(false);
+    this.selected = false;
     //
     this.address = ko.observable(data.address);
     //
@@ -173,9 +173,9 @@
     //
     this.geoLocation = ko.observable(data.geoLocation);
     //
-    this.markerColor = '070B57';//ko.observable('070B57');
+    this.markerColor = '070B57';
     //
-    this.markerHighlightColor = 'FFFF24';//ko.observable('FFFF24')
+    this.markerHighlightColor = 'FFFF24';
     //
     this.imgSrc = data.imgSrc;
     //
@@ -183,13 +183,9 @@
     //
     this.reviews = ko.observableArray(data.reviews);
     //
-    this.marker = null;//ko.observable(null);
+    this.marker = null;
     //
     this.markerVisible = ko.observable(false);
-    // TODO: Add computed observables; get more information about this spot, 
-    // map marker, etc.
-    // Map marker for this object
-    //
     /**
      * @description Return the name and clickCount together
      */
@@ -236,12 +232,10 @@
     this.zoomed = false;
     this.ZOOMIN = 'Zoom to Your Area';
     this.ZOOMOUT = 'Zoom Back';
-    this.zoomText = ko.observable(this.ZOOMIN);
+    this.zoomText = this.ZOOMIN;//ko.observable();
     //**************************
     // TEXT BOXES
     //  Favourite Area search input
-    //  TODO: Remove this
-    //this.favoriteAreaText = ko.observable('');
     //  Zoom to Area search input
     this.timeSearchText = ko.observable('');
     // *************************
@@ -290,10 +284,17 @@
       // console.log("----List size " + this.nearbyList().length);
       //
     };
-//    this.addNearbySpots(favSpots[0]);
+    /**
+     * Get the full list of nearby spots
+     * @returns {ko.observableArray.result}
+     */
     this.getNearbyList = function () {
       return this.nearbyList();
     }
+    /**
+     * Clear the whole list of nearby spots
+     * @returns {undefined}
+     */
     this.clearNearbyList = function () {
       // console.log("----pop count: " + this.nearbyCount);
       while (this.nearbyList().length > 0) {
@@ -387,7 +388,6 @@
       var williams_lake = {lat: 52.1417, lng: -122.1417};
       // Constructor that creates a new map - only center and zoom are required
       //  The first parameter is the element on the page to place the map,
-      // TODO: Change to a jQuery reference(?)
       map = new google.maps.Map(document.getElementById('map'), {
         // Set initial location to Williams Lake
         center: williams_lake,
@@ -491,8 +491,6 @@
        */
 //      this.showSpots();
     };// END OF initMap
-    //*****************************
-    // TODO: Search by nearby places
 
     /**
      * @description The PLACE DETAILS search; most detailed so it is only executed
@@ -508,7 +506,6 @@
         placeId: marker.id
       }, function (place, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
-          // TODO: Change to knockoutJS data-bind(ing's)
           // Set the marker property on this infowindow so it isn't created again.
           detailInfoWindow.marker = marker;
           var innerHTML = '<div>';
@@ -531,13 +528,11 @@
                     place.opening_hours.weekday_text[5] + '<br>' +
                     place.opening_hours.weekday_text[6] + '<br>';
           }
-          // TODO: Change to knockoutJS data-bind(ing's)
           if (place.photos) {
             //
             innerHTML += '<br><br><img src="' + place.photos[0].getUrl({maxHeight: 100, maxWidth: 200}) + '">';
 
           }
-          // TODO: Change to knockoutJS data-bind(ing's)
           // Place HTML
           detailInfoWindow.setContent(innerHTML);
           // Open marker info window with details
@@ -623,11 +618,8 @@
     this.displayDirections = function (toPosition) {
       self.hideSpots();
       //Get the destination address from the user entered value.
-      // TODO: Change to knockoutjs data-bind(ing)
-//      var destinationAddress = self.timeSearchText();
       var originAddress = self.timeSearchText();
       // Get the mode again from the user entered value
-      // TODO: Change to knockoutjs data-bind(ing)
       var mode = self.selectedMode();
       directionsService.route({
         // The origin is the passed in marker's position
@@ -642,7 +634,6 @@
           //  show the directions by setting the 'panel' parameter with the
           //  html div that we want it to go to
           //  Show polyline of route.
-          // TODO: Make an observableArray to hold the directions for
           // multiple routes.
           var directionsDisplay = new google.maps.DirectionsRenderer({
             map: map_global,
@@ -694,12 +685,13 @@
     if (event.target.id === "nearby-h3")
     {
       // console.log("---Look for nearby spots.");
+      // Clear nearbySpot list
+      self.clearNearbyList();
       // If there are any favorites selected, check FourSquare
       self.spotList.forEach(function (spot) {
         if (spot.selected) {
           // console.log("--Nearby " + spot.name());
-          // Clear nearbySpot list
-          self.clearNearbyList();
+
           // Call FourSquare to get nearby locations
           self.queryFourSquare(spot);
         }
@@ -981,14 +973,14 @@
           if (!self.zoomed) {
             self.zoomed = true;
             // then Zoom In
-            self.zoomText(self.ZOOMOUT);
+            self.zoomText = self.ZOOMOUT;
             // If zooming in
             map_global.setZoom(16);//zoom to street level
             // otherwise zoom back
           } else {// Zoom out
             self.zoomed = false;
             //
-            self.zoomText(self.ZOOMIN);
+            self.zoomText = (self.ZOOMIN);
             //
             map_global.setZoom(13);// zoom to city level
           }
@@ -1060,7 +1052,6 @@
           atLeastOne = true;
           // Create a mini infowindow to open immediately and
           //  contain the distance and duration
-          // TODO: Change to knockoutjs data-bind(ing)
           var infowindow = new google.maps.InfoWindow({
             content: durationText + ' away, about ' + distanceText +
                     '<div><button type=\"button\" id=\"display-directions\" onClick=' +
@@ -1133,11 +1124,6 @@
       });
     }
   };
-  /**
-   *
-   * TODO: Add distance functionality
-   */
-
   /**
    * @description Search for cool spots within a given time
    * from a location given by user. User can also supply mode of travel.
@@ -1224,7 +1210,6 @@
     var bounds = map_global.getBounds();
     this.hideMarkers(this.placeMarkers());
     var placesService = new google.maps.places.PlacesService(map);
-    // TODO: Change to knockoutjs data-bind(ing)
     placesService.textSearch({
       query:
               document.getElementById('places-search').value,
@@ -1353,37 +1338,3 @@
 
 
 
-
-
-// ***********************************
-//  HELPER FUNCTIONS
-//TODO: Add Foursquare API
-
-  /**
-   * Using tutorial from Foursquare as inspiration;
-   * See https://developer.foursquare.com/overview/tutorial
-   */
-  /*
-   var config = {
-   apiKey: 'XXXXXXXXXXXXXX',
-   authUrl: 'https://foursquare.com/',
-   apiUrl: 'https://api.foursquare.com/'
-   };
-   
-   /* Attempt to retrieve access token from URL. */
-//  function doAuthRedirect() {
-//    var redirect = window.location.href.replace(window.location.hash, '');
-//    var url = config.authUrl + 'oauth2/authenticate?response_type=token&client_id=' + config.apiKey +
-//        '&redirect_uri=' + encodeURIComponent(redirect) +
-//        '&state=' + encodeURIComponent($.bbq.getState('req') || 'users/self');
-//    window.location.href = url;
-//  };
-//  if ($.bbq.getState('access_token')) {
-//    // If there is a token in the state, consume it
-//    var token = $.bbq.getState('access_token');
-//    $.bbq.pushState({}, 2)
-//  } else if ($.bbq.getState('error')) {
-//  } else {
-//    doAuthRedirect();
-//  }
-//  
