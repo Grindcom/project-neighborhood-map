@@ -15,11 +15,11 @@ for fun things to do.
 ### Search
 The search options available include:  
 * Sketch a polygon around an area in the map.
-* Enter an area you want to zoom in to.  This becomes your origin point for the next search feature.
+* Enter an area name or address in the text box that you want to zoom in to.  This becomes your origin point for the next search feature.
 * Select time and mode of travel, using the drop down boxes (in the 'find the route from' area).
 
 #### How search works
-1. Show all the cool spot markers at once; they will drop in from the top of the map.  
+1. Show all the cool spot markers at once by selecting the 'Show All' button; they will drop in from the top of the map.  
 2. Sketch out an area of interest to see if there are any cool spots inside it;
   1. If there are any markers outside the sketch they will either be hidden or not shown.
   2. When toggled off the sketch will be removed, but the markers will be left in place.
