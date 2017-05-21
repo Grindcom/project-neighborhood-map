@@ -99,3 +99,4 @@ The search options available include:
 2. Asynchronously load css http://stackoverflow.com/questions/32759272/how-to-load-css-asynchronously
 3. Cache-control, suggested by google pagespeed, found at [MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control)
 and explained at [Stack Overflow](http://stackoverflow.com/questions/4480304/how-to-set-http-headers-for-cache-control)
+4. Minify app.js at [JS Compress](https://jscompress.com/) for 67.69% compression
