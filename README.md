@@ -1,5 +1,5 @@
 # Neighborhood Map
-A single page application utilizing the google maps API (and others) to showcase my town.  This a project for the UDacity Front-end Developer course. 
+A single page application utilizing the google maps API (and others) to showcase my home town; Williams Lake, BC, Canada.  This a project for the UDacity Front-end Developer course. 
 The code is informed and inspired by the GoogleMap API project found in lesson 19 'Using API's in Practice'.
 
 ## How to use
@@ -8,13 +8,13 @@ This app starts with a google map located at Williams Lake, BC - including a mar
 There is a hidden, slideout menu that can be accessed by a standard 'hamburger' button in the top right of the page.  
 
 Once the slideout menu is toggled open, the user will see dropdown menu lists of cool spots as well as multiple ways to explore the 'Puddle' 
-for fun things to do.  
+for places nearby the happy spots and ways to find routes to them.  
 
 
 ### Cool Features
 * Clear or show all the markers with a click of the appropriate button.
 * A click count is maintained for the favorite spot list.  Every time the list item is clicked the counter goes up.
-* If the user selects a cool spots check box they can open the Nearby Locations to see a list of nearby locations provided by Foursquare.
+* If the user selects the check box for a cool spot, they can open the Nearby Locations menu to see a list of nearby venues; provided by Foursquare.
 ### Search
 The search options available include:  
 * Sketch a polygon around an area in the map.
@@ -23,14 +23,22 @@ The search options available include:
 
 #### How search works
 1. Show all the cool spot markers at once by selecting the 'Show All' button; they will drop in from the top of the map.  
-2. Sketch out an area of interest to see if there are any cool spots inside it;
-  1. If there are any markers outside the sketch they will either be hidden or not shown.
-  2. When toggled off the sketch will be removed, but the markers will be left in place.
-3. Search by an area; enter an area of interest in the text box then click zoom to swoop in to the zone.
-4. Select one of the listed cool spots;
+2. Choose one of the listed **Happy Spots**;
     1. If all markers are showing, the selected spots' marker will bounce.
     2. If the markers aren't showing, the spots' marker will drop onto the map and start bouncing.
     3. If a spot's marker is bouncing, selecting it again will stop it.
+3. **Nearby Locations** for are shown for any *Happy Spots* that are selected.
+4. Use the **Search and Filter** drop down to  
+    1. Sketch out an area of interest to see if there are any cool spots inside it;
+        1. If there are any markers outside the sketch they will either be hidden or not shown.
+        2. When toggled off the sketch will be removed, but the markers will be left in place.
+    2. Search by an area; enter an area of interest in the text box then click zoom to swoop in to the zone.
+    3. Find a route from an area or address that you enter in 4.2
+        1. Choose a maximum travel time that you want to take to get to a venue.
+        2. Select a mode of travel that you want to use.
+        3. Click the **GO** button to see the Places that fall within your selected criteria.
+        4. Click the **View Route** button to see the route.
+
 
 ## Requirements
 
@@ -41,6 +49,7 @@ The search options available include:
 #### Also using:
 1. [jQuery.js](https://jquery.com/)
 2. [slideout.js](https://github.com/Mango/slideout)
+3. [Bootstrap.js](http://getbootstrap.com/)
 
 #### API's
 1. GoogleMaps API
