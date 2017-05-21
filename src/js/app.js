@@ -154,11 +154,13 @@
       imgAttribution: ''
     }
   ]
-//*******************
-//
+/**
+ * Cool Spot
+ * @param {type} data
+ * @param {type} id
+ * @returns {CoolSpot}
+ */
   var CoolSpot = function (data, id) {
-    var self = this;
-    //
     this.id = id;
     //
     this.clickCount = ko.observable(0);
@@ -181,8 +183,6 @@
     //
     this.imgAttribution = data.imgAttribution;
     //
-    this.reviews = ko.observableArray(data.reviews);
-    //
     this.marker = null;
     //
     this.markerVisible = ko.observable(false);
@@ -202,6 +202,7 @@
   }
   /**
    * ViewModel
+   * @returns {ViewModel}
    */
   var ViewModel = function () {
     // Use for clarity when necessary

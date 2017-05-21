@@ -68,7 +68,6 @@ Start Date: Dec. 13, 2016 -->
             mouseout: function(spot){ $parent.menuListMouseout(spot);}
           }"></span>
                                 <p data-bind="text: likes"></p>
-                                <p style="cursor: pointer" data-bind="click: function(spot){ $parent.queryFourSquare(spot);}">More info.</p>
                             </li>
                         </ul>
                     </div>
@@ -102,16 +101,12 @@ Start Date: Dec. 13, 2016 -->
         <script type="text/javascript" async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1Vs3ktrsweXIEICK-axcOk_Smy7-plgU&libraries=drawing,geometry,places&v=3&callback=view_model.initMap">
         </script>
         <!-- Slideout.js for off canvas menu -->
-        <!--<script defer src="js/lib/slideout-1.0.1/dist/slideout.js"></script>-->
         <script defer src="./dist/js/lib/slideout-1.0.1/slideout.min.js" ></script>
         <!-- jQuery for DOM manipulation and AJAX -->
         <script defer type="text/javascript" src="./dist/js/lib/jquery.min.js"></script>
         <!-- knockout-3 for data responsiveness -->
         <script defer src="./dist/js/lib/knockout-3.4.1.js"></script>
-        <!--oAuth signature-->
-        <!--<script src="/bower_components/oauth-signature/dist/oauth-signature.js"></script>-->
         <!-- Application code base -->
-        <!--<script defer src="./js/app.js"></script>-->
         <script defer src="./dist/js/app.min.js"></script>
     </body>
 </html>
