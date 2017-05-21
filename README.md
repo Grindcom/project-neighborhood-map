@@ -2,6 +2,13 @@
 A single page application utilizing the google maps API (and others) to showcase my home town; Williams Lake, BC, Canada.  This a project for the UDacity Front-end Developer course. 
 The code is informed and inspired by the GoogleMap API project found in lesson 19 'Using API's in Practice'.
 
+### Files Structure
+The master branch has a compressed index.html file for optimization and the expanded original index file can be found in ./src as index_src.html. 
+In order to to use that file for review you must rename and replace the compressed index.html file.  
+The pre-optimized index.html file is called index_opt.html; also found in ./src. This file can also replace the index.html file, but is only meant for reference.  
+
+Download or Clone the repository.  Open index.html in your favorite browser (or index_src.html to review all code).
+
 ## How to use
 This app starts with a google map located at Williams Lake, BC - including a marker at the center of the town as well as several pre-loaded cool spots.  
 
@@ -9,11 +16,6 @@ There is a hidden, slideout menu that can be accessed by a standard 'hamburger' 
 
 Once the slideout menu is toggled open, the user will see dropdown menu lists of cool spots as well as multiple ways to explore the 'Puddle' 
 for places nearby the happy spots and ways to find routes to them.  
-
-### Files Structure
-The master branch has a compressed index.html file for optimization and the expanded original index file can be found in ./src as index_src.html. 
-In order to to use that file for review you must rename and replace the compressed index.html file.  
-The pre-optimized index.html file is called index_opt.html; also found in ./src. This file can also replace the index.html file, but is only meant for reference.
 
 
 
