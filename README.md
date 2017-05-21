@@ -1,5 +1,6 @@
 # Neighborhood Map
-A single page application utilizing the google maps API (and others) to showcase my town.  This a project for the UDacity Front-end Developer course.
+A single page application utilizing the google maps API (and others) to showcase my town.  This a project for the UDacity Front-end Developer course. 
+The code is informed and inspired by the GoogleMap API project found in previous coursed at UDacity.
 
 ## How to use
 This app starts with a google map located at Williams Lake, BC - including a marker at the center of the town as well as several pre-loaded cool spots.  

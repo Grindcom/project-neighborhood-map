@@ -285,9 +285,9 @@
     this.nearbyCount = 0;
 //    this.nearbyList().push(new CoolSpot(favSpots[0],1));
     this.addNearbySpots = function (spot) {
-      console.log("Add nearby spots..." + spot.name);//new CoolSpot(spot,this.nearbyCount++)
+      // console.log("Add nearby spots..." + spot.name);//new CoolSpot(spot,this.nearbyCount++)
       self.nearbyList.push(spot);
-      console.log("----List size " + this.nearbyList().length);
+      // console.log("----List size " + this.nearbyList().length);
       //
     };
 //    this.addNearbySpots(favSpots[0]);
@@ -295,7 +295,7 @@
       return this.nearbyList();
     }
     this.clearNearbyList = function () {
-      console.log("----pop count: " + this.nearbyCount);
+      // console.log("----pop count: " + this.nearbyCount);
       while (this.nearbyList().length > 0) {
         this.nearbyList().pop();
         this.nearbyCount--;
@@ -464,7 +464,7 @@
         self.drawingManager.setDrawingMode(null);
         // Create a new editable polygon from the overlay
         self.polygon = event.overlay;
-        console.log("polygon " + self.polygon.getPath());
+        // console.log("polygon " + self.polygon.getPath());
         // Make it so the user can change the shape without re-drawing
         self.polygon.setEditable(true);
         // Make it so the user can move the shape around the map
@@ -559,10 +559,10 @@
      * @returns {undefined}
      */
     this.populateInfoWindow = function (marker) {
-//      console.log("populateInfoWindow ");
+//      // console.log("populateInfoWindow ");
       // Make sure the infowindow is not already opened on this marker
       if (self.largeInfowindow.marker !== marker) {
-        console.log("infowindow.marker != marker");
+        // console.log("infowindow.marker != marker");
         self.largeInfowindow.marker = marker;
         // Add the marker title to an element in the infowindow
         self.largeInfowindow.setContent('<div>' + marker.title + '</div>');
@@ -673,7 +673,7 @@
    */
   ViewModel.prototype.toggleSubMenu = function (data, event) {
     var self = this;
-    console.log("Toggle Sub-Menu: id = " + event.target.id);
+    // console.log("Toggle Sub-Menu: id = " + event.target.id);
     // Get the element following
     var sub = $(event.target).next();
     // Toggle its visibility
@@ -684,7 +684,7 @@
       var arrow = $(event.target).children('span');
       // If 
       if (isVis) {
-        console.log("----Visible");
+        // console.log("----Visible");
         arrow.text(self.UPARROW);
       } else {
         arrow.text(self.DOWNARROW);
@@ -693,11 +693,11 @@
     //
     if (event.target.id === "nearby-h3")
     {
-      console.log("---Look for nearby spots.")
+      // console.log("---Look for nearby spots.");
       // If there are any favorites selected, check FourSquare
       self.spotList.forEach(function (spot) {
         if (spot.selected) {
-          console.log("--Nearby " + spot.name());
+          // console.log("--Nearby " + spot.name());
           // Clear nearbySpot list
           self.clearNearbyList();
           // Call FourSquare to get nearby locations
@@ -805,7 +805,7 @@
     } else { // Otherwise set its visibility to true
       //
       spot.markerVisible(true);
-      console.log("Marker visible: " + spot.markerVisible());
+      // // console.log("Marker visible: " + spot.markerVisible());
     }
   };
   /**
@@ -835,7 +835,7 @@
       spot.marker.setIcon(icon);
     }
     //
-    console.log('hover over ' + spot.name());
+    // // console.log('hover over ' + spot.name());
     //
     this.pulseMenuListItem(spot.id);
   };
@@ -910,7 +910,7 @@
    * @param {object[]} markers - an array of google map markers.
    */
   ViewModel.prototype.hideMarkers = function (markers) {
-    console.log("Hide Markers");
+    // console.log("Hide Markers");
     markers.forEach(function (marker) {
       marker.setMap(null);
     })
@@ -957,7 +957,7 @@
   ViewModel.prototype.zoomToArea = function () {
     var self = this;
     // Initialize a geocoder
-    console.log("zoom To Area");
+    // console.log("zoom To Area");
     var geocoder = new google.maps.Geocoder();
     // Get the address to zoom to
     // Make sure the address isn't blank
@@ -966,7 +966,7 @@
       // the timeSearchText text box
       window.alert('Please ad an area or address');
     } else {
-      console.log('Zoom Caption:' + self.zoomText() + ' w ' + this.ZOOMOUT);
+      // console.log('Zoom Caption:' + self.zoomText() + ' w ' + this.ZOOMOUT);
       // If zoom button doesn't say zoom out
 
       // Geocode the address/area entered; want the center.
@@ -975,7 +975,7 @@
               }, function (results, status) {
         // Center the map on location if an address or area is found
         if (status == google.maps.GeocoderStatus.OK) {
-          console.log("    location " + results[0].geometry.location);
+          // console.log("    location " + results[0].geometry.location);
           //
           map_global.setCenter(results[0].geometry.location);
           if (!self.zoomed) {
@@ -1018,9 +1018,9 @@
      */
     var self = this;
     var origins = response.originAddresses;
-    console.log("----display markers>>Origin " + origins[0]);
+    // console.log("----display markers>>Origin " + origins[0]);
     var destinations = response.destinationAddresses;
-    console.log("----display markers>>Destination 1: " + destinations[0]);
+    // console.log("----display markers>>Destination 1: " + destinations[0]);
     //
     var atLeastOne = false;
     // Incrementing reference to identify marker
@@ -1046,7 +1046,7 @@
         // Also need the duration text
         var durationText = result.duration.text;
         // If the route duration is less than the selected time
-        console.log("  selected Time: " + self.selectedTime());
+        // console.log("  selected Time: " + self.selectedTime());
         if (duration <= self.selectedTime()) {
           // set the marker for this result.
           // indavidual marker, to be used later in this function as well.
@@ -1108,7 +1108,7 @@
     var tempFilteredList = [];
     // Check list to see if any spots are within polygon
     self.spotList.forEach(function (spot) {
-      console.log(" Search Within Poly: target " + spot.name());
+      // console.log(" Search Within Poly: target " + spot.name());
       // Check if the markers position is inside the global polygon area
       if (google.maps.geometry.poly.containsLocation(spot.marker.position, self.polygon)) {
         spot.marker.setMap(map_global);// its inside so add it to the map
@@ -1155,7 +1155,7 @@
       // in the search by time text box.
       window.alert('You need to enter an address');
     } else {
-      console.log(" Search Within Time");
+      // console.log(" Search Within Time");
       // Hide all cool spot markers first.
       this.hideSpots();
       // Use the distance matrix service to calculate the duration of the
@@ -1188,8 +1188,8 @@
         } else {
           var originList = response.originAddresses;
           var destinationList = response.destinationAddresses;
-          console.log("Origin test: " + originList[0]);
-          console.log("Destination test: " + destinationList[0]);
+          // console.log("Origin test: " + originList[0]);
+          // console.log("Destination test: " + destinationList[0]);
           // Display all markers that are within the
           // given time period
           self.displayMarkersWithinTime(response);
@@ -1243,7 +1243,7 @@
    * @returns {undefined}
    */
   ViewModel.prototype.createMarkersForPlaces = function (places) {
-    console.log("Create Markers for Places");
+    // console.log("Create Markers for Places");
     var mapBounds = new google.maps.LatLngBounds();
     places.forEach(function (place) {
       // Marker icon parameters
@@ -1267,7 +1267,7 @@
       // Event listener for when the marker is clicked
       marker.addListener('click', function () {
         if (placeInfoWindow.marker == this) {
-          console.log("This infowindow already is on this marker");
+          // console.log("This infowindow already is on this marker");
         } else {
           // Get the details for the place that this marker is related to
           getPlacesDetails(this, placeInfoWindow);
@@ -1304,7 +1304,7 @@
     var query = "";
     // Location
     var location = spot.marker.position.lat() + "," + spot.marker.position.lng();//"41.878114,87.629798";
-    console.log("Location: " + location);
+    // console.log("Location: " + location);
     var url = "https://api.foursquare.com/v2/venues/search";
     //https://api.foursquare.com/v2/venues/search?v=20161016&ll=41.878114%2C%20-87.629798&query=coffee&intent=checkin&client_id=INWUJQCSABPNKFZPFSG1L1023VTHBFWBP4YZCUXUFQEO01MW&client_secret=T5RHEMNEQBGGQ4ZYF5ESD4NA1J20OWGD5IWTFYT5R4N21JZX
     // Possible intents: checkin, match
@@ -1317,16 +1317,16 @@
       "client_id": client_id,
       "client_secret": client_secret
     }).done(function (data) {
-      console.log("hello: " + data.meta.code);
+      // console.log("hello: " + data.meta.code);
       //
       data.response.venues.forEach(function (venue) {
-        console.log("Name: " + venue.name);
-        console.log(venue.location.distance + " from ");
+        // console.log("Name: " + venue.name);
+        // console.log(venue.location.distance + " from ");
         if (venue.categories.length > 0)
         {
-          console.log("Known as ");
+          // console.log("Known as ");
           venue.categories.forEach(function (category) {
-            console.log("- " + category.name);
+            // console.log("- " + category.name);
           })
         }
         //
@@ -1341,7 +1341,7 @@
         };
         // nearbySpot
         self.addNearbySpots(nearbySpot);
-        console.log("-----Length of nearbySpots: " + self.getNearbyList().length);
+        // console.log("-----Length of nearbySpots: " + self.getNearbyList().length);
       });
     });
   };
