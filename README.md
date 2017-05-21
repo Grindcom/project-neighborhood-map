@@ -2,11 +2,22 @@
 A single page application utilizing the google maps API (and others) to showcase my town.  This a project for the UDacity Front-end Developer course.
 
 ## How to use
-This app starts with a google map located at Williams Lake, BC - including a marker at the center of the town.  There is a hidden, slideout menu that can be accessed by a standard 'hamburger' button.
+This app starts with a google map located at Williams Lake, BC - including a marker at the center of the town as well as several pre-loaded cool spots.  
+There is a hidden, slideout menu that can be accessed by a standard 'hamburger' button in the top right of the page.  
+
+Once the slideout menu is toggled open, the user will see dropdown menu lists of cool spots as well as multiple ways to explore the 'Puddle' 
+for fun things to do.  
+
+
 ### Cool Features
-* A click count is maintained for the favourite spot list.  Every time the list item is clicked the counter goes up.
+* Clear or show all the markers with a click of the appropriate button.
+* A click count is maintained for the favorite spot list.  Every time the list item is clicked the counter goes up.
 ### Search
-Once the menu is toggled open, the user will see a list of cool spots as well as multiple ways to explore the 'Puddle' for fun things to do.  There are a few search options.
+The search options available include:  
+* Sketch a polygon around an area in the map.
+* Enter an area you want to zoom in to.  This becomes your origin point for the next search feature.
+* Select time and mode of travel, using the drop down boxes (in the 'find the route from' area).
+
 #### How search works
 1. Show all the cool spot markers at once; they will drop in from the top of the map.  
 2. Sketch out an area of interest to see if there are any cool spots inside it;
@@ -36,8 +47,8 @@ Once the menu is toggled open, the user will see a list of cool spots as well as
 ### Must do's
 1. [x] Track click events on list items using Knockout.js
 2. [x] Create markers as part of the ViewModel (as observables is not permitted)
-3. [ ] All API's must be loaded asynchronously.
-4. [ ] Error handling must be handled gracefully (including 3rd party API access issues); any of the following are recommened;
+3. [x] All API's must be loaded asynchronously.
+4. [x] Error handling must be handled gracefully (including 3rd party API access issues); any of the following are recommened;
   1. [x] "A message is displayed notifying the user that the data can't be loaded"(UDacity project details)  
   2. [ ] "There are no negative repercussions to the UI"(UDacity project details)
   3. [ ] [Special error handling](http://api.jquery.com/jquery.ajax/#jqXHR)
@@ -56,7 +67,7 @@ Once the menu is toggled open, the user will see a list of cool spots as well as
     1. [ ] Yelp reviews
     2. [ ] Wikipedia
     3. [ ] Flickr images
-    4. [ ] Foursquare
+    4. [x] Foursquare
     5. [ ] [Instagram] (https://www.instagram.com/developer/authentication/)
     6. [ ] etc.
   2. [ ] Google maps libraries like StreetView and Places do not count

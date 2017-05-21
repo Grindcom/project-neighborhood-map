@@ -165,7 +165,7 @@
     //
     this.name = ko.observable(data.name);
     //
-    this.selected = ko.observable(false);
+    this.selected = false;//ko.observable(false);
     //
     this.address = ko.observable(data.address);
     //
@@ -696,7 +696,7 @@
       console.log("---Look for nearby spots.")
       // If there are any favorites selected, check FourSquare
       self.spotList.forEach(function (spot) {
-        if (spot.selected()) {
+        if (spot.selected) {
           console.log("--Nearby " + spot.name());
           // Clear nearbySpot list
           self.clearNearbyList();

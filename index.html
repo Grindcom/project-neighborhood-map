@@ -35,12 +35,12 @@ Start Date: Dec. 13, 2016 -->
             <nav class="sidebar-menu" id="menu">                                
                 <hr>
                 <h3 data-bind="text: spotTitle">Cool Spots</h3>
-                <button type="button" id="show-button" data-bind="click: showSpots">Show</button>
-                <button type="button" name="hide-button" data-bind="click: hideSpots">Hide</button>
+                <button type="button" id="show-button" data-bind="click: showSpots">Show All</button>
+                <button type="button" name="hide-button" data-bind="click: hideSpots">Hide All</button>
                 <hr>
                 <section>
                     <h3 data-toggle="tooltip" title="Show Favorites" id="fav-h3" class="row-h2" style="cursor: pointer" data-bind="click: toggleSubMenu">My Happy Spots<span class="arrow" data-bind="text: DOWNARROW"></span></h3>
-                    <div id="sub-fav" class="location-list" style="display:none">
+                    <div  data-toggle="tooltip" title="Click the Checkbox to look for nearby locations."  id="sub-fav" class="location-list" style="display:none">
                         <ul class="sidebar-menu__list" data-bind="foreach: filteredSpotList">
                             <li class="sidebar-menu__item" >
                                 <input class="list-checkbox" type="checkbox" data-bind="checked: selected">
