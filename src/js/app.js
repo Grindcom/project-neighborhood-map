@@ -91,7 +91,7 @@
       value: '60',
       text: '1 hour'
     }
-  ]
+  ];
 // ******************
 // Possible transportation modes
   var modes = [
@@ -108,7 +108,7 @@
       value: 'TRANSIT',
       text: 'transit ride'
     }
-  ]
+  ];
 // ******************
 // Favorite locations
   var favSpots = [
@@ -153,7 +153,7 @@
       imgSrc: '',
       imgAttribution: ''
     }
-  ]
+  ];
 /**
  * Cool Spot
  * @param {type} data
@@ -199,7 +199,7 @@
       return " | " + this.clickCount() + " Likes";
     }, this);
 
-  }
+  };
   /**
    * ViewModel
    * @returns {ViewModel}
@@ -301,9 +301,11 @@
         this.nearbyList.pop();
       }
     };
-    //
+    /**
+     * Compile List of selected favorite places
+     * @returns {String}
+     */
     this.compileNearbyList = function () {
-      log.console("Compiling List of selected favorite places...");
       // Clear list
       self.clearNearbyList();
       // Add selected items to list
@@ -313,7 +315,7 @@
         }
       });
       return self.clearNearbyList().length > 0 ?
-              "Your Selected List: " : "Nothing Selected"
+              "Your Selected List: " : "Nothing Selected";
     };
     // *********************
     // MENU AND SUB MENU SECTION
@@ -610,7 +612,7 @@
      * @description Information for browser based call can be found https://developers.google.com/maps/documentation/directions/
      * And for using the API from JavaScript, here:
      * https://developers.google.com/maps/documentation/javascript/directions
-     * @param {type} position
+     * @param {type} toPosition
      * @returns {undefined}
      */
     this.displayDirections = function (toPosition) {
@@ -903,7 +905,7 @@
     // console.log("Hide Markers");
     markers.forEach(function (marker) {
       marker.setMap(null);
-    })
+    });
   };
   /**
    * @description Toggle Drawing function
@@ -1028,7 +1030,7 @@
           distanceText = result.distance.text;
         } else {
           // If not, Skip the rest, there is no valid result and alert the user.
-          window.alert("There are no cool spots in that area.")
+          window.alert("There are no cool spots in that area.");
           return;
         }
         // Duration value is given in seconds, convert to minutes.
@@ -1080,7 +1082,7 @@
     //
     if (!atLeastOne) {
       // Alert user that there wasn't any good results found
-      window.alert('Sorry, nothing found within your selected time window.')
+      window.alert('Sorry, nothing found within your selected time window.');
     }
 
   };
@@ -1249,7 +1251,7 @@
       var placeInfoWindow = new google.maps.InfoWindow();
       // Event listener for when the marker is clicked
       marker.addListener('click', function () {
-        if (placeInfoWindow.marker == this) {
+        if (placeInfoWindow.marker === this) {
           // console.log("This infowindow already is on this marker");
         } else {
           // Get the details for the place that this marker is related to
