@@ -117,7 +117,7 @@
       type: 'Pub',
       address: '23 Oliver St, Williams Lake, BC',
       geoLocation: '',
-      reviews: [],
+      closeTo: [],
       imgSrc: '',
       imgAttribution: ''
     },  {
@@ -125,7 +125,7 @@
       type: 'Restaurant',
       address: '770 Oliver St, Williams Lake, BC',
       geoLocation: '',
-      reviews: [],
+      closeTo: [],
       imgSrc: '',
       imgAttribution: ''
     },{
@@ -133,7 +133,7 @@
       type: 'Restaurant',
       address: '12 Oliver Street, Williams Lake, BC',
       geoLocation: '',
-      reviews: [],
+      closeTo: [],
       imgSrc: '',
       imgAttribution: ''
     }, {
@@ -141,7 +141,7 @@
       type: 'Bistro',
       address: 'Suite B 180 3rd Ave N, Williams Lake, BC',
       geoLocation: '',
-      reviews: [],
+      closeTo: [],
       imgSrc: '',
       imgAttribution: ''
     }, {
@@ -149,7 +149,7 @@
       type: 'Pub',
       address: '1118 Lakeview Crescent, Williams Lake, BC',
       geoLocation: '',
-      reviews: [],
+      closeTo: [],
       imgSrc: '',
       imgAttribution: ''
     }, {
@@ -157,7 +157,7 @@
       type: 'Pub',
       address: '1730 Broadway Ave S, Williams Lake, BC',
       geoLocation: '',
-      reviews: [],
+      closeTo: [],
       imgSrc: '',
       imgAttribution: ''
     }
@@ -182,6 +182,8 @@
     this.type = ko.observable(data.type);
     //
     this.geoLocation = ko.observable(data.geoLocation);
+    //
+    this.closeTo = data.closeTo;
     //
     this.markerColor = '070B57';
     //
@@ -275,7 +277,6 @@
     // Load the favorite location list with static data
     var i = 0;
     favSpots.forEach(function (location) {
-      console.log("hello");
       var spot = new CoolSpot(location, i++);
       self.spotList.push(spot);
       self.filteredSpotList.push(spot);
@@ -562,16 +563,18 @@
      * @param {type} marker - googlemaps marker object
      * @returns {undefined}
      */
-    this.populateInfoWindow = function (marker) {
+    this.populateInfoWindow = function (spot) {
 //      // console.log("populateInfoWindow ");
       // Make sure the infowindow is not already opened on this marker
-      if (self.largeInfowindow.marker !== marker) {
+      if (self.largeInfowindow.marker !== spot.marker) {
+        //
+        var content_html = '<div>' + spot.marker.title + '</div>';
         // console.log("infowindow.marker != marker");
-        self.largeInfowindow.marker = marker;
+        self.largeInfowindow.marker = spot.marker;
         // Add the marker title to an element in the infowindow
-        self.largeInfowindow.setContent('<div>' + marker.title + '</div>');
+        self.largeInfowindow.setContent(content_html);
         // Open the content on the map
-        self.largeInfowindow.open(map_global, marker);
+        self.largeInfowindow.open(map_global, spot.marker);
         // Set up street view stuff
         var streetViewService = new google.maps.StreetViewService();
         var radius = 50;// 50 meters
@@ -582,14 +585,14 @@
          * @param status -
          */
         function getStreetView(data, status) {
-          if (status == google.maps.StreetViewStatus.OK) {
+          if (status === google.maps.StreetViewStatus.OK) {
             var nearStreetViewLocation = data.location.latLng;
             // Get the direction to face in order to see the fron of the building
             var heading = google.maps.geometry.spherical.computeHeading(
-                    nearStreetViewLocation, marker.position
+                    nearStreetViewLocation, spot.marker.position
                     );
             // Create a div for the street view image
-            self.largeInfowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
+            self.largeInfowindow.setContent('<div>' + spot.marker.title + '</div><div id="pano"></div>');
             // Options for the street view service
             // request
             var panoramaOptions = {
@@ -605,14 +608,14 @@
                     document.getElementById('pano'), panoramaOptions
                     );
           } else {
-            self.largeInfowindow.setContent('<div>' + marker.title + '</div>' + '<div>No Street View Found</div>');
+            self.largeInfowindow.setContent('<div>' + spot.marker.title + '</div>' + '<div>No Street View Found</div>');
           }
         }
         // Use the streetview service to get the closest streetview image
         //  within 50 meters of the markers position
-        streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+        streetViewService.getPanoramaByLocation(spot.marker.position, radius, getStreetView);
         // Open the infowindow on the correct marker.
-        self.largeInfowindow.open(map_global, marker);
+        self.largeInfowindow.open(map_global, spot.marker);
       }
     };
 
@@ -776,7 +779,7 @@
           // Add a click event listener to call the
           // info window function
           marker.addListener('click', function () {
-            self.populateInfoWindow(this);
+            self.populateInfoWindow(targetSpot);
           });
           // Add the marker to the spot
           targetSpot.marker = marker;
@@ -802,7 +805,7 @@
       var clicks = spot.clickCount();
       spot.clickCount(++clicks);
       //
-      this.populateInfoWindow(spot.marker);
+      this.populateInfoWindow(spot);
     } else { // Otherwise set its visibility to true
       //
       spot.markerVisible(true);
@@ -1312,7 +1315,7 @@
       "client_secret": client_secret
     }).done(function (data) {
       // console.log("hello: " + data.meta.code);
-      //
+      // For each response ad to the nearby spots
       data.response.venues.forEach(function (venue) {
         // console.log("Name: " + venue.name);
         // console.log(venue.location.distance + " from ");
@@ -1331,13 +1334,15 @@
           type: category_name,//venue.categories[0].name,
           address: venue.location.address,
           geoLocation: venue.location.lat + "," + venue.location.lng,
-          reviews: [],
+          closeTo: [],
           imgSrc: '',
           imgAttribution: ''
         };
         // nearbySpot
         self.addNearbySpots(nearbySpot);
-        // console.log("-----Length of nearbySpots: " + self.getNearbyList().length);
+        //
+        spot.closeTo.push(nearbySpot);
+         console.log("-----Length of nearbySpots: " + spot.closeTo.length);
       });
     });
   };
