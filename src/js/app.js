@@ -120,7 +120,7 @@
       closeTo: [],
       imgSrc: '',
       imgAttribution: ''
-    },  {
+    }, {
       name: 'Sushi California',
       type: 'Restaurant',
       address: '770 Oliver St, Williams Lake, BC',
@@ -128,7 +128,7 @@
       closeTo: [],
       imgSrc: '',
       imgAttribution: ''
-    },{
+    }, {
       name: 'Mings Palace',
       type: 'Restaurant',
       address: '12 Oliver Street, Williams Lake, BC',
@@ -162,12 +162,12 @@
       imgAttribution: ''
     }
   ];
-/**
- * Cool Spot
- * @param {type} data
- * @param {type} id
- * @returns {CoolSpot}
- */
+  /**
+   * Cool Spot
+   * @param {type} data
+   * @param {type} id
+   * @returns {CoolSpot}
+   */
   var CoolSpot = function (data, id) {
     this.id = id;
     //
@@ -569,10 +569,10 @@
       if (self.largeInfowindow.marker !== spot.marker) {
         //
         var content_html = '<div>' + spot.marker.title + '</div>';
+        var pano_html = '<div id="pano"></div>';
+        var foursquare_html = '<div><br>Foursquare shows no spots near here</div>';
         // console.log("infowindow.marker != marker");
         self.largeInfowindow.marker = spot.marker;
-        // Add the marker title to an element in the infowindow
-        self.largeInfowindow.setContent(content_html);
         // Open the content on the map
         self.largeInfowindow.open(map_global, spot.marker);
         // Set up street view stuff
@@ -591,8 +591,7 @@
             var heading = google.maps.geometry.spherical.computeHeading(
                     nearStreetViewLocation, spot.marker.position
                     );
-            // Create a div for the street view image
-            self.largeInfowindow.setContent('<div>' + spot.marker.title + '</div><div id="pano"></div>');
+
             // Options for the street view service
             // request
             var panoramaOptions = {
@@ -611,6 +610,8 @@
             self.largeInfowindow.setContent('<div>' + spot.marker.title + '</div>' + '<div>No Street View Found</div>');
           }
         }
+        // Create a div for the street view image
+        self.largeInfowindow.setContent(content_html + pano_html + foursquare_html);
         // Use the streetview service to get the closest streetview image
         //  within 50 meters of the markers position
         streetViewService.getPanoramaByLocation(spot.marker.position, radius, getStreetView);
@@ -938,7 +939,7 @@
         // remove filter on spot list
         self.filteredSpotList.removeAll();
         // Add all spots to filtered spot List
-        self.spotList.forEach(function(spot){
+        self.spotList.forEach(function (spot) {
           self.filteredSpotList.push(spot);
         });
       }
@@ -1324,14 +1325,14 @@
         {
           // console.log("Known as ");
           venue.categories.forEach(function (category) {
-             console.log("- " + category.name);
-             category_name = category.name;
+            console.log("- " + category.name);
+            category_name = category.name;
           });
         }
         //
         var nearbySpot = {
           name: venue.name,
-          type: category_name,//venue.categories[0].name,
+          type: category_name, //venue.categories[0].name,
           address: venue.location.address,
           geoLocation: venue.location.lat + "," + venue.location.lng,
           closeTo: [],
@@ -1342,7 +1343,7 @@
         self.addNearbySpots(nearbySpot);
         //
         spot.closeTo.push(nearbySpot);
-         console.log("-----Length of nearbySpots: " + spot.closeTo.length);
+        console.log("-----Length of nearbySpots: " + spot.closeTo.length);
       });
     });
   };
