@@ -120,7 +120,15 @@
       reviews: [],
       imgSrc: '',
       imgAttribution: ''
-    }, {
+    },  {
+      name: 'Sushi California',
+      type: 'Restaurant',
+      address: '770 Oliver St, Williams Lake, BC',
+      geoLocation: '',
+      reviews: [],
+      imgSrc: '',
+      imgAttribution: ''
+    },{
       name: 'Mings Palace',
       type: 'Restaurant',
       address: '12 Oliver Street, Williams Lake, BC',
@@ -267,6 +275,7 @@
     // Load the favorite location list with static data
     var i = 0;
     favSpots.forEach(function (location) {
+      console.log("hello");
       var spot = new CoolSpot(location, i++);
       self.spotList.push(spot);
       self.filteredSpotList.push(spot);
