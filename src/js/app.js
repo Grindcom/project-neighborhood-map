@@ -1316,7 +1316,7 @@
    * default is null
    * @returns {undefined}
    */
-  ViewModel.prototype.queryFourSquare = function (querySpot, callback = null) {
+  ViewModel.prototype.queryFourSquare = function (querySpot, callback) {
     var self = this;
     // FourSquare access credentials
     var client_id = "INWUJQCSABPNKFZPFSG1L1023VTHBFWBP4YZCUXUFQEO01MW";
