@@ -607,7 +607,9 @@
                     document.getElementById('pano'), panoramaOptions
                     );
           } else {
-            self.largeInfowindow.setContent('<div>' + spot.marker.title + '</div>' + '<div>No Street View Found</div>');
+                        pano_html = '<div>No Street View Found</div>';
+            self.largeInfowindow.setContent(content_html + pano_html + foursquare_html);
+
           }
         }
 
@@ -617,20 +619,28 @@
          */
         function callback() {
           if (spot.closeTo().length > 0) {
+            var tmp_html = "";
             console.log("yes, length " + spot.closeTo().length);
-            foursquare_html = "<ul class='sidebar-menu__list' data-bind='foreach: nearbyList'><li><strong data-bind='text: type + ' - ' ></strong><i data-bind='text: name'>hello</i></li></ul>";
+            spot.closeTo().forEach(function (nearbyspot) {
+               console.log(nearbyspot.type + " " + nearbyspot.name);
+               tmp_html += "<li><strong>"+nearbyspot.type + " - </strong>" + nearbyspot.name + "</li>";
+            });
+
+            foursquare_html = "<h3>According to Foursquare this is close to a</h3><ul>"+tmp_html+"</ul>"
           }
+                  // Use the streetview service to get the closest streetview image
+        //  within 50 meters of the markers position
+        streetViewService.getPanoramaByLocation(spot.marker.position, radius, getStreetView);
+        // Create a div for the street view image
+        self.largeInfowindow.setContent(content_html + pano_html + foursquare_html);
+        
 
           // Open the infowindow on the correct marker.
           self.largeInfowindow.open(map_global, spot.marker);
         }
         // Get any nearby locations and place them in the foursquare html
-        this.queryFourSquare(spot,callback);
-                  // Create a div for the street view image
-          self.largeInfowindow.setContent(content_html + pano_html + foursquare_html);
-                  // Use the streetview service to get the closest streetview image
-          //  within 50 meters of the markers position
-          streetViewService.getPanoramaByLocation(spot.marker.position, radius, getStreetView);
+        this.queryFourSquare(spot, callback);
+
 
       }
     };
@@ -1308,7 +1318,7 @@
    * default is null
    * @returns {undefined}
    */
-  ViewModel.prototype.queryFourSquare = function (querySpot,callback=null) {
+  ViewModel.prototype.queryFourSquare = function (querySpot, callback = null) {
     var self = this;
     // FourSquare access credentials
     var client_id = "INWUJQCSABPNKFZPFSG1L1023VTHBFWBP4YZCUXUFQEO01MW";
