@@ -117,7 +117,7 @@
       type: 'Pub',
       address: '23 Oliver St, Williams Lake, BC',
       geoLocation: '',
-      closeTo: [],
+      closeTo: [""],
       imgSrc: '',
       imgAttribution: ''
     }, {
@@ -125,7 +125,7 @@
       type: 'Restaurant',
       address: '770 Oliver St, Williams Lake, BC',
       geoLocation: '',
-      closeTo: [],
+      closeTo: [""],
       imgSrc: '',
       imgAttribution: ''
     }, {
@@ -133,7 +133,7 @@
       type: 'Restaurant',
       address: '12 Oliver Street, Williams Lake, BC',
       geoLocation: '',
-      closeTo: [],
+      closeTo: [""],
       imgSrc: '',
       imgAttribution: ''
     }, {
@@ -141,7 +141,7 @@
       type: 'Bistro',
       address: 'Suite B 180 3rd Ave N, Williams Lake, BC',
       geoLocation: '',
-      closeTo: [],
+      closeTo: [""],
       imgSrc: '',
       imgAttribution: ''
     }, {
@@ -149,7 +149,7 @@
       type: 'Pub',
       address: '1118 Lakeview Crescent, Williams Lake, BC',
       geoLocation: '',
-      closeTo: [],
+      closeTo: [""],
       imgSrc: '',
       imgAttribution: ''
     }, {
@@ -157,7 +157,7 @@
       type: 'Pub',
       address: '1730 Broadway Ave S, Williams Lake, BC',
       geoLocation: '',
-      closeTo: [],
+      closeTo: [""],
       imgSrc: '',
       imgAttribution: ''
     }
@@ -183,7 +183,7 @@
     //
     this.geoLocation = ko.observable(data.geoLocation);
     //
-    this.closeTo = data.closeTo;
+    this.closeTo = ko.observableArray([]);
     //
     this.markerColor = '070B57';
     //
@@ -610,13 +610,28 @@
             self.largeInfowindow.setContent('<div>' + spot.marker.title + '</div>' + '<div>No Street View Found</div>');
           }
         }
-        // Create a div for the street view image
-        self.largeInfowindow.setContent(content_html + pano_html + foursquare_html);
-        // Use the streetview service to get the closest streetview image
-        //  within 50 meters of the markers position
-        streetViewService.getPanoramaByLocation(spot.marker.position, radius, getStreetView);
-        // Open the infowindow on the correct marker.
-        self.largeInfowindow.open(map_global, spot.marker);
+
+        /**
+         * @description Callback function, to respond when Foursquare query finishes
+         * @returns {undefined}
+         */
+        function callback() {
+          if (spot.closeTo().length > 0) {
+            console.log("yes, length " + spot.closeTo().length);
+            foursquare_html = "<ul class='sidebar-menu__list' data-bind='foreach: nearbyList'><li><strong data-bind='text: type + ' - ' ></strong><i data-bind='text: name'>hello</i></li></ul>";
+          }
+
+          // Open the infowindow on the correct marker.
+          self.largeInfowindow.open(map_global, spot.marker);
+        }
+        // Get any nearby locations and place them in the foursquare html
+        this.queryFourSquare(spot,callback);
+                  // Create a div for the street view image
+          self.largeInfowindow.setContent(content_html + pano_html + foursquare_html);
+                  // Use the streetview service to get the closest streetview image
+          //  within 50 meters of the markers position
+          streetViewService.getPanoramaByLocation(spot.marker.position, radius, getStreetView);
+
       }
     };
 
@@ -1288,10 +1303,12 @@
   };
   /**
    * @description Call the FourSquare API for more information
-   * @param {type} spot
+   * @param {type} querySpot to query Foursquare API on
+   * @param {function} callback function to call when query finishes, 
+   * default is null
    * @returns {undefined}
    */
-  ViewModel.prototype.queryFourSquare = function (spot) {
+  ViewModel.prototype.queryFourSquare = function (querySpot,callback=null) {
     var self = this;
     // FourSquare access credentials
     var client_id = "INWUJQCSABPNKFZPFSG1L1023VTHBFWBP4YZCUXUFQEO01MW";
@@ -1301,7 +1318,7 @@
     // Query type
     var query = "";
     // Location
-    var location = spot.marker.position.lat() + "," + spot.marker.position.lng();//"41.878114,87.629798";
+    var location = querySpot.marker.position.lat() + "," + querySpot.marker.position.lng();//"41.878114,87.629798";
     // console.log("Location: " + location);
     var url = "https://api.foursquare.com/v2/venues/search";
     //https://api.foursquare.com/v2/venues/search?v=20161016&ll=41.878114%2C%20-87.629798&query=coffee&intent=checkin&client_id=INWUJQCSABPNKFZPFSG1L1023VTHBFWBP4YZCUXUFQEO01MW&client_secret=T5RHEMNEQBGGQ4ZYF5ESD4NA1J20OWGD5IWTFYT5R4N21JZX
@@ -1335,16 +1352,21 @@
           type: category_name, //venue.categories[0].name,
           address: venue.location.address,
           geoLocation: venue.location.lat + "," + venue.location.lng,
-          closeTo: [],
           imgSrc: '',
           imgAttribution: ''
         };
         // nearbySpot
         self.addNearbySpots(nearbySpot);
         //
-        spot.closeTo.push(nearbySpot);
-        console.log("-----Length of nearbySpots: " + spot.closeTo.length);
+        querySpot.closeTo.push(nearbySpot);
+//        console.log("-----Length of nearbySpot: " + querySpot.closeTo().length);
+
       });
+      // Notify the callback function on completion of data mining.
+      if (callback !== null)
+      {
+        callback();
+      }
     });
   };
 
