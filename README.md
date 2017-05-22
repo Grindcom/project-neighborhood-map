@@ -22,7 +22,9 @@ for places nearby the happy spots and ways to find routes to them.
 ### Cool Features
 * Clear or show all the markers with a click of the appropriate button.
 * A click count is maintained for the favorite spot list.  Every time the list item is clicked the counter goes up.
-* If the user selects the check box for a cool spot, they can open the Nearby Locations menu to see a list of nearby venues; provided by Foursquare.
+* Clicking a marker will cause an info window to appear with Foursquare information about nearby venues.
+* Depending if a marker is already visible or not, you can click the happy spots name on the menu to see the marker drop into place and show an info window
+ (if not visible). Bounce, then a second click shows the information (if already visible).
 ### Search
 The search options available include:  
 * Sketch a polygon around an area in the map.
@@ -32,11 +34,10 @@ The search options available include:
 #### How search works
 1. Show all the cool spot markers at once by selecting the 'Show All' button; they will drop in from the top of the map.  
 2. Choose one of the listed **Happy Spots**;
-    1. If all markers are showing, the selected spots' marker will bounce.
+    1. If all markers are showing, clicking the selected spot will cause its marker to bounce.
     2. If the markers aren't showing, the spots' marker will drop onto the map and start bouncing.
     3. If a spot's marker is bouncing, selecting it again will stop it.
-3. **Nearby Locations** for are shown for any *Happy Spots* that are selected.
-4. Use the **Search and Filter** drop down to  
+3. Use the **Search and Filter** drop down to  
     1. Sketch out an area of interest to see if there are any cool spots inside it;
         1. If there are any markers outside the sketch they will either be hidden or not shown.
         2. When toggled off the sketch will be removed, but the markers will be left in place.
