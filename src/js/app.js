@@ -617,31 +617,29 @@
          * @description Callback function, to respond when Foursquare query finishes
          * @returns {undefined}
          */
-        function callback() {
+        function callbackFromFoursquare() {
+          // If there are nearby spots, add them to an html list
           if (spot.closeTo().length > 0) {
             var tmp_html = "";
-            console.log("yes, length " + spot.closeTo().length);
             spot.closeTo().forEach(function (nearbyspot) {
-               console.log(nearbyspot.type + " " + nearbyspot.name);
                tmp_html += "<li><strong>"+nearbyspot.type + " - </strong>" + nearbyspot.name + "</li>";
             });
-
-            foursquare_html = "<h3>According to Foursquare this is close to a</h3><ul>"+tmp_html+"</ul>"
+            foursquare_html = "<h3>According to Foursquare this is close to a</h3><ul>"+tmp_html+"</ul>";
           }
-                  // Use the streetview service to get the closest streetview image
-        //  within 50 meters of the markers position
-        streetViewService.getPanoramaByLocation(spot.marker.position, radius, getStreetView);
-        // Create a div for the street view image
-        self.largeInfowindow.setContent(content_html + pano_html + foursquare_html);
-        
-
+          // Use the streetview service to get the closest streetview image
+          //  within 50 meters of the markers position
+          streetViewService.getPanoramaByLocation(spot.marker.position, radius, getStreetView);
+          // Create a div for the street view image
+          self.largeInfowindow.setContent(content_html + pano_html + foursquare_html);  
           // Open the infowindow on the correct marker.
           self.largeInfowindow.open(map_global, spot.marker);
         }
+        // Make sure the spots closeTo list is cleared
+        while(spot.closeTo().length > 0){
+          spot.closeTo.pop();
+        }
         // Get any nearby locations and place them in the foursquare html
-        this.queryFourSquare(spot, callback);
-
-
+        this.queryFourSquare(spot, callbackFromFoursquare);
       }
     };
 
@@ -1369,8 +1367,6 @@
         self.addNearbySpots(nearbySpot);
         //
         querySpot.closeTo.push(nearbySpot);
-//        console.log("-----Length of nearbySpot: " + querySpot.closeTo().length);
-
       });
       // Notify the callback function on completion of data mining.
       if (callback !== null)
