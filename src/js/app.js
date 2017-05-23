@@ -9,7 +9,7 @@
 //
   var view_model;
 // Google Map object
-  var map_global;
+  var MAP_GLOBAL;
 // ******************
 // Map Styles
 // Create styles to use on the map
@@ -74,7 +74,7 @@
         // {lightness: -40}
       ]
     }
-  ]
+  ];
 // ******************
 // Time durations
   var durations = [
@@ -427,11 +427,11 @@
       /**
        * Set the new map to the Global map variable
        */
-      map_global = map;
+      MAP_GLOBAL = map;
       // Set the marker with the position and the map object created above.
       var marker = new google.maps.Marker({
         position: williams_lake,
-        map: map_global,
+        map: MAP_GLOBAL,
         title: 'Center of Williams Lake'
       });
       // set up markers for the cool spots
@@ -511,14 +511,14 @@
      * @returns {undefined}
      */
     this.getPlacesDetails = function (marker, detailInfoWindow) {
-      var service = new google.maps.places.PlacesService(map_global);
+      var service = new google.maps.places.PlacesService(MAP_GLOBAL);
       service.getDetails({
         placeId: marker.id
       }, function (place, status) {
+        // Set the marker property on this infowindow so it isn't created again.
+        detailInfoWindow.marker = marker;
+        var innerHTML = '<div>';
         if (status === google.maps.places.PlacesServiceStatus.OK) {
-          // Set the marker property on this infowindow so it isn't created again.
-          detailInfoWindow.marker = marker;
-          var innerHTML = '<div>';
           if (place.name) {
             innerHTML += '<strong>' + place.name + '</strong>';
           }
@@ -543,15 +543,19 @@
             innerHTML += '<br><br><img src="' + place.photos[0].getUrl({maxHeight: 100, maxWidth: 200}) + '">';
 
           }
-          // Place HTML
-          detailInfoWindow.setContent(innerHTML);
-          // Open marker info window with details
-          detailInfoWindow.open(map, marker);
-          // add a close click listener
-          detailInfoWindow.addListener('closeclick', function () {
-            detailInfoWindow.marker = null;
-          });
+
+        }else{
+          // Error handling
+          innerHTML += 'There are no Place details available at this time</div>';
         }
+        // Place HTML
+        detailInfoWindow.setContent(innerHTML);
+        // Open marker info window with details
+        detailInfoWindow.open(map, marker);
+        // add a close click listener
+        detailInfoWindow.addListener('closeclick', function () {
+          detailInfoWindow.marker = null;
+        });
       });
     };
 
@@ -560,7 +564,7 @@
      * @description This function will populate the infowindow when the marker is clicked.
      * We'll only allow one infowindow at a time.  When clicked it will be
      * populated with the related information
-     * @param {type} marker - googlemaps marker object
+     * @param {type} spot - cool spot object
      * @returns {undefined}
      */
     this.populateInfoWindow = function (spot) {
@@ -574,7 +578,7 @@
         // console.log("infowindow.marker != marker");
         self.largeInfowindow.marker = spot.marker;
         // Open the content on the map
-        self.largeInfowindow.open(map_global, spot.marker);
+        self.largeInfowindow.open(MAP_GLOBAL, spot.marker);
         // Set up street view stuff
         var streetViewService = new google.maps.StreetViewService();
         var radius = 50;// 50 meters
@@ -632,7 +636,7 @@
           // Create a div for the street view image
           self.largeInfowindow.setContent(content_html + pano_html + foursquare_html);  
           // Open the infowindow on the correct marker.
-          self.largeInfowindow.open(map_global, spot.marker);
+          self.largeInfowindow.open(MAP_GLOBAL, spot.marker);
         }
         // Make sure the spots closeTo list is cleared
         while(spot.closeTo().length > 0){
@@ -672,7 +676,7 @@
           //  Show polyline of route.
           // multiple routes.
           var directionsDisplay = new google.maps.DirectionsRenderer({
-            map: map_global,
+            map: MAP_GLOBAL,
             directions: response,
             draggable: true,
             polylineOptions: {
@@ -780,7 +784,7 @@
           //**
           // Create marker
           var marker = new google.maps.Marker({
-            map: map_global, // Add marker to global map when it's created
+            map: MAP_GLOBAL, // Add marker to global map when it's created
             position: targetSpot.geoLocation(), // Location of marker on map
             title: targetSpot.name(), // What will show when the marker is hovered over
             icon: icon,
@@ -888,7 +892,7 @@
     var self = this;
     // If the marker isn't presant on the map place it.
     if (!spot.marker.getMap()) {
-      spot.marker.setMap(map_global);
+      spot.marker.setMap(MAP_GLOBAL);
     }
     // If there is an animation clear it
     if (spot.marker.getAnimation() === google.maps.Animation.BOUNCE) {
@@ -910,15 +914,15 @@
     // Go through the cool spot list and set the map for
     //  each marker
     this.spotList.forEach(function (spot) {
-      spot.marker.setMap(map_global);
+      spot.marker.setMap(MAP_GLOBAL);
       // Extend the boundry for the marker if necessary
       mapBounds.extend(spot.marker.position);
     });
     // Set the center of the map by getting the center of
     //  all of the cool spot list markers
-    map_global.setCenter(mapBounds.getCenter());
+    MAP_GLOBAL.setCenter(mapBounds.getCenter());
     // Set the bounds of the map by the marker postions
-    map_global.fitBounds(mapBounds);
+    MAP_GLOBAL.fitBounds(mapBounds);
   };
   /**
    * @description Called to hide cool spots
@@ -970,7 +974,7 @@
       this.sketchToggleValue(this.DRAWPOLY);
     } else {
       // Place drawing manager on the map
-      this.drawingManager.setMap(map_global);
+      this.drawingManager.setMap(MAP_GLOBAL);
       // Set the button text 
       this.sketchToggleValue(this.CLEARPOLY);
     }
@@ -1005,20 +1009,20 @@
         if (status == google.maps.GeocoderStatus.OK) {
           // console.log("    location " + results[0].geometry.location);
           //
-          map_global.setCenter(results[0].geometry.location);
+          MAP_GLOBAL.setCenter(results[0].geometry.location);
           if (!self.zoomed) {
             self.zoomed = true;
             // then Zoom In
             self.zoomText = self.ZOOMOUT;
             // If zooming in
-            map_global.setZoom(16);//zoom to street level
+            MAP_GLOBAL.setZoom(16);//zoom to street level
             // otherwise zoom back
           } else {// Zoom out
             self.zoomed = false;
             //
             self.zoomText = (self.ZOOMIN);
             //
-            map_global.setZoom(13);// zoom to city level
+            MAP_GLOBAL.setZoom(13);// zoom to city level
           }
         } else {
           // Alert the user if the status is anything but OK
@@ -1081,7 +1085,7 @@
           var marker = null;
           if (i < self.spotList.length) {
             marker = self.spotList[i].marker;
-            marker.setMap(map_global);
+            marker.setMap(MAP_GLOBAL);
           }
           //
           // Obviously at least one marker is within range
@@ -1108,7 +1112,7 @@
 
           }
           // Show the marker
-          infowindow.open(map_global, marker);
+          infowindow.open(MAP_GLOBAL, marker);
         }
         // increment i for marker selection
         i = i + 1;
@@ -1138,7 +1142,7 @@
       // console.log(" Search Within Poly: target " + spot.name());
       // Check if the markers position is inside the global polygon area
       if (google.maps.geometry.poly.containsLocation(spot.marker.position, self.polygon)) {
-        spot.marker.setMap(map_global);// its inside so add it to the map
+        spot.marker.setMap(MAP_GLOBAL);// its inside so add it to the map
         //
         self.spotTitle(self.defaultSpotTitle + ' (filtered)');
         //
@@ -1243,7 +1247,7 @@
    * @returns {undefined}
    */
   ViewModel.prototype.textSearchPlaces = function () {
-    var bounds = map_global.getBounds();
+    var bounds = MAP_GLOBAL.getBounds();
     this.hideMarkers(this.placeMarkers());
     var placesService = new google.maps.places.PlacesService(map);
     placesService.textSearch({
@@ -1277,7 +1281,7 @@
       };
       // Create a marker
       var marker = new google.maps.Marker({
-        map: map_global,
+        map: MAP_GLOBAL,
         icon: icon,
         title: place.name,
         position: place.geometry.location,
@@ -1304,9 +1308,9 @@
       }
       // Move the center of the map to the marker that
       //  is in the middle of of the grouping
-      map_global.setCenter(mapBounds.getCenter());
+      MAP_GLOBAL.setCenter(mapBounds.getCenter());
       // Make sure the map shows all markers
-      map_global.fitBounds(mapBounds);
+      MAP_GLOBAL.fitBounds(mapBounds);
     });
   };
   /**

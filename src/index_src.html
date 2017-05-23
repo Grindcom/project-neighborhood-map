@@ -14,7 +14,7 @@ Start Date: Dec. 13, 2016 -->
         <meta name="HandheldFriendly" content="True">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <!-- This meta is used to make the site compatible with mobile devices -->
-        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
         <!-- Load the page styles. -->
 
         <!-- Bootstrap -->
@@ -83,17 +83,18 @@ Start Date: Dec. 13, 2016 -->
                 </section>
             </nav>
         </aside>
-        <!-- GoogleMaps API -->
-        <script type="text/javascript" async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1Vs3ktrsweXIEICK-axcOk_Smy7-plgU&libraries=drawing,geometry,places&v=3&callback=view_model.initMap">
-        </script>
+
         <!-- Slideout.js for off canvas menu -->
         <script defer src="js/lib/slideout-1.0.1/dist/slideout.js"></script>
         <!--<script defer src="./js/lib/slideout-1.0.1/slideout.min.js" ></script>-->
         <!-- jQuery for DOM manipulation and AJAX -->
-        <script defer type="text/javascript" src="./js/lib/jquery.min.js"></script>
+        <script src="./js/lib/jquery-3.2.1.min.js" type="text/javascript"></script>
         <!-- knockout-3 for data responsiveness -->
         <script defer src="./js/lib/knockout-3.4.1.js"></script>
         <!-- Application code base -->
         <script defer src="./js/app.js"></script>
+        <!-- GoogleMaps API -->
+        <script type="text/javascript" async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1Vs3ktrsweXIEICK-axcOk_Smy7-plgU&libraries=drawing,geometry,places&v=3&callback=view_model.initMap">
+        </script>
     </body>
 </html>
