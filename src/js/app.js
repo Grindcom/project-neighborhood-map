@@ -819,6 +819,8 @@
             this.setIcon(hoverOverIcon);
             // Emphasize the related menu list item
             self.pulseMenuListItem(targetSpot.id);
+            // Stop the other bouncing
+            self.settleMarkers();
           });
           // Add a mouseout listener so the icon changes
           // back when the mouse leaves
@@ -826,9 +828,12 @@
             this.setIcon(icon);
           });
           // Add a click event listener to call the
-          // info window function
-          marker.addListener('click', function () {
+          marker.addListener('click', function () {            
+            // info window function
+            // Show information about the target spot
             self.populateInfoWindow(targetSpot);
+            // Make the marker bounce
+            targetSpot.marker.setAnimation(google.maps.Animation.BOUNCE);
           });
           // Add the marker to the spot
           targetSpot.marker = marker;
@@ -840,18 +845,29 @@
     }
   };
   /**
-   * @description Handle click events from 'Favourite spot list'
-   * @param {object} spot - passed from click event handler, reference to a spotList element.
+   * @description Stop the bounce animation of any markers by changing 
+   * Animation to Drop once.
+   * @returns {undefined}
    */
-  ViewModel.prototype.listClickHandler = function (spot) {
+  ViewModel.prototype.settleMarkers = function(){
     var self = this;
-    // Stop the bounce - if any - of all other spots
+        // Stop the bounce - if any - of all other spots
     self.spotList.forEach(function (spot) {
       // If there is an animation clear it
       if (spot.marker.getAnimation() === google.maps.Animation.BOUNCE) {
         spot.marker.setAnimation(google.maps.Animation.DROP);
       }
     });
+  };
+  
+  /**
+   * @description Handle click events from 'Favourite spot list'
+   * @param {object} spot - passed from click event handler, reference to a spotList element.
+   */
+  ViewModel.prototype.listClickHandler = function (spot) {
+    var self = this;
+    // Stop the bounce - if any - of all other spots
+    self.settleMarkers();
     // Get visibility of spot
     var vis = spot.markerVisible();
     // Toggle marker to appear and bounce OR
