@@ -501,7 +501,18 @@
        */
 //      this.showSpots();
     };// END OF initMap
-
+    
+    this.mapLoadError = function(){
+      var load_error_mes = "Ooops! There seems to be a problem loading the map.\n"+
+              "Should I try again?";
+      if (window.confirm(load_error_mes) == true) {
+        // Re-load map
+        
+      } else {
+        // Do Nothing and show message
+        
+      }
+    };
     /**
      * @description The PLACE DETAILS search; most detailed so it is only executed
      * when a marker is selected, indicating the user wants more
@@ -1377,6 +1388,9 @@
       {
         callback();
       }
+    }).fail(function(jqxhr, textStatus, error){
+      var err = textStatus + ", " + error;
+      window.alert("Sorry there was an error in the Foursquare query: "+ err);
     });
   };
 
