@@ -3,7 +3,7 @@
 // Author: Greg Ford, B.Sc.
 // Start Date: Dec. 13, 2016
 // And Still going in 2017
-
+/*global google: false*/
 //
 // GLOBALS
 //
@@ -589,21 +589,7 @@
      * @returns {undefined}
      */
     this.populateInfoWindow = function (spot) {
-//      // console.log("populateInfoWindow ");
-      // Make sure the infowindow is not already opened on this marker
-      if (self.largeInfowindow.marker !== spot.marker) {
-        //
-        var content_html = '<div>' + spot.marker.title + '</div>';
-        var pano_html = '<div id="pano"></div>';
-        var foursquare_html = '<div><br>Foursquare shows no spots near here</div>';
-        // console.log("infowindow.marker != marker");
-        self.largeInfowindow.marker = spot.marker;
-        // Open the content on the map
-        self.largeInfowindow.open(MAP_GLOBAL, spot.marker);
-        // Set up street view stuff
-        var streetViewService = new google.maps.StreetViewService();
-        var radius = 50;// 50 meters
-        /**
+              /**
          * @description Parse the data received from
          * A call to the streetview service
          * @param data - information packet
@@ -659,6 +645,21 @@
           // Open the infowindow on the correct marker.
           self.largeInfowindow.open(MAP_GLOBAL, spot.marker);
         }
+//      // console.log("populateInfoWindow ");
+      // Make sure the infowindow is not already opened on this marker
+      if (self.largeInfowindow.marker !== spot.marker) {
+        //
+        var content_html = '<div>' + spot.marker.title + '</div>';
+        var pano_html = '<div id="pano"></div>';
+        var foursquare_html = '<div><br>Foursquare shows no spots near here</div>';
+        // console.log("infowindow.marker != marker");
+        self.largeInfowindow.marker = spot.marker;
+        // Open the content on the map
+        self.largeInfowindow.open(MAP_GLOBAL, spot.marker);
+        // Set up street view stuff
+        var streetViewService = new google.maps.StreetViewService();
+        var radius = 50;// 50 meters
+
         // Make sure the spots closeTo list is cleared
         while(spot.closeTo().length > 0){
           spot.closeTo.pop();
@@ -793,54 +794,55 @@
     } else {
       // Geocode the address/area entered; want the center.
       geocoder.geocode(
-              {address: targetSpot.address()}// keep within city
-      , function (results, status) {
-        // Center the map on location if an address or area is found
-        if (status === google.maps.GeocoderStatus.OK) {
-          //
-          targetSpot.geoLocation(results[0].geometry.location);
-          //**
-          // Make an icon with the spots selected color
-          var icon = self.makeMarkerIcon(targetSpot.markerColor);
-          //**
-          // Create marker
-          var marker = new google.maps.Marker({
-            map: MAP_GLOBAL, // Add marker to global map when it's created
-            position: targetSpot.geoLocation(), // Location of marker on map
-            title: targetSpot.name(), // What will show when the marker is hovered over
-            icon: icon,
-            animation: google.maps.Animation.DROP // Shake the marker as it appears
-          });
-          // Make a contrasting icon for mouse hover over
-          var hoverOverIcon = self.makeMarkerIcon(targetSpot.markerHighlightColor);
-          // Add a mousover listener to change color on hover
-          marker.addListener('mouseover', function () {
-            // Change icon color
-            this.setIcon(hoverOverIcon);
-            // Emphasize the related menu list item
-            self.pulseMenuListItem(targetSpot.id);
-            // Stop the other bouncing
-            self.settleMarkers();
-          });
-          // Add a mouseout listener so the icon changes
-          // back when the mouse leaves
-          marker.addListener('mouseout', function () {
-            this.setIcon(icon);
-          });
-          // Add a click event listener to call the
-          marker.addListener('click', function () {            
-            // info window function
-            // Show information about the target spot
-            self.populateInfoWindow(targetSpot);
-            // Make the marker bounce
-            targetSpot.marker.setAnimation(google.maps.Animation.BOUNCE);
-          });
-          // Add the marker to the spot
-          targetSpot.marker = marker;
-        } else {
-          window.alert('Could not find that location - try entering a more specific place');
-        }
-      }
+              //keep within city
+              {address: targetSpot.address()},
+              // Center the map on location if an address or area is found
+              function (results, status) {                
+                if (status === google.maps.GeocoderStatus.OK) {
+                  //
+                  targetSpot.geoLocation(results[0].geometry.location);
+                  //**
+                  // Make an icon with the spots selected color
+                  var icon = self.makeMarkerIcon(targetSpot.markerColor);
+                  //**
+                  // Create marker
+                  var marker = new google.maps.Marker({
+                    map: MAP_GLOBAL, // Add marker to global map when it's created
+                    position: targetSpot.geoLocation(), // Location of marker on map
+                    title: targetSpot.name(), // What will show when the marker is hovered over
+                    icon: icon,
+                    animation: google.maps.Animation.DROP // Shake the marker as it appears
+                  });
+                  // Make a contrasting icon for mouse hover over
+                  var hoverOverIcon = self.makeMarkerIcon(targetSpot.markerHighlightColor);
+                  // Add a mousover listener to change color on hover
+                  marker.addListener('mouseover', function () {
+                    // Change icon color
+                    this.setIcon(hoverOverIcon);
+                    // Emphasize the related menu list item
+                    self.pulseMenuListItem(targetSpot.id);
+                    // Stop the other bouncing
+                    self.settleMarkers();
+                  });
+                  // Add a mouseout listener so the icon changes
+                  // back when the mouse leaves
+                  marker.addListener('mouseout', function () {
+                    this.setIcon(icon);
+                  });
+                  // Add a click event listener to call the
+                  marker.addListener('click', function () {
+                    // info window function
+                    // Show information about the target spot
+                    self.populateInfoWindow(targetSpot);
+                    // Make the marker bounce
+                    targetSpot.marker.setAnimation(google.maps.Animation.BOUNCE);
+                  });
+                  // Add the marker to the spot
+                  targetSpot.marker = marker;
+                } else {
+                  window.alert('Could not find that location - try entering a more specific place');
+                }
+              }
       );
     }
   };
@@ -1226,7 +1228,7 @@
     //
     var self = this;
     // Initialize the distance matrix
-    var distanceMatrixService = new google.maps.DistanceMatrixService;
+    var distanceMatrixService = new google.maps.DistanceMatrixService();
     // Get the address entered by user
     // Check to make sure the address isn't blank
     if (this.timeSearchText() === '') {
