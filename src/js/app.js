@@ -335,7 +335,7 @@
     // Down arrow (unicode)
     this.DOWNARROW = '\u27F1';
     // Left arrow (unicode)
-    this.LEFTARROW = '\u21DA';
+    this.LEFTARROW = "\\u21DA";
     //
     this.RIGHTARROW = '\u21DB';
     // Left/Right arrow for slideout menu (has to be observable to work)
@@ -1136,6 +1136,7 @@
             marker = self.spotList[i].marker;
             marker.setMap(MAP_GLOBAL);
             // Expand the map to include this marker
+            // Ref: https://stackoverflow.com/questions/19304574/center-set-zoom-of-map-to-cover-all-visible-markers
             mapBounds.extend(marker.position);
           }
           //
