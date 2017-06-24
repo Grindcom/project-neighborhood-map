@@ -1285,26 +1285,6 @@
 
   };
 
-  /**
-   * @description Search by text places
-   * Called when 'go' button for search places is clicked
-   *  It will do a nearby search using the entered query string or place.
-   * @returns {undefined}
-   */
-  ViewModel.prototype.textSearchPlaces = function () {
-    var bounds = MAP_GLOBAL.getBounds();
-    this.hideMarkers(this.placeMarkers());
-    var placesService = new google.maps.places.PlacesService(map);
-    placesService.textSearch({
-      query:
-              document.getElementById('places-search').value,
-      bounds: bounds
-    }, function (results, status) {
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-        createMarkersForPlaces(results);
-      }
-    });
-  };
 
   /**
    * @description Create markers for all places that are searched for
