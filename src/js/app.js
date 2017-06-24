@@ -844,22 +844,30 @@
    * @param {object} spot - passed from click event handler, reference to a spotList element.
    */
   ViewModel.prototype.listClickHandler = function (spot) {
+    var self = this;
+    // Stop the bounce - if any - of all other spots
+    self.spotList.forEach(function (spot) {
+      // If there is an animation clear it
+      if (spot.marker.getAnimation() === google.maps.Animation.BOUNCE) {
+        spot.marker.setAnimation(google.maps.Animation.DROP);
+      }
+    });
+    // Get visibility of spot
     var vis = spot.markerVisible();
     // Toggle marker to appear and bounce OR
     // Drop in
     this.shakeNameMarker(spot);
-    // If the spot's marker is already visible
-    if (vis) {
       // increment click count for this spot
       var clicks = spot.clickCount();
       spot.clickCount(++clicks);
-      //
-      this.populateInfoWindow(spot);
-    } else { // Otherwise set its visibility to true
+    // If the spot's marker is already visible  
+    if (!vis) { // Otherwise set its visibility to true
       //
       spot.markerVisible(true);
       // // console.log("Marker visible: " + spot.markerVisible());
     }
+    // Show the spots information
+    this.populateInfoWindow(spot);
   };
   /**
    * @description Called when the mouse leaves a menu list item, 
@@ -916,14 +924,14 @@
       spot.marker.setMap(MAP_GLOBAL);
     }
     // If there is an animation clear it
-    if (spot.marker.getAnimation() === google.maps.Animation.BOUNCE) {
-      spot.marker.setAnimation(google.maps.Animation.DROP);
-    } else {
+//    if (spot.marker.getAnimation() === google.maps.Animation.BOUNCE) {
+//      spot.marker.setAnimation(google.maps.Animation.DROP);
+//    } else {
       // If not, add a bounce to the marker
       spot.marker.setAnimation(google.maps.Animation.BOUNCE);
       // Set the current spot
       self.currentSpot(self.spotList[spot.id]);
-    }
+//    }
   };
   /**
    * @description Called to show cool spot
