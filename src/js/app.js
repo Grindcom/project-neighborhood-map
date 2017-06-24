@@ -502,17 +502,27 @@
 //      this.showSpots();
     };// END OF initMap
     
-    this.mapLoadError = function(){
-      var load_error_mes = "Ooops! There seems to be a problem loading the map.\n"+
+    this.mapLoadError = function () {
+      var load_error_mes = "Ooops!\nThere seems to be a problem loading the map.\n" +
               "Should I try again?";
+      console.log("Map Load Error");
+
       if (window.confirm(load_error_mes) == true) {
+        console.log("---re-load");
         // Re-load map
-        
-      } else {
-        // Do Nothing and show message
-        
+        // Ref: https://stackoverflow.com/questions/8545125/how-to-get-json-results-placed-on-google-maps
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "https://maps.googleapis.com/maps/api/js?"+
+                "key=AIzaSyB1Vs3ktrsweXIEICK-axcOk_Smy7-plgU&"+
+                "libraries=drawing,geometry,places&v=3&callback=view_model.initMap";
+        script.onerror = "view_model.mapLoadError()";
+        //Empty the google map script and re-send it
+        // Ref:https://stackoverflow.com/questions/10290019/jquery-replace-html-element-contents-if-id-begins-with-prefix
+        $('#map-script').empty().append(script);
       }
     };
+
     /**
      * @description The PLACE DETAILS search; most detailed so it is only executed
      * when a marker is selected, indicating the user wants more
@@ -1393,6 +1403,8 @@
       window.alert("Sorry there was an error in the Foursquare query: "+ err);
     });
   };
+  
+
 
   /**
    * @description Entry point for Neighborhood Map
