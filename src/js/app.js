@@ -1370,33 +1370,39 @@
       "client_secret": client_secret
     }).done(function (data) {
       // console.log("hello: " + data.meta.code);
-      // For each response ad to the nearby spots
-      data.response.venues.forEach(function (venue) {
-        // console.log("Name: " + venue.name);
-        // console.log(venue.location.distance + " from ");
-        var category_name = "No Category";
-        if (venue.categories.length > 0)
-        {
-          // console.log("Known as ");
-          venue.categories.forEach(function (category) {
-            console.log("- " + category.name);
-            category_name = category.name;
-          });
-        }
-        //
-        var nearbySpot = {
-          name: venue.name,
-          type: category_name, //venue.categories[0].name,
-          address: venue.location.address,
-          geoLocation: venue.location.lat + "," + venue.location.lng,
-          imgSrc: '',
-          imgAttribution: ''
-        };
-        // nearbySpot
-        self.addNearbySpots(nearbySpot);
-        //
-        querySpot.closeTo.push(nearbySpot);
-      });
+      // If there is data to look at in venues, parse it
+      if (data.response.venues.length > 0) {
+        // For each response ad to the nearby spots
+        data.response.venues.forEach(function (venue) {
+          // console.log("Name: " + venue.name);
+          // console.log(venue.location.distance + " from ");
+          var category_name = "No Category";
+          if (venue.categories.length > 0)
+          {
+            // console.log("Known as ");
+            venue.categories.forEach(function (category) {
+              console.log("- " + category.name);
+              category_name = category.name;
+            });
+          }
+          //
+          var nearbySpot = {
+            name: venue.name,
+            type: category_name, //venue.categories[0].name,
+            address: venue.location.address,
+            geoLocation: venue.location.lat + "," + venue.location.lng,
+            imgSrc: '',
+            imgAttribution: ''
+          };
+          // nearbySpot
+          self.addNearbySpots(nearbySpot);
+          //
+          querySpot.closeTo.push(nearbySpot);
+        });
+      } else { // indicate no data available
+        window.alert("Sorry there was no information available for that search.");
+      }
+
       // Notify the callback function on completion of data mining.
       if (callback !== null)
       {
