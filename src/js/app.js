@@ -507,7 +507,7 @@
               "Should I try again?";
       console.log("Map Load Error");
 
-      if (window.confirm(load_error_mes) == true) {
+      if (window.confirm(load_error_mes) === true) {
         console.log("---re-load");
         // Re-load map
         // Ref: https://stackoverflow.com/questions/8545125/how-to-get-json-results-placed-on-google-maps
