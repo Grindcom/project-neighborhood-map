@@ -1106,6 +1106,9 @@
     // Go through each response address and compare the time it
     //  takes
     response.rows.forEach(function (results) {
+      // Get a map boundry object
+      var mapBounds = new google.maps.LatLngBounds();
+      // Go through all the elements to see if there is a valid result
       results.elements.forEach(function (result) {
         // The distance .value is returned in feet - set by the UnitSystem parameter - but the .text is in miles.
         //  if you want to change the logic to show markers in a distance, you need the value for distance; 'result.distance.value' only need text here tho.
@@ -1125,12 +1128,15 @@
         // If the route duration is less than the selected time
         // console.log("  selected Time: " + self.selectedTime());
         if (duration <= self.selectedTime()) {
+          
           // set the marker for this result.
           // indavidual marker, to be used later in this function as well.
           var marker = null;
           if (i < self.spotList.length) {
             marker = self.spotList[i].marker;
             marker.setMap(MAP_GLOBAL);
+            // Expand the map to include this marker
+            mapBounds.extend(marker.position);
           }
           //
           // Obviously at least one marker is within range
@@ -1162,7 +1168,8 @@
         // increment i for marker selection
         i = i + 1;
       });
-
+      // Show all the markers on the map
+      MAP_GLOBAL.fitBounds(mapBounds);
     });
     //
     if (!atLeastOne) {
@@ -1293,6 +1300,7 @@
    * @returns {undefined}
    */
   ViewModel.prototype.createMarkersForPlaces = function (places) {
+    var self = this;
     // console.log("Create Markers for Places");
     var mapBounds = new google.maps.LatLngBounds();
     places.forEach(function (place) {
